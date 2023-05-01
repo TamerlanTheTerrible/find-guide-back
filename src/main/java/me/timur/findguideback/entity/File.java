@@ -2,6 +2,7 @@ package me.timur.findguideback.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import me.timur.findguideback.model.dto.FileCreateDto;
 import me.timur.findguideback.model.enums.DocumentExtension;
 import me.timur.findguideback.model.enums.DocumentType;
 
@@ -33,6 +34,17 @@ public class File extends BaseEntity {
     private Long size;
 
     @ManyToOne
-    @JoinColumn(name = "guide_id")
+    @JoinColumn(name = "guide_id", nullable = false)
     private Guide guide;
+
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+    private Boolean isDeleted;
+
+    public File(FileCreateDto createDto) {
+        this.type = createDto.getType();
+        this.path = createDto.getPath();
+        this.extension = createDto.getExtension();
+        this.size = createDto.getSize();
+        this.isDeleted = false;
+    }
 }

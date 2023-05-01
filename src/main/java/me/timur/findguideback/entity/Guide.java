@@ -2,8 +2,11 @@ package me.timur.findguideback.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import me.timur.findguideback.model.dto.GuideCreateDto;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by Temurbek Ismoilov on 30/04/23.
@@ -18,7 +21,7 @@ import java.util.Set;
 @Table(name = "guide")
 public class Guide extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -34,7 +37,7 @@ public class Guide extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "region_id"))
     private Set<Region> regions;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "guide_file",
             joinColumns = @JoinColumn(name = "guide_id"),
             inverseJoinColumns = @JoinColumn(name = "region_id"))
@@ -51,4 +54,23 @@ public class Guide extends BaseEntity {
 
     @Column(name = "is_blocked", nullable = false, columnDefinition = "boolean default false")
     private Boolean isBlocked;
+
+    public Guide(GuideCreateDto createDto, Set<Language> languages, Set<Region> regions, Set<File> files) {
+        this.user = new User(createDto.getUser());
+        this.languages = languages;
+        this.regions = regions;
+        this.files = files;
+        this.description = createDto.getDescription();
+        this.isVerified = false;
+        this.isActive = true;
+        this.isBlocked = false;
+    }
+
+    public Set<String> getLanguageNames() {
+        return languages.stream().map(Language::getEngName).collect(Collectors.toSet());
+    }
+
+    public Set<String> getRegionNames() {
+        return regions.stream().map(Region::getEngName).collect(Collectors.toSet());
+    }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 import me.timur.findguideback.mapper.ListToStringConverter;
+import me.timur.findguideback.model.dto.UserCreateDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,7 +33,7 @@ public class User extends BaseEntity {
     @Column(name = "birthDate")
     private LocalDateTime birthDate;
 
-    @Column(name = "tg_id")
+    @Column(name = "tg_id", unique = true)
     private Long telegramId;
 
     @Convert(converter = ListToStringConverter.class)
@@ -44,4 +45,14 @@ public class User extends BaseEntity {
 
     @Column(name = "is_blocked", nullable = false, columnDefinition = "boolean default false")
     private Boolean isBlocked;
+
+    public User(UserCreateDto createDto) {
+        this.firstName = createDto.getFirstName();
+        this.lastName = createDto.getLastName();
+        this.birthDate = createDto.getBirthDate();
+        this.telegramId = createDto.getTelegramId();
+        this.phoneNumbers = createDto.getPhoneNumbers();
+        this.isActive = true;
+        this.isBlocked = false;
+    }
 }
