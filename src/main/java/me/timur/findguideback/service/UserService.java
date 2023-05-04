@@ -10,6 +10,5 @@ import me.timur.findguideback.model.dto.UserDto;
 public interface UserService {
     UserDto save(UserCreateDto createDto);
     UserDto getById(Long id);
-
     UserDto getByTelegramId(Long telegramId);
 }

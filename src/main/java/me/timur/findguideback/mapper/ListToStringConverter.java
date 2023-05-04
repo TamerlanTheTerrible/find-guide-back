@@ -16,6 +16,7 @@ public class ListToStringConverter implements AttributeConverter<List<String>, S
     @SneakyThrows
     @Override
     public String convertToDatabaseColumn(List<String> list) {
+        if (list == null) return null;
         return String.join(",", list);
     }
 

@@ -8,10 +8,14 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class LocalDateTimeUtil {
-    public final static String PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    public final static String PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);
 
     public static String toString(LocalDateTime dateTime){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);
         return dateTime.format(formatter);
+    }
+
+    public static LocalDateTime toLocalDateTime(String birthDate) {
+        return LocalDateTime.parse(birthDate, formatter);
     }
 }

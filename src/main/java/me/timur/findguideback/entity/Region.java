@@ -24,7 +24,6 @@ public class Region {
     @Column(name = "en_name")
     String engName;
 
-    @Id
     @Column(name = "ru_name")
     String ruName;
 }

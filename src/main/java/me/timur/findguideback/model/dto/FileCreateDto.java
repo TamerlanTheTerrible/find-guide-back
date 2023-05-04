@@ -19,11 +19,11 @@ import java.time.LocalDateTime;
 @Data
 public class FileCreateDto implements Serializable {
     @JsonProperty("type")
-    private final DocumentType type;
+    private DocumentType type;
     @JsonProperty("path")
-    private final String path;
+    private String path;
     @JsonProperty("extension")
-    private final DocumentExtension extension;
+    private DocumentExtension extension;
     @JsonProperty("size")
-    private final Long size;
+    private Long size;
 }

@@ -20,21 +20,21 @@ import java.time.LocalDateTime;
 @Data
 public class FileDto implements Serializable {
     @JsonProperty("id")
-    private final Long id;
+    private Long id;
     @JsonProperty("date_created")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private final LocalDateTime dateCreated;
+    private LocalDateTime dateCreated;
     @JsonProperty("date_updated")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private final LocalDateTime dateUpdated;
+    private LocalDateTime dateUpdated;
     @JsonProperty("type")
-    private final DocumentType type;
+    private DocumentType type;
     @JsonProperty("path")
-    private final String path;
+    private String path;
     @JsonProperty("extension")
-    private final DocumentExtension extension;
+    private DocumentExtension extension;
     @JsonProperty("size")
-    private final Long size;
+    private Long size;
 
     public FileDto(File file) {
         this.id = file.getId();

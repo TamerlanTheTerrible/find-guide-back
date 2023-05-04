@@ -24,13 +24,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto save(UserCreateDto createDto) {
+        log.info("Saving user {}", createDto);
+
         User user = new User(createDto);
         userRepository.save(user);
+
+        log.info("User saved {}", user);
+
         return new UserDto(user);
     }
 
     @Override
     public UserDto getById(Long id) {
+        log.info("Getting user by id {}", id);
         return userRepository.findById(id)
                 .map(UserDto::new)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "User with id %s not found", id));
@@ -38,6 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getByTelegramId(Long telegramId) {
+        log.info("Getting user by telegram id {}", telegramId);
         return userRepository.findByTelegramId(telegramId)
                 .map(UserDto::new)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "User with telegram id %s not found", telegramId));

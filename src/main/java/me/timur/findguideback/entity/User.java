@@ -36,6 +36,9 @@ public class User extends BaseEntity {
     @Column(name = "tg_id", unique = true)
     private Long telegramId;
 
+    @Column(name = "tg_username")
+    private String telegramUsername;
+
     @Convert(converter = ListToStringConverter.class)
     @Column(name = "phone_numbers", nullable = false)
     private List<String> phoneNumbers;
@@ -51,8 +54,24 @@ public class User extends BaseEntity {
         this.lastName = createDto.getLastName();
         this.birthDate = createDto.getBirthDate();
         this.telegramId = createDto.getTelegramId();
+        this.telegramUsername = createDto.getTelegramUsername();
         this.phoneNumbers = createDto.getPhoneNumbers();
         this.isActive = true;
         this.isBlocked = false;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + super.getId() +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", telegramId=" + telegramId +
+                ", telegramUsername='" + telegramUsername + '\'' +
+                ", phoneNumbers=" + phoneNumbers +
+                ", isActive=" + isActive +
+                ", isBlocked=" + isBlocked +
+                '}';
     }
 }

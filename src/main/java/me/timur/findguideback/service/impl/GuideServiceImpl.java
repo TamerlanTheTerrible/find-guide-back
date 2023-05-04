@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.entity.File;
 import me.timur.findguideback.entity.Guide;
+import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.dto.GuideCreateDto;
 import me.timur.findguideback.model.dto.GuideDto;
+import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.repository.FileRepository;
 import me.timur.findguideback.repository.GuideRepository;
 import me.timur.findguideback.repository.LanguageRepository;
@@ -40,11 +42,15 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideDto getById(Long id) {
-        return null;
+        return guideRepository.findById(id)
+                .map(GuideDto::new)
+                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with id: " + id));
     }
 
     @Override
     public GuideDto getByTelegramId(Long telegramId) {
-        return null;
+        return guideRepository.findById(telegramId)
+                .map(GuideDto::new)
+                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with telegram id: " + telegramId));
     }
 }
