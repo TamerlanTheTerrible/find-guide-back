@@ -80,10 +80,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
                 .setCode(ResponseCode.OK.getCode())
                 .setMessage("success")
                 .setPayload(
-                        Any.newBuilder()
-                                .setValue(payload.toByteString())
-                                .setTypeUrl("/" + payload.getClass().getName())
-                                .build()
+                        Any.pack(payload)
                 )
                 .build();
         //send response

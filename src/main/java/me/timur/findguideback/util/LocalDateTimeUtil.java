@@ -16,6 +16,8 @@ public class LocalDateTimeUtil {
     }
 
     public static LocalDateTime toLocalDateTime(String birthDate) {
+        if (birthDate == null || birthDate.isEmpty())
+            return null;
         return LocalDateTime.parse(birthDate, formatter);
     }
 }
