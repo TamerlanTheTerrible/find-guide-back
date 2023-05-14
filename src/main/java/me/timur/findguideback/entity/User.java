@@ -49,15 +49,27 @@ public class User extends BaseEntity {
     @Column(name = "is_blocked", nullable = false, columnDefinition = "boolean default false")
     private Boolean isBlocked;
 
-    public User(UserCreateDto createDto) {
-        this.firstName = createDto.getFirstName();
-        this.lastName = createDto.getLastName();
-        this.birthDate = createDto.getBirthDate();
-        this.telegramId = createDto.getTelegramId();
-        this.telegramUsername = createDto.getTelegramUsername();
-        this.phoneNumbers = createDto.getPhoneNumbers();
-        this.isActive = true;
-        this.isBlocked = false;
+    public static User from(UserCreateDto createDto) {
+        return User.builder()
+                .firstName(createDto.getFirstName())
+                .lastName(createDto.getLastName())
+                .birthDate(createDto.getBirthDate())
+                .telegramId(createDto.getTelegramId())
+                .telegramUsername(createDto.getTelegramUsername())
+                .phoneNumbers(createDto.getPhoneNumbers())
+                .isActive(true)
+                .isBlocked(false)
+                .build();
+    }
+
+    public static User from(User user, UserCreateDto createDto) {
+        user.setFirstName(createDto.getFirstName());
+        user.setLastName(createDto.getLastName());
+        user.setBirthDate(createDto.getBirthDate());
+        user.setTelegramId(createDto.getTelegramId());
+        user.setTelegramUsername(createDto.getTelegramUsername());
+        user.setPhoneNumbers(createDto.getPhoneNumbers());
+        return user;
     }
 
     @Override

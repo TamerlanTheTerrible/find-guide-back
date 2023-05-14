@@ -56,7 +56,7 @@ public class Guide extends BaseEntity {
     private Boolean isBlocked;
 
     public Guide(GuideCreateDto createDto, Set<Language> languages, Set<Region> regions, Set<File> files) {
-        this.user = new User(createDto.getUser());
+        this.user = User.from(createDto.getUser());
         this.languages = languages;
         this.regions = regions;
         this.files = files;

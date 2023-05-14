@@ -11,6 +11,8 @@ import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Created by Temurbek Ismoilov on 01/05/23.
  */
@@ -23,15 +25,30 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDto save(UserCreateDto createDto) {
+    public UserDto getOrSave(UserCreateDto createDto) {
+        // get user from repository by telegram id, if user is present, update user, else save user
+        var user = userRepository.findByTelegramId(createDto.getTelegramId())
+                .map(userFromDB -> update(userFromDB, createDto))
+                .orElseGet(() -> save(createDto));
+
+        log.info("User got or saved {}", user);
+        return new UserDto(user);
+    }
+
+    private User update(User oldUser, UserCreateDto createDto) {
+        log.info("Updating user {}", createDto);
+
+        return userRepository.save(
+                User.from(oldUser, createDto)
+        );
+    }
+
+    private User save(UserCreateDto createDto) {
         log.info("Saving user {}", createDto);
 
-        User user = new User(createDto);
-        userRepository.save(user);
-
-        log.info("User saved {}", user);
-
-        return new UserDto(user);
+        return userRepository.save(
+                User.from(createDto)
+        );
     }
 
     @Override

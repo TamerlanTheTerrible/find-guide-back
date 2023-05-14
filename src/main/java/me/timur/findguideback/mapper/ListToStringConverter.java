@@ -4,6 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.SneakyThrows;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public class ListToStringConverter implements AttributeConverter<List<String>, S
     @SneakyThrows
     @Override
     public List<String> convertToEntityAttribute(String s) {
+        if (s == null) return Collections.emptyList();
         return List.of(s.split(","));
     }
 }

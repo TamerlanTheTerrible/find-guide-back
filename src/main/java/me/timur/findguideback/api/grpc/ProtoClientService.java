@@ -24,14 +24,14 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
     private final UserService userService;
 
     @Override
-    public void save(ProtoUserCreateDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
+    public void getOrSave(ProtoUserCreateDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
         try {
             //save user
-            var userDto = userService.save(UserCreateDto.create(request));
+            var userDto = userService.getOrSave(UserCreateDto.create(request));
             //send response
             sendResponse(userDto, responseObserver);
         } catch (Exception e) {
-            log.error("Error while saving user: {}", e.getMessage());
+            log.error("Error while saving user: {}", e.getMessage(), e);
             handleException(ResponseCode.INTERNAL_ERROR, e.getMessage(), responseObserver);
         }
     }
@@ -68,8 +68,9 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
                 .setId(userDto.getId())
                 .setFirstName(userDto.getFirstName())
                 .setLastName(userDto.getLastName())
+                .setTelegramUsername(userDto.getTelegramUsername())
                 .setTelegramId(userDto.getTelegramId())
-                .setPhoneNumbers(String.join(",", userDto.getPhoneNumbers()))
+                .setPhoneNumbers(userDto.getPhoneNumbers() == null ? "" : String.join(",", userDto.getPhoneNumbers()))
                 .setIsActive(userDto.getIsActive())
                 .setIsBlocked(userDto.getIsBlocked())
                 .setDateCreated(LocalDateTimeUtil.toString(userDto.getDateCreated()))
@@ -91,7 +92,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
     private void handleException(ResponseCode code, String message, StreamObserver<ProtoBaseResponse> responseObserver) {
         var protoResponse = ProtoBaseResponse.newBuilder()
                 .setCode(code.getCode())
-                .setMessage(message)
+                .setMessage(message == null ? "" : message)
                 .build();
 
         responseObserver.onNext(protoResponse);

@@ -19,7 +19,7 @@ public class ClientController {
 
     @PostMapping("/")
     public BaseResponse<UserDto> save(@RequestBody UserCreateDto createDto) {
-        return BaseResponse.of(userService.save(createDto));
+        return BaseResponse.of(userService.getOrSave(createDto));
     }
 
     @GetMapping("/{id}")
