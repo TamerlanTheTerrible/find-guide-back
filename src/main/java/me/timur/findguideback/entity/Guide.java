@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import me.timur.findguideback.model.dto.GuideCreateDto;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @Table(name = "guide")
 public class Guide extends BaseEntity {
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -49,19 +48,23 @@ public class Guide extends BaseEntity {
     @Column(name = "is_verified", nullable = false, columnDefinition = "boolean default false")
     private Boolean isVerified;
 
+    @Column(name = "has_car", nullable = false, columnDefinition = "boolean default false")
+    private Boolean hasCar;
+
     @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private Boolean isActive;
 
     @Column(name = "is_blocked", nullable = false, columnDefinition = "boolean default false")
     private Boolean isBlocked;
 
-    public Guide(GuideCreateDto createDto, Set<Language> languages, Set<Region> regions, Set<File> files) {
-        this.user = User.from(createDto.getUser());
+    public Guide(GuideCreateDto createDto, User user, Set<Language> languages, Set<Region> regions, Set<File> files) {
+        this.user = user;
         this.languages = languages;
         this.regions = regions;
         this.files = files;
         this.description = createDto.getDescription();
         this.isVerified = false;
+        this.hasCar = createDto.getHasCar();
         this.isActive = true;
         this.isBlocked = false;
     }

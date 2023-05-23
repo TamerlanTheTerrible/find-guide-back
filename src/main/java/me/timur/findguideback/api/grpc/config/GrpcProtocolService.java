@@ -4,6 +4,7 @@ import io.grpc.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.api.grpc.ProtoClientService;
+import me.timur.findguideback.api.grpc.ProtoGuideService;
 import me.timur.findguideback.api.grpc.interceptor.GrpcServerRequestInterceptor;
 import me.timur.findguideback.api.grpc.interceptor.GrpcServerResponseInterceptor;
 import me.timur.findguideback.exception.FindGuideException;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class GrpcProtocolService {
 
     private final ProtoClientService protoClientService;
+    private final ProtoGuideService protoGuideService;
 
     @Value("${grpc.server.port}")
     private Integer port;
@@ -40,8 +42,14 @@ public class GrpcProtocolService {
                 final ServerBuilder<?> serverBuilder = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create());
                 server = serverBuilder
                         .addService(protoClientService)
+                        .addService(protoGuideService)
                         .addService(ServerInterceptors.intercept(
                                 protoClientService,
+                                new GrpcServerResponseInterceptor(),
+                                new GrpcServerRequestInterceptor())
+                        )
+                        .addService(ServerInterceptors.intercept(
+                                protoGuideService,
                                 new GrpcServerResponseInterceptor(),
                                 new GrpcServerRequestInterceptor())
                         )

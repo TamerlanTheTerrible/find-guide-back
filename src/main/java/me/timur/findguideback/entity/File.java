@@ -41,6 +41,9 @@ public class File extends BaseEntity {
     private Boolean isDeleted;
 
     public File(FileCreateDto createDto) {
+        if (createDto == null) {
+            return;
+        }
         this.type = createDto.getType();
         this.path = createDto.getPath();
         this.extension = createDto.getExtension();

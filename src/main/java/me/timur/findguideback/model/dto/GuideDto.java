@@ -40,6 +40,8 @@ public class GuideDto implements Serializable {
     private String description;
     @JsonProperty("is_verified")
     private Boolean isVerified;
+    @JsonProperty("has_car")
+    private Boolean hasCar;
     @JsonProperty("is_active")
     private Boolean isActive;
     @JsonProperty("is_blocked")
@@ -52,9 +54,10 @@ public class GuideDto implements Serializable {
         this.user = new UserDto(guide.getUser());
         this.languageNames = guide.getLanguageNames();
         this.regionNames = guide.getRegionNames();
-        this.files = guide.getFiles().stream().map(FileDto::new).collect(Collectors.toList());
+        this.files = guide.getFiles() == null ? null : guide.getFiles().stream().map(FileDto::new).collect(Collectors.toList());
         this.description = guide.getDescription();
         this.isVerified = guide.getIsVerified();
+        this.hasCar = guide.getHasCar();
         this.isActive = guide.getIsActive();
         this.isBlocked = guide.getIsBlocked();
     }

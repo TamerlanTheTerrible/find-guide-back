@@ -9,6 +9,7 @@ import me.timur.findguideback.model.dto.GuideDto;
 
 public interface GuideService {
     GuideDto save(GuideCreateDto createDto);
+    GuideDto update(GuideCreateDto createDto);
     GuideDto getById(Long id);
     GuideDto getByTelegramId(Long telegramId);
 }

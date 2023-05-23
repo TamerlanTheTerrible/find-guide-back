@@ -12,6 +12,14 @@ public class LocalDateTimeUtil {
     private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);
 
     public static String toString(LocalDateTime dateTime){
+        if (dateTime == null)
+            return null;
+        return dateTime.format(formatter);
+    }
+
+    public static String toStringOrBlankIfNull(LocalDateTime dateTime){
+        if (dateTime == null)
+            return "";
         return dateTime.format(formatter);
     }
 

@@ -8,13 +8,12 @@ import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.dto.GuideCreateDto;
 import me.timur.findguideback.model.dto.GuideDto;
 import me.timur.findguideback.model.enums.ResponseCode;
-import me.timur.findguideback.repository.FileRepository;
-import me.timur.findguideback.repository.GuideRepository;
-import me.timur.findguideback.repository.LanguageRepository;
-import me.timur.findguideback.repository.RegionRepository;
+import me.timur.findguideback.repository.*;
 import me.timur.findguideback.service.GuideService;
+import me.timur.findguideback.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 public class GuideServiceImpl implements GuideService {
 
     private final GuideRepository guideRepository;
+    private final UserRepository userRepository;
     private final LanguageRepository languageRepository;
     private final RegionRepository regionRepository;
     private final FileRepository fileRepository;
@@ -34,10 +34,19 @@ public class GuideServiceImpl implements GuideService {
     public GuideDto save(GuideCreateDto createDto) {
         var languages = languageRepository.findAllByEngNameIn(createDto.getLanguageNames());
         var regions = regionRepository.findAllByEngNameIn(createDto.getRegionNames());
-        var files = createDto.getFiles().stream().map(File::new).collect(Collectors.toSet());
-        Guide guide = new Guide(createDto, languages, regions, files);
-        guide = guideRepository.save(guide);
+        Set<File> files = null;
+        if (createDto.getFiles() != null) {
+            files = createDto.getFiles().stream().map(File::new).collect(Collectors.toSet());
+        }
+        var user = userRepository.findByTelegramId(createDto.getUserTelegramId()).orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find user with telegram id: " + createDto.getUserTelegramId()));
+        Guide guide = guideRepository.save(new Guide(createDto, user, languages, regions, files));
         return new GuideDto(guide);
+    }
+
+    @Override
+    public GuideDto update(GuideCreateDto guideCreateDto) {
+//        var user = guideRepository.findByUserIdOrUserTelegramId(createDto.getUserId(), createDto.getUserTelegramId());
+        return null;
     }
 
     @Override

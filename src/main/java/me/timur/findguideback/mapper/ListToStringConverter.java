@@ -3,6 +3,7 @@ package me.timur.findguideback.mapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.SneakyThrows;
+import me.timur.findguideback.util.StringUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +25,6 @@ public class ListToStringConverter implements AttributeConverter<List<String>, S
     @SneakyThrows
     @Override
     public List<String> convertToEntityAttribute(String s) {
-        if (s == null) return Collections.emptyList();
-        return List.of(s.split(","));
+        return StringUtil.splitToList(s, ",");
     }
 }

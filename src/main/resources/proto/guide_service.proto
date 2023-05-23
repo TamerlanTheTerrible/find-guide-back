@@ -1,0 +1,46 @@
+syntax = "proto3";
+package com.proto;
+option java_package = "com.proto";
+option java_multiple_files = true;
+
+message ProtoGuideCreateDto {
+  int64 user_id = 1;
+  int64 user_telegram_id = 2;
+  string language_names = 3;
+  string region_names = 4;
+  string description = 5;
+  bool has_car = 6;
+}
+
+message ProtoGuideDto {
+  int64 id = 1;
+  string date_created = 2;
+  string date_updated = 3;
+  string language_names = 4;
+  string region_names = 5;
+  string files = 6;
+  string description = 7;
+  bool is_verified = 8;
+  bool has_car = 9;
+  bool is_active = 10;
+  bool is_blocked = 11;
+  ProtoUserDto user = 12;
+}
+
+message ProtoUserDto {
+  int64 id = 1;
+  string date_created = 2;
+  string date_updated = 3;
+  string first_name = 4;
+  string last_name = 5;
+  string birth_date = 6;
+  int64 telegram_id = 7;
+  string telegram_username = 8;
+  string phone_numbers = 9;
+  bool is_active = 10;
+  bool is_blocked = 11;
+}
+
+service ProtoGuideService {
+  rpc saveGuide(ProtoGuideCreateDto) returns (ProtoGuideDto) {};
+}
