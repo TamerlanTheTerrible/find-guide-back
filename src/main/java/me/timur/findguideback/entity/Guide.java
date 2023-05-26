@@ -2,7 +2,7 @@ package me.timur.findguideback.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import me.timur.findguideback.model.dto.GuideCreateDto;
+import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -57,7 +57,7 @@ public class Guide extends BaseEntity {
     @Column(name = "is_blocked", nullable = false, columnDefinition = "boolean default false")
     private Boolean isBlocked;
 
-    public Guide(GuideCreateDto createDto, User user, Set<Language> languages, Set<Region> regions, Set<File> files) {
+    public Guide(GuideCreateOrUpdateDto createDto, User user, Set<Language> languages, Set<Region> regions, Set<File> files) {
         this.user = user;
         this.languages = languages;
         this.regions = regions;

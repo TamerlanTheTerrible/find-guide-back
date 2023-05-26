@@ -26,4 +26,7 @@ public class Region {
 
     @Column(name = "ru_name")
     String ruName;
+
+    @Column(name = "uz_name")
+    String uzName;
 }

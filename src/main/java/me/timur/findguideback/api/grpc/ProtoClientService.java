@@ -5,14 +5,12 @@ import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.model.dto.GuideCreateDto;
 import me.timur.findguideback.model.dto.UserCreateDto;
 import me.timur.findguideback.model.dto.UserDto;
 import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.service.GuideService;
 import me.timur.findguideback.service.UserService;
 import me.timur.findguideback.util.LocalDateTimeUtil;
-import me.timur.findguideback.util.StringUtil;
 import org.springframework.stereotype.Component;
 
 /**

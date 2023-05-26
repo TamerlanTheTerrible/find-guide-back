@@ -1,6 +1,6 @@
 package me.timur.findguideback.service;
 
-import me.timur.findguideback.model.dto.GuideCreateDto;
+import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideDto;
 
 /**
@@ -8,8 +8,8 @@ import me.timur.findguideback.model.dto.GuideDto;
  */
 
 public interface GuideService {
-    GuideDto save(GuideCreateDto createDto);
-    GuideDto update(GuideCreateDto createDto);
+    GuideDto save(GuideCreateOrUpdateDto requestDto);
+    GuideDto update(GuideCreateOrUpdateDto requestDto);
     GuideDto getById(Long id);
     GuideDto getByTelegramId(Long telegramId);
 }

@@ -7,7 +7,7 @@ import com.proto.ProtoUserDto;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.model.dto.GuideCreateDto;
+import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.service.GuideService;
 import me.timur.findguideback.util.LocalDateTimeUtil;
 import me.timur.findguideback.util.StringUtil;
@@ -26,7 +26,7 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
 
     @Override
     public void saveGuide(ProtoGuideCreateDto request, StreamObserver<ProtoGuideDto> responseObserver) {
-        var guideDto = guideService.save(new GuideCreateDto(request));
+        var guideDto = guideService.save(new GuideCreateOrUpdateDto(request));
         var protoGuideDto = ProtoGuideDto.newBuilder()
                 .setId(guideDto.getId())
                 .setUser(
