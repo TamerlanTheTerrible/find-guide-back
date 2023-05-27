@@ -42,14 +42,14 @@ public class StringUtil {
             throw new FindGuideException(ResponseCode.INVALID_PARAMETERS, "Invalid format for %s: %s", format, str);
         }
 
-        return Arrays.stream(str.split(delimiter)).toList();
+        return Arrays.stream(str.split(delimiter)).map(String::trim).toList();
     }
 
     public static Set<String> splitToSet(String str, String delimiter) {
         if (str == null || str.isEmpty()) {
             return Collections.emptySet();
         }
-        return Arrays.stream(str.split(delimiter)).collect(Collectors.toSet());
+        return Arrays.stream(str.split(delimiter)).map(String::trim).collect(Collectors.toSet());
     }
 
     public static String join(Iterable<String> elements) {
