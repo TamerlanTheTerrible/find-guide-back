@@ -24,22 +24,28 @@ public class Guide extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "guide_language",
             joinColumns = @JoinColumn(name = "guide_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     private Set<Language> languages;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "guide_region",
             joinColumns = @JoinColumn(name = "guide_id"),
             inverseJoinColumns = @JoinColumn(name = "region_id"))
     private Set<Region> regions;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "guide_transport",
+            joinColumns = @JoinColumn(name = "guide_id"),
+            inverseJoinColumns = @JoinColumn(name = "transport_id"))
+    private Set<Transport> transports;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "guide_file",
             joinColumns = @JoinColumn(name = "guide_id"),
-            inverseJoinColumns = @JoinColumn(name = "region_id"))
+            inverseJoinColumns = @JoinColumn(name = "file_id"))
     private Set<File> files;
 
     @Column(name = "description")
@@ -57,7 +63,7 @@ public class Guide extends BaseEntity {
     @Column(name = "is_blocked", nullable = false, columnDefinition = "boolean default false")
     private Boolean isBlocked;
 
-    public Guide(GuideCreateOrUpdateDto createDto, User user, Set<Language> languages, Set<Region> regions, Set<File> files) {
+    public Guide(GuideCreateOrUpdateDto createDto, User user, Set<Language> languages, Set<Region> regions, Set<Transport> transports, Set<File> files) {
         this.user = user;
         this.languages = languages;
         this.regions = regions;
@@ -65,6 +71,7 @@ public class Guide extends BaseEntity {
         this.description = createDto.getDescription();
         this.isVerified = false;
         this.hasCar = createDto.getHasCar();
+        this.transports = transports;
         this.isActive = true;
         this.isBlocked = false;
     }

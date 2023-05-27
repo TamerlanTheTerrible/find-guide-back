@@ -20,10 +20,10 @@ public class GuideSearchDto {
     String region;
 
     @JsonProperty("start_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.PATTERN) @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIM_PATTERN) @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate startDate;
 
     @JsonProperty("end_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.PATTERN) @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIM_PATTERN) @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate endDate;
 }

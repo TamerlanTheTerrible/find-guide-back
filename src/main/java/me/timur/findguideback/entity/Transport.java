@@ -18,8 +18,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "region")
-public class Region {
+@Table(name = "car")
+public class Transport {
     @Id
     @Column(name = "en_name")
     String engName;

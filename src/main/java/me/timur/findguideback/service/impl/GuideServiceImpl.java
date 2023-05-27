@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.entity.File;
 import me.timur.findguideback.entity.Guide;
+import me.timur.findguideback.entity.Transport;
 import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideDto;
@@ -27,18 +28,36 @@ public class GuideServiceImpl implements GuideService {
     private final UserRepository userRepository;
     private final LanguageRepository languageRepository;
     private final RegionRepository regionRepository;
+    private final TransportRepository transportRepository;
     private final FileRepository fileRepository;
 
     @Override
     public GuideDto save(GuideCreateOrUpdateDto requestDto) {
         var languages = languageRepository.findAllByEngNameIn(requestDto.getLanguageNames());
+        if (languages.isEmpty()) {
+            throw new FindGuideException(ResponseCode.NOT_FOUND, "Could not find languages with names: " + requestDto.getLanguageNames());
+        }
+
         var regions = regionRepository.findAllByEngNameIn(requestDto.getRegionNames());
+        if (regions.isEmpty()) {
+            throw new FindGuideException(ResponseCode.NOT_FOUND, "Could not find regions with names: " + requestDto.getRegionNames());
+        }
+
+        Set<Transport> transports = null;
+        if (requestDto.getTransports() != null && !requestDto.getTransports().isEmpty()) {
+            transports = transportRepository.findAllByEngNameIn(requestDto.getTransports());
+            if (transports.isEmpty()) {
+                throw new FindGuideException(ResponseCode.NOT_FOUND, "Could not find transports with names: " + requestDto.getTransports());
+            }
+        }
+
         Set<File> files = null;
         if (requestDto.getFiles() != null) {
             files = requestDto.getFiles().stream().map(File::new).collect(Collectors.toSet());
         }
+
         var user = userRepository.findByTelegramId(requestDto.getUserTelegramId()).orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find user with telegram id: " + requestDto.getUserTelegramId()));
-        Guide guide = guideRepository.save(new Guide(requestDto, user, languages, regions, files));
+        var guide = guideRepository.save(new Guide(requestDto, user, languages, regions, transports, files));
         return new GuideDto(guide);
     }
 

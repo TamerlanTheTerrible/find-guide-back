@@ -34,6 +34,8 @@ public class GuideCreateOrUpdateDto implements Serializable {
     private String description;
     @JsonProperty("has_car")
     private Boolean hasCar;
+    @JsonProperty("files")
+    private Set<String> transports;
 
     public GuideCreateOrUpdateDto(ProtoGuideCreateDto request) {
         this.userId = request.getUserId();
@@ -42,5 +44,6 @@ public class GuideCreateOrUpdateDto implements Serializable {
         this.regionNames = StringUtil.splitToSet(request.getRegionNames(), ",");
         this.description = request.getDescription();
         this.hasCar = request.getHasCar();
+        this.transports = StringUtil.splitToSet(request.getTransport(), ",");
     }
 }

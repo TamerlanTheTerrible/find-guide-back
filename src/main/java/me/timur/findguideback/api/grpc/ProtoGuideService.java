@@ -1,17 +1,20 @@
 package me.timur.findguideback.api.grpc;
 
-import com.proto.ProtoGuideCreateDto;
-import com.proto.ProtoGuideDto;
-import com.proto.ProtoGuideServiceGrpc;
-import com.proto.ProtoUserDto;
+import com.google.protobuf.Any;
+import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
+import me.timur.findguideback.model.dto.GuideDto;
+import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.service.GuideService;
 import me.timur.findguideback.util.LocalDateTimeUtil;
 import me.timur.findguideback.util.StringUtil;
 import org.springframework.stereotype.Component;
+
+import java.util.function.Function;
 
 /**
  * Created by Temurbek Ismoilov on 14/05/23.
@@ -25,9 +28,43 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
     private final GuideService guideService;
 
     @Override
-    public void saveGuide(ProtoGuideCreateDto request, StreamObserver<ProtoGuideDto> responseObserver) {
-        var guideDto = guideService.save(new GuideCreateOrUpdateDto(request));
-        var protoGuideDto = ProtoGuideDto.newBuilder()
+    public void save(ProtoGuideCreateDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
+        handleRequest(guideService::save, new GuideCreateOrUpdateDto(request), responseObserver, "guide save");
+    }
+
+    @Override
+    public void update(ProtoGuideCreateDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
+        handleRequest(guideService::update, new GuideCreateOrUpdateDto(request), responseObserver, "guide update");
+    }
+
+    private <T, R> void handleRequest(Function<T, R> consumer, T param, StreamObserver<ProtoBaseResponse> responseObserver, String methodName) {
+        try {
+            final R result = consumer.apply(param);
+            prepareAndSendResponse((GuideDto) result, responseObserver);
+        } catch (FindGuideException e) {
+            log.error("Error while {}: {}", methodName, e.getMessage());
+            handleException(e.getCode(), e.getMessage(), responseObserver);
+        } catch (Exception e) {
+            log.error("Unexpected error while {}: {}", methodName, e.getMessage(), e);
+            handleException(ResponseCode.INTERNAL_ERROR, e.getMessage(), responseObserver);
+        }
+    }
+
+    private void prepareAndSendResponse(GuideDto guideDto, StreamObserver<ProtoBaseResponse> responseObserver) {
+        var protoResponse = ProtoBaseResponse.newBuilder()
+                .setCode(ResponseCode.OK.getCode())
+                .setMessage("success")
+                .setPayload(
+                        Any.pack(toProtoGuideDto(guideDto))
+                )
+                .build();
+        //send response
+        responseObserver.onNext(protoResponse);
+        responseObserver.onCompleted();
+    }
+
+    private ProtoGuideDto toProtoGuideDto(GuideDto guideDto) {
+        return ProtoGuideDto.newBuilder()
                 .setId(guideDto.getId())
                 .setUser(
                         ProtoUserDto.newBuilder()
@@ -57,7 +94,16 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
                 .setDateCreated(LocalDateTimeUtil.toStringOrBlankIfNull(guideDto.getUser().getDateCreated()))
                 .setDateUpdated(LocalDateTimeUtil.toStringOrBlankIfNull(guideDto.getUser().getDateUpdated()))
                 .build();
-        responseObserver.onNext(protoGuideDto);
+    }
+
+    private void handleException(ResponseCode code, String message, StreamObserver<ProtoBaseResponse> responseObserver) {
+        var protoResponse = ProtoBaseResponse.newBuilder()
+                .setCode(code.getCode())
+                .setMessage(message == null ? "" : message)
+                .build();
+
+        responseObserver.onNext(protoResponse);
         responseObserver.onCompleted();
     }
+
 }

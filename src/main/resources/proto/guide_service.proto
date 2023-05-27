@@ -3,6 +3,8 @@ package com.proto;
 option java_package = "com.proto";
 option java_multiple_files = true;
 
+import "base_response.proto";
+
 message ProtoGuideCreateDto {
   int64 user_id = 1;
   int64 user_telegram_id = 2;
@@ -10,6 +12,7 @@ message ProtoGuideCreateDto {
   string region_names = 4;
   string description = 5;
   bool has_car = 6;
+  string transport = 7;
 }
 
 message ProtoGuideDto {
@@ -42,5 +45,6 @@ message ProtoUserDto {
 }
 
 service ProtoGuideService {
-  rpc saveGuide(ProtoGuideCreateDto) returns (ProtoGuideDto) {};
+  rpc save(ProtoGuideCreateDto) returns (ProtoBaseResponse) {};
+  rpc update(ProtoGuideCreateDto) returns (ProtoBaseResponse) {};
 }

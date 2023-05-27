@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.proto.ProtoUserCreateDto;
 import lombok.Data;
 import me.timur.findguideback.util.LocalDateTimeUtil;
+import me.timur.findguideback.util.StringUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +23,7 @@ public class UserCreateDto {
     @JsonProperty("last_name")
     private String lastName;
     @JsonProperty("birth_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIM_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime birthDate;
     @JsonProperty("telegram_id")
     private Long telegramId;
@@ -40,7 +41,7 @@ public class UserCreateDto {
         dto.telegramUsername = request.getTelegramUsername();
         request.getPhoneNumbers();
         if (!request.getPhoneNumbers().isEmpty()) {
-            dto.phoneNumbers = List.of(request.getPhoneNumbers().split(","));
+            dto.phoneNumbers = StringUtil.splitToList(request.getPhoneNumbers(), StringUtil.StringFormat.PHONE);
         }
         return dto;
     }

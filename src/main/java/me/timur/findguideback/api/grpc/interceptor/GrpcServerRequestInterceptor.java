@@ -2,7 +2,6 @@ package me.timur.findguideback.api.grpc.interceptor;
 
 import io.grpc.*;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.exception.FindGuideException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,14 +18,14 @@ public class GrpcServerRequestInterceptor implements ServerInterceptor {
 //        final Map<String, String> mdcContext = buildMdcContext();
 //        MDC.setContextMap(mdcContext);
 
-        log.info("GRPC metadata: {}", metadata);
+        log.info("GRPC metadata => {}", metadata);
 
         final ServerCall.Listener<ReqT> original = next.startCall(serverCall, metadata);
         return new ForwardingServerCallListener.SimpleForwardingServerCallListener<ReqT>(original) {
             @Override
             public void onMessage(final ReqT message) {
 //                MDC.setContextMap(mdcContext);
-                log.info("GRPC request: {}", message);
+                log.info("GRPC request => {}", message);
                 //TODO validation
                 super.onMessage(message);
             }
@@ -35,7 +34,7 @@ public class GrpcServerRequestInterceptor implements ServerInterceptor {
             public void onHalfClose() {
                 try {
                     super.onHalfClose();
-                } catch (FindGuideException e) {
+                } catch (Exception e) {
                     handleException(e, serverCall, metadata);
                 }
             }
@@ -56,13 +55,13 @@ public class GrpcServerRequestInterceptor implements ServerInterceptor {
             public void onReady() {
                 try {
                     super.onReady();
-                } catch (FindGuideException e) {
+                } catch (Exception e) {
                     handleException(e, serverCall, metadata);
                 }
             }
 
-            private void handleException(FindGuideException e, ServerCall<ReqT, RespT> serverCall, Metadata metadata) {
-                log.error("GRPC error while processing method: {} => {}", serverCall.getMethodDescriptor().getFullMethodName(), e.getMessage());
+            private void handleException(Exception e, ServerCall<ReqT, RespT> serverCall, Metadata metadata) {
+                log.error("GRPC error while processing method: {} => {}", serverCall.getMethodDescriptor().getFullMethodName(), e.getMessage(), e);
 
                 //TODO Trying to put custom key-pair value in response
                 Metadata newMeta = new Metadata();

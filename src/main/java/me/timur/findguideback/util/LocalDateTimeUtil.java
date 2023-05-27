@@ -1,5 +1,8 @@
 package me.timur.findguideback.util;
 
+import me.timur.findguideback.exception.FindGuideException;
+import me.timur.findguideback.model.enums.ResponseCode;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -8,8 +11,8 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class LocalDateTimeUtil {
-    public final static String PATTERN = "yyyy-MM-dd HH:mm:ss";
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);
+    public final static String DATE_TIM_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIM_PATTERN);
 
     public static String toString(LocalDateTime dateTime){
         if (dateTime == null)
@@ -26,6 +29,11 @@ public class LocalDateTimeUtil {
     public static LocalDateTime toLocalDateTime(String birthDate) {
         if (birthDate == null || birthDate.isEmpty())
             return null;
-        return LocalDateTime.parse(birthDate, formatter);
+
+        try {
+            return LocalDateTime.parse(birthDate, formatter);
+        } catch (Exception e) {
+            throw new FindGuideException(ResponseCode.INVALID_PARAMETERS, "Invalid date format: %s", birthDate);
+        }
     }
 }

@@ -13,11 +13,12 @@ package me.timur.findguideback.model.enums;
 public enum ResponseCode {
     OK(1),
 
-    INTERNAL_ERROR(100),
-    NOT_FOUND(201),
-    INVALID_PARAMETERS(202),
+    INTERNAL_ERROR(-100),
 
-    FEIGN_EXCEPTION(300)
+    NOT_FOUND(-201),
+    INVALID_PARAMETERS(-202),
+
+    FEIGN_EXCEPTION(-300)
     ;
 
     private final int code;
