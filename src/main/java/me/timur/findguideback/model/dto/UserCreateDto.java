@@ -23,7 +23,7 @@ public class UserCreateDto {
     @JsonProperty("last_name")
     private String lastName;
     @JsonProperty("birth_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIM_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIME_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime birthDate;
     @JsonProperty("telegram_id")
     private Long telegramId;

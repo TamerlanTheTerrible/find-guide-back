@@ -22,10 +22,10 @@ public class FileDto implements Serializable {
     @JsonProperty("id")
     private Long id;
     @JsonProperty("date_created")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIM_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIME_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateCreated;
     @JsonProperty("date_updated")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIM_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIME_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateUpdated;
     @JsonProperty("type")
     private DocumentType type;

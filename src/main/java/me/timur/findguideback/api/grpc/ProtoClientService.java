@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.GrpcRequestHandler;
 import me.timur.findguideback.model.dto.UserCreateDto;
 import me.timur.findguideback.model.dto.UserDto;
-import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.service.UserService;
 import me.timur.findguideback.util.LocalDateTimeUtil;
 import org.springframework.stereotype.Component;
@@ -30,7 +29,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getOrSave,
                 UserCreateDto.create(request),
-                this::sendResponse,
+                this::toAny,
                 responseObserver,
                 "getting or saving user"
         );
@@ -41,7 +40,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getById,
                 request.getId(),
-                this::sendResponse,
+                this::toAny,
                 responseObserver,
                 "getting user by id"
         );
@@ -52,14 +51,13 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getByTelegramId,
                 request.getTelegramId(),
-                this::sendResponse,
+                this::toAny,
                 responseObserver,
                 "getting user by telegram id"
         );
     }
 
-    private void sendResponse(UserDto userDto, StreamObserver<ProtoBaseResponse> responseObserver) {
-        //build payload
+    private Any toAny(UserDto userDto) {
         var payload = ProtoUserDto.newBuilder()
                 .setId(userDto.getId())
                 .setFirstName(userDto.getFirstName())
@@ -72,16 +70,6 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
                 .setDateCreated(LocalDateTimeUtil.toString(userDto.getDateCreated()))
                 .setDateUpdated(LocalDateTimeUtil.toString(userDto.getDateUpdated()))
                 .build();
-
-        var protoResponse = ProtoBaseResponse.newBuilder()
-                .setCode(ResponseCode.OK.getCode())
-                .setMessage("success")
-                .setPayload(
-                        Any.pack(payload)
-                )
-                .build();
-        //send response
-        responseObserver.onNext(protoResponse);
-        responseObserver.onCompleted();
+        return Any.pack(payload);
     }
 }

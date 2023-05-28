@@ -45,7 +45,19 @@ message ProtoUserDto {
   bool is_blocked = 11;
 }
 
+message ProtoGuideFilterDto {
+  string from = 1;
+  string to = 2;
+  string language_names = 3;
+  string region_names = 4;
+  string comment = 5;
+  bool has_car = 6;
+  int32 page = 7;
+  int32 page_size = 8;
+}
+
 service ProtoGuideService {
   rpc save(ProtoGuideCreateDto) returns (ProtoBaseResponse) {};
   rpc update(ProtoGuideCreateDto) returns (ProtoBaseResponse) {};
+  rpc search(ProtoGuideFilterDto) returns (ProtoBaseResponse) {};
 }

@@ -7,12 +7,14 @@ import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.dto.FileCreateDto;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideDto;
+import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.repository.*;
 import me.timur.findguideback.service.GuideService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -78,6 +80,16 @@ public class GuideServiceImpl implements GuideService {
         return guideRepository.findById(telegramId)
                 .map(GuideDto::new)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with telegram id: " + telegramId));
+    }
+
+    @Override
+    public List<GuideDto> getFiltered(GuideFilterDto filterDto) {
+        try {
+            return guideRepository.findAllFiltered(filterDto).stream().map(GuideDto::new).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error while getting filtered guides", e);
+            throw new FindGuideException(ResponseCode.INTERNAL_ERROR, "Error while getting filtered guides");
+        }
     }
 
     private Set<File> getFiles(Collection<FileCreateDto> args) {

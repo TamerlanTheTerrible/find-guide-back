@@ -11,8 +11,8 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class LocalDateTimeUtil {
-    public final static String DATE_TIM_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIM_PATTERN);
+    public final static String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     public static String toString(LocalDateTime dateTime){
         if (dateTime == null)

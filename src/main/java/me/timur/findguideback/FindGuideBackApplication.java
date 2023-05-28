@@ -1,6 +1,6 @@
 package me.timur.findguideback;
 
-import me.timur.findguideback.api.controller.TomcatConfig;
+import me.timur.findguideback.api.controller.config.TomcatConfig;
 import me.timur.findguideback.api.grpc.config.GrpcConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package me.timur.findguideback.api.controller;
+package me.timur.findguideback.api.controller.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
