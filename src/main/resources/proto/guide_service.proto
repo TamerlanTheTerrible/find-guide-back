@@ -31,6 +31,10 @@ message ProtoGuideDto {
   ProtoUserDto user = 13;
 }
 
+message ProtoGuideDtoList {
+  repeated ProtoGuideDto items = 1;
+}
+
 message ProtoUserDto {
   int64 id = 1;
   string date_created = 2;

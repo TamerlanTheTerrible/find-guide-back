@@ -1,6 +1,7 @@
 package me.timur.findguideback;
 
 import com.google.protobuf.Any;
+import com.google.protobuf.Message;
 import com.proto.ProtoBaseResponse;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
@@ -17,26 +18,30 @@ import java.util.function.Function;
 @Slf4j
 @Component
 public class GrpcRequestHandler {
-    public <T, R> void handle(Function<T, R> requestMethod, T requestParam, Function<R, Any> mapperMethod, StreamObserver<ProtoBaseResponse> responseObserver, String actionName) {
+
+    public <T, R, U extends Message> void handle(Function<T, R> requestMethod, T requestParam, Function<R, U> mapperMethod, StreamObserver<ProtoBaseResponse> responseObserver, String actionName) {
         try {
-            final R payload = requestMethod.apply(requestParam);
-            final Any any = mapperMethod.apply(payload);
-            sendResponse(any, responseObserver);
+            final R result = requestMethod.apply(requestParam);
+            final U protoPayload = mapperMethod.apply(result);
+            sendResponse(protoPayload, responseObserver);
         } catch (FindGuideException e) {
-            log.error("Error while {}: {}", actionName, e.getMessage());
+            log.error("GRPC error while {}: {}", actionName, e.getMessage());
             handleException(e.getCode(), e.getMessage(), responseObserver);
         } catch (Exception e) {
-            log.error("Unexpected error while {}: {}", actionName, e.getMessage(), e);
+            log.error("GRPC unexpected error while {}: {}", actionName, e.getMessage(), e);
             handleException(ResponseCode.INTERNAL_ERROR, e.getMessage(), responseObserver);
         }
     }
 
-    private void sendResponse(Any any, StreamObserver<ProtoBaseResponse> responseObserver) {
+    private <U extends Message> void sendResponse(U payload, StreamObserver<ProtoBaseResponse> responseObserver) {
+
+        log.info("GRPC payload: {}", payload.toString());
+
         var protoResponse = ProtoBaseResponse.newBuilder()
                 .setCode(ResponseCode.OK.getCode())
                 .setMessage("success")
                 .setPayload(
-                        Any.pack(any)
+                        Any.pack(payload)
                 )
                 .build();
         //send response

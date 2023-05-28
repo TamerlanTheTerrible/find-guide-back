@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.proto.ProtoGuideFilterDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import me.timur.findguideback.util.LocalDateTimeUtil;
 
 import java.time.LocalDateTime;
@@ -18,6 +20,8 @@ import java.time.LocalDateTime;
  */
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -46,5 +50,11 @@ public class GuideFilterDto extends BaseFilter {
         }
         this.hasCar = request.getHasCar();
         this.comments = request.getComment();
+        this.pageNumber = request.getPage();
+        if (request.getPageSize() == 0) {
+            this.pageSize = 10;
+        } else{
+            this.pageSize = request.getPageSize();
+        }
     }
 }

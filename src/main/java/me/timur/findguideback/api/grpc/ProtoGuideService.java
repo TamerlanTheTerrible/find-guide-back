@@ -1,6 +1,5 @@
 package me.timur.findguideback.api.grpc;
 
-import com.google.protobuf.Any;
 import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.GrpcRequestHandler;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideDto;
+import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.service.GuideService;
 import me.timur.findguideback.util.LocalDateTimeUtil;
 import me.timur.findguideback.util.StringUtil;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Created by Temurbek Ismoilov on 14/05/23.
@@ -30,7 +32,7 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
         requestHandler.handle(
                 guideService::save,
                 new GuideCreateOrUpdateDto(request),
-                this::toAny,
+                this::toProtoGuideDto,
                 responseObserver,
                 "guide save"
         );
@@ -41,7 +43,7 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
         requestHandler.handle(
                 guideService::update,
                 new GuideCreateOrUpdateDto(request),
-                this::toAny,
+                this::toProtoGuideDto,
                 responseObserver,
                 "guide update"
         );
@@ -49,17 +51,25 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
 
     @Override
     public void search(ProtoGuideFilterDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
-//        requestHandler.handle(
-//                guideService::getFiltered,
-//                new GuideFilterDto(request),
-//                this::sendResponse,
-//                responseObserver,
-//                "guide filtered search"
-//        );
+        requestHandler.handle(
+                guideService::getFiltered,
+                new GuideFilterDto(request),
+                this::toProtoGuideDtoList,
+                responseObserver,
+                "guide filtered search"
+        );
     }
 
-    private Any toAny(GuideDto guideDto) {
-        final ProtoGuideDto protoGuideDto = ProtoGuideDto.newBuilder()
+    private ProtoGuideDtoList toProtoGuideDtoList(List<GuideDto> guideDtoList) {
+        return ProtoGuideDtoList.newBuilder()
+                .addAllItems(
+                        guideDtoList.stream().map(this::toProtoGuideDto).toList()
+                )
+                .build();
+    }
+
+    private ProtoGuideDto toProtoGuideDto(GuideDto guideDto) {
+        return ProtoGuideDto.newBuilder()
                 .setId(guideDto.getId())
                 .setUser(
                         ProtoUserDto.newBuilder()
@@ -89,7 +99,6 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
                 .setDateCreated(LocalDateTimeUtil.toStringOrBlankIfNull(guideDto.getUser().getDateCreated()))
                 .setDateUpdated(LocalDateTimeUtil.toStringOrBlankIfNull(guideDto.getUser().getDateUpdated()))
                 .build();
-        return Any.pack(protoGuideDto);
     }
 
 }

@@ -88,7 +88,7 @@ public class GuideServiceImpl implements GuideService {
             return guideRepository.findAllFiltered(filterDto).stream().map(GuideDto::new).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Error while getting filtered guides", e);
-            throw new FindGuideException(ResponseCode.INTERNAL_ERROR, "Error while getting filtered guides");
+            throw new FindGuideException(ResponseCode.INTERNAL_ERROR, "Error while getting filtered guides: %s", e.getMessage());
         }
     }
 

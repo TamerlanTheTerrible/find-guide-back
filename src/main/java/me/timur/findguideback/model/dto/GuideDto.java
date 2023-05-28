@@ -61,4 +61,22 @@ public class GuideDto implements Serializable {
         this.isActive = guide.getIsActive();
         this.isBlocked = guide.getIsBlocked();
     }
+
+    @Override
+    public String toString() {
+        return "GuideDto{" +
+                "id=" + id +
+                ", userId=" + user.getId() +
+                ", telegramUsername=" + user.getTelegramUsername() +
+                ", phone=" + user.getPhoneNumbers() +
+                ", languageNames=" + languageNames +
+                ", regionNames=" + regionNames +
+                ", files=" + files +
+                ", description='" + description + '\'' +
+                ", isVerified=" + isVerified +
+                ", hasCar=" + hasCar +
+                ", isActive=" + isActive +
+                ", isBlocked=" + isBlocked +
+                '}';
+    }
 }

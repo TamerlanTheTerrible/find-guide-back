@@ -1,6 +1,5 @@
 package me.timur.findguideback.api.grpc;
 
-import com.google.protobuf.Any;
 import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getOrSave,
                 UserCreateDto.create(request),
-                this::toAny,
+                this::toProtoUserDto,
                 responseObserver,
                 "getting or saving user"
         );
@@ -40,7 +39,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getById,
                 request.getId(),
-                this::toAny,
+                this::toProtoUserDto,
                 responseObserver,
                 "getting user by id"
         );
@@ -51,14 +50,14 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getByTelegramId,
                 request.getTelegramId(),
-                this::toAny,
+                this::toProtoUserDto,
                 responseObserver,
-                "getting user by telegram id"
+                    "getting user by telegram id"
         );
     }
 
-    private Any toAny(UserDto userDto) {
-        var payload = ProtoUserDto.newBuilder()
+    private ProtoUserDto toProtoUserDto(UserDto userDto) {
+        return ProtoUserDto.newBuilder()
                 .setId(userDto.getId())
                 .setFirstName(userDto.getFirstName())
                 .setLastName(userDto.getLastName())
@@ -70,6 +69,5 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
                 .setDateCreated(LocalDateTimeUtil.toString(userDto.getDateCreated()))
                 .setDateUpdated(LocalDateTimeUtil.toString(userDto.getDateUpdated()))
                 .build();
-        return Any.pack(payload);
     }
 }
