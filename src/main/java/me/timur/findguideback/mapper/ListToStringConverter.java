@@ -3,28 +3,35 @@ package me.timur.findguideback.mapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.SneakyThrows;
-import me.timur.findguideback.util.StringUtil;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by Temurbek Ismoilov on 08/02/22.
  */
 
 @Converter
-public class ListToStringConverter implements AttributeConverter<List<String>, String> {
+public class ListToStringConverter<T> implements AttributeConverter<List<T>, String> {
 
     @SneakyThrows
     @Override
-    public String convertToDatabaseColumn(List<String> list) {
+    public String convertToDatabaseColumn(List<T> list) {
         if (list == null) return null;
-        return String.join(",", list);
+        return list.stream()
+                .map(Objects::toString)
+                .collect(Collectors.joining(","));
     }
 
     @SneakyThrows
     @Override
-    public List<String> convertToEntityAttribute(String s) {
-        return StringUtil.splitToList(s, ",");
+    public List<T> convertToEntityAttribute(String s) {
+        if (s == null || s.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return (List<T>) Arrays.asList(s.split(","));
     }
 }
