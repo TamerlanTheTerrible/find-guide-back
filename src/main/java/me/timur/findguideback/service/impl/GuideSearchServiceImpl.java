@@ -34,7 +34,7 @@ public class GuideSearchServiceImpl implements GuideSearchService {
     private final UserRepository userRepository;
 
     @Override
-    public SearchResultDto<GuideDto> getFiltered(GuideFilterDto filterDto) {
+    public SearchResultDto getFiltered(GuideFilterDto filterDto) {
         log.info("Getting filtered guides: {}", filterDto);
         try {
             //fetch guides and total count from db
@@ -54,7 +54,7 @@ public class GuideSearchServiceImpl implements GuideSearchService {
             var guideSearch = guideSearchRepository.save(new GuideSearch(user, filterDto, guideIds, totalCount));
             log.info("Guide search saved: {}", guideSearch);
             //return result
-            return new SearchResultDto<>(totalCount, guideDtos);
+            return new SearchResultDto(guideDtos, guideSearch.getId(), totalCount);
         } catch (Exception e) {
             log.error("Error while getting filtered guides: {}", e.getMessage(), e);
             throw new FindGuideException(ResponseCode.INTERNAL_ERROR, "Error while getting filtered guides: %s", e.getMessage());

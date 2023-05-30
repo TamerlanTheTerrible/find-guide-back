@@ -73,7 +73,8 @@ public class GuideSearch extends BaseEntity{
     @Override
     public String toString() {
         return "GuideSearch{" +
-                "client=" + client +
+                "id=" + this.getId() +
+                ", client=" + client +
                 ", fromDate=" + fromDate +
                 ", toDate=" + toDate +
                 ", language='" + language + '\'' +

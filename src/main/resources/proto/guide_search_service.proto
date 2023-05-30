@@ -6,8 +6,9 @@ option java_multiple_files = true;
 import "mutual_messages.proto";
 
 message ProtoGuideDtoList {
-  repeated ProtoGuideDto items = 1;
-  int64 total_count = 2;
+  int64 search_id = 1;
+  repeated ProtoGuideDto items = 2;
+  int64 total_count = 3;
 }
 
 message ProtoGuideFilterDto {

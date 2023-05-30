@@ -30,8 +30,9 @@ public class ProtoMapper {
                 .build();
     }
 
-    public static ProtoGuideDtoList toProtoGuideDtoList(SearchResultDto<GuideDto> result) {
+    public static ProtoGuideDtoList toProtoGuideDtoList(SearchResultDto result) {
         return ProtoGuideDtoList.newBuilder()
+                .setSearchId(result.getSearchId())
                 .addAllItems(
                         result.getResultList().stream().map(ProtoMapper::toProtoGuideDto).toList()
                 )

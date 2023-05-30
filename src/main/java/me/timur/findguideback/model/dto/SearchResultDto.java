@@ -9,12 +9,14 @@ import java.util.List;
  */
 
 @Getter
-public class SearchResultDto<T> {
+public class SearchResultDto {
+    private final List<GuideDto> resultList;
+    private final Long searchId;
     private final Long count;
-    private final List<T> resultList;
 
-    public SearchResultDto(Long count, List<T> resultList) {
-        this.count = count;
+    public SearchResultDto(List<GuideDto> resultList, Long searchId, Long count) {
         this.resultList = resultList;
+        this.searchId = searchId;
+        this.count = count;
     }
 }
