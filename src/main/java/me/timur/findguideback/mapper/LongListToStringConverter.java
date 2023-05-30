@@ -4,10 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.SneakyThrows;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -15,11 +12,11 @@ import java.util.stream.Collectors;
  */
 
 @Converter
-public class ListToStringConverter<T> implements AttributeConverter<List<T>, String> {
+public class LongListToStringConverter implements AttributeConverter<List<Long>, String> {
 
     @SneakyThrows
     @Override
-    public String convertToDatabaseColumn(List<T> list) {
+    public String convertToDatabaseColumn(List<Long> list) {
         if (list == null) return null;
         return list.stream()
                 .map(Objects::toString)
@@ -28,10 +25,12 @@ public class ListToStringConverter<T> implements AttributeConverter<List<T>, Str
 
     @SneakyThrows
     @Override
-    public List<T> convertToEntityAttribute(String s) {
+    public List<Long> convertToEntityAttribute(String s) {
         if (s == null || s.isEmpty()) {
             return Collections.emptyList();
         }
-        return (List<T>) Arrays.asList(s.split(","));
+        return Arrays.stream(s.split(","))
+                .map(Long::parseLong)
+                .toList();
     }
 }

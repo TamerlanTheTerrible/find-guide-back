@@ -5,7 +5,7 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
-import me.timur.findguideback.mapper.ListToStringConverter;
+import me.timur.findguideback.mapper.StringListToStringConverter;
 import me.timur.findguideback.model.dto.UserCreateDto;
 
 import java.time.LocalDateTime;
@@ -39,7 +39,7 @@ public class User extends BaseEntity {
     @Column(name = "tg_username")
     private String telegramUsername;
 
-    @Convert(converter = ListToStringConverter.class)
+    @Convert(converter = StringListToStringConverter.class)
     @Column(name = "phone_numbers", nullable = false)
     private List<String> phoneNumbers;
 

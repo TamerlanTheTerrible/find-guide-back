@@ -4,7 +4,7 @@ import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.api.mapper.ProtoMapper;
+import me.timur.findguideback.api.grpc.mapper.ProtoMapper;
 import me.timur.findguideback.model.dto.UserCreateDto;
 import me.timur.findguideback.service.UserService;
 import org.springframework.stereotype.Component;

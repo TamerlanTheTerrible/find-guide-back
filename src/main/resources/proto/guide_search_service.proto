@@ -23,6 +23,11 @@ message ProtoGuideFilterDto {
   int32 page_size = 10;
 }
 
+message ProtoGuideSearchNotificationRequestDto {
+  int64 search_id = 1;
+}
+
 service ProtoGuideSearchService{
   rpc search(ProtoGuideFilterDto) returns (ProtoBaseResponse) {};
+  rpc notify(ProtoGuideSearchNotificationRequestDto) returns (ProtoBaseResponse) {};
 }

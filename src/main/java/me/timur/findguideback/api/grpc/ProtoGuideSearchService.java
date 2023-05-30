@@ -2,11 +2,12 @@ package me.timur.findguideback.api.grpc;
 
 import com.proto.ProtoBaseResponse;
 import com.proto.ProtoGuideFilterDto;
+import com.proto.ProtoGuideSearchNotificationRequestDto;
 import com.proto.ProtoGuideSearchServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.api.mapper.ProtoMapper;
+import me.timur.findguideback.api.grpc.mapper.ProtoMapper;
 import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.service.GuideSearchService;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,16 @@ public class ProtoGuideSearchService extends ProtoGuideSearchServiceGrpc.ProtoGu
                 ProtoMapper::toProtoGuideDtoList,
                 responseObserver,
                 "guide filtered search"
+        );
+    }
+
+    @Override
+    public void notify(ProtoGuideSearchNotificationRequestDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
+        requestHandler.handle(
+                guideSearchService::notifyGuides,
+                request.getSearchId(),
+                responseObserver,
+                "guide search notification"
         );
     }
 }

@@ -2,7 +2,7 @@ package me.timur.findguideback.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import me.timur.findguideback.mapper.ListToStringConverter;
+import me.timur.findguideback.mapper.LongListToStringConverter;
 import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.model.enums.SearchStatus;
 
@@ -46,7 +46,7 @@ public class GuideSearch extends BaseEntity{
     @Column(name = "comment")
     private String comment;
 
-    @Convert(converter = ListToStringConverter.class)
+    @Convert(converter = LongListToStringConverter.class)
     @Column(name = "guides")
     private List<Long> guideIds;
 

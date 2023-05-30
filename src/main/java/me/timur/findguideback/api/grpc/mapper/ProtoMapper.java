@@ -1,4 +1,4 @@
-package me.timur.findguideback.api.mapper;
+package me.timur.findguideback.api.grpc.mapper;
 
 import com.proto.ProtoGuideDto;
 import com.proto.ProtoGuideDtoList;
