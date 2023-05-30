@@ -16,7 +16,7 @@ public class GrpcServerResponseInterceptor implements ServerInterceptor {
                 new ForwardingServerCall.SimpleForwardingServerCall<>(serverCall) {
                     @Override
                     public void sendMessage(RespT message) {
-                        log.info("GRPC response => " + message);
+                        log.info("GRPC response => \n" + message);
                         super.sendMessage(message);
                     }
                 },

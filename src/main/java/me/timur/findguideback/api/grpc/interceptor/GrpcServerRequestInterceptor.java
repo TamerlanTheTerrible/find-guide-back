@@ -25,7 +25,7 @@ public class GrpcServerRequestInterceptor implements ServerInterceptor {
             @Override
             public void onMessage(final ReqT message) {
 //                MDC.setContextMap(mdcContext);
-                log.info("GRPC request => {}", message);
+                log.info("GRPC request => \n{}", message);
                 //TODO validation
                 super.onMessage(message);
             }
