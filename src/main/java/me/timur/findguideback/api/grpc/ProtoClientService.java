@@ -4,10 +4,9 @@ import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.timur.findguideback.api.mapper.ProtoMapper;
 import me.timur.findguideback.model.dto.UserCreateDto;
-import me.timur.findguideback.model.dto.UserDto;
 import me.timur.findguideback.service.UserService;
-import me.timur.findguideback.util.LocalDateTimeUtil;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +26,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getOrSave,
                 UserCreateDto.create(request),
-                this::toProtoUserDto,
+                ProtoMapper::toProtoUserDto,
                 responseObserver,
                 "getting or saving user"
         );
@@ -38,7 +37,7 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getById,
                 request.getId(),
-                this::toProtoUserDto,
+                ProtoMapper::toProtoUserDto,
                 responseObserver,
                 "getting user by id"
         );
@@ -49,24 +48,10 @@ public class ProtoClientService extends ProtoClientServiceGrpc.ProtoClientServic
         requestHandler.handle(
                 userService::getByTelegramId,
                 request.getTelegramId(),
-                this::toProtoUserDto,
+                ProtoMapper::toProtoUserDto,
                 responseObserver,
                     "getting user by telegram id"
         );
     }
 
-    private ProtoUserDto toProtoUserDto(UserDto userDto) {
-        return ProtoUserDto.newBuilder()
-                .setId(userDto.getId())
-                .setFirstName(userDto.getFirstName())
-                .setLastName(userDto.getLastName())
-                .setTelegramUsername(userDto.getTelegramUsername())
-                .setTelegramId(userDto.getTelegramId())
-                .setPhoneNumbers(userDto.getPhoneNumbers() == null ? "" : String.join(",", userDto.getPhoneNumbers()))
-                .setIsActive(userDto.getIsActive())
-                .setIsBlocked(userDto.getIsBlocked())
-                .setDateCreated(LocalDateTimeUtil.toString(userDto.getDateCreated()))
-                .setDateUpdated(LocalDateTimeUtil.toString(userDto.getDateUpdated()))
-                .build();
-    }
 }

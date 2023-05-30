@@ -48,7 +48,7 @@ public class GuideSearch extends BaseEntity{
 
     @Convert(converter = ListToStringConverter.class)
     @Column(name = "guides")
-    private List<Long> guides;
+    private List<Long> guideIds;
 
     @Column(name = "search_count")
     private Long searchCount;
@@ -65,7 +65,7 @@ public class GuideSearch extends BaseEntity{
         this.region = filterDto.getRegion();
         this.hasCar = filterDto.getHasCar();
         this.comment = filterDto.getComment();
-        this.guides = new ArrayList<>(guideIds);
+        this.guideIds = new ArrayList<>(guideIds);
         this.searchCount = totalCount;
         this.status = SearchStatus.CREATED;
     }
@@ -80,7 +80,7 @@ public class GuideSearch extends BaseEntity{
                 ", region='" + region + '\'' +
                 ", hasCar=" + hasCar +
                 ", comment='" + comment + '\'' +
-                ", guides=" + guides +
+                ", guides=" + guideIds +
                 ", status=" + status +
                 '}';
     }

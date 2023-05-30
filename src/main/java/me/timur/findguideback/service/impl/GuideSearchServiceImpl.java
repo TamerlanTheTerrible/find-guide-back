@@ -10,6 +10,7 @@ import me.timur.findguideback.model.dto.GuideDto;
 import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.model.dto.SearchResultDto;
 import me.timur.findguideback.model.enums.ResponseCode;
+import me.timur.findguideback.model.enums.SearchStatus;
 import me.timur.findguideback.repository.GuideRepository;
 import me.timur.findguideback.repository.GuideSearchRepository;
 import me.timur.findguideback.repository.UserRepository;
@@ -58,6 +59,17 @@ public class GuideSearchServiceImpl implements GuideSearchService {
             log.error("Error while getting filtered guides: {}", e.getMessage(), e);
             throw new FindGuideException(ResponseCode.INTERNAL_ERROR, "Error while getting filtered guides: %s", e.getMessage());
         }
+    }
+
+    @Override
+    public void notifyGuides(Long guideSearchId) {
+        var guideSearch = guideSearchRepository.findById(guideSearchId)
+                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide search with id: " + guideSearchId));
+        Long[] guideIds = guideSearch.getGuideIds().toArray(new Long[0]);
+        log.info("Sending notification on search with id {} to guides {}", guideSearchId, guideIds);
+        //TODO: send notification to guides
+        guideSearch.setStatus(SearchStatus.SEARCHING);
+        guideSearchRepository.save(guideSearch);
     }
 
     private User getUser(Long userId, Long userTelegramId) {

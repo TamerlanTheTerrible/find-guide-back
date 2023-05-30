@@ -10,4 +10,5 @@ import me.timur.findguideback.model.dto.SearchResultDto;
 
 public interface GuideSearchService {
     SearchResultDto<GuideDto> getFiltered(GuideFilterDto filterDto);
+    void notifyGuides(Long guideSearchId);
 }
