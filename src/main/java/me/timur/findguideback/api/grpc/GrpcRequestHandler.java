@@ -1,4 +1,4 @@
-package me.timur.findguideback;
+package me.timur.findguideback.api.grpc;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.Message;
@@ -34,9 +34,6 @@ public class GrpcRequestHandler {
     }
 
     private <U extends Message> void sendResponse(U payload, StreamObserver<ProtoBaseResponse> responseObserver) {
-
-        log.info("GRPC payload: {}", payload.toString());
-
         var protoResponse = ProtoBaseResponse.newBuilder()
                 .setCode(ResponseCode.OK.getCode())
                 .setMessage("success")

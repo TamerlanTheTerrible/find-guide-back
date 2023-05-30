@@ -50,11 +50,14 @@ public class GuideSearch extends BaseEntity{
     @Column(name = "guides")
     private List<Long> guides;
 
+    @Column(name = "search_count")
+    private Long searchCount;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private SearchStatus status;
 
-    public GuideSearch(User user, GuideFilterDto filterDto, HashSet<Long> guideIds) {
+    public GuideSearch(User user, GuideFilterDto filterDto, HashSet<Long> guideIds, Long totalCount) {
         this.client = user;
         this.fromDate = filterDto.getFromDate();
         this.toDate = filterDto.getToDate();
@@ -63,6 +66,7 @@ public class GuideSearch extends BaseEntity{
         this.hasCar = filterDto.getHasCar();
         this.comment = filterDto.getComment();
         this.guides = new ArrayList<>(guideIds);
+        this.searchCount = totalCount;
     }
 
     @Override

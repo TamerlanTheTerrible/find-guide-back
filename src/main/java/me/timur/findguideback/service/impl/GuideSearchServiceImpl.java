@@ -2,6 +2,7 @@ package me.timur.findguideback.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.timur.findguideback.entity.BaseEntity;
 import me.timur.findguideback.entity.GuideSearch;
 import me.timur.findguideback.entity.User;
 import me.timur.findguideback.exception.FindGuideException;
@@ -37,20 +38,22 @@ public class GuideSearchServiceImpl implements GuideSearchService {
         try {
             //fetch guides and total count from db
             var searchResult = guideRepository.findAllFiltered(filterDto);
-//            var count = guideRepository.countTotal(filterDto);
+            var guides = searchResult.getResultList();
+            var totalCount = searchResult.getCount();
+            log.info("Filtered guide id list: {}", guides.stream().map(BaseEntity::getId).toList());
             //prepare guide ids and guide dtos
             var guideIds = new HashSet<Long>();
             var guideDtos = new ArrayList<GuideDto>();
-            for (var guide : searchResult.getResultList()) {
+            for (var guide : guides) {
                 guideIds.add(guide.getId());
                 guideDtos.add(new GuideDto(guide));
             }
             var user = getUser(filterDto.getUserId(), filterDto.getTelegramId());
             //save guide search
-            var guideSearch = guideSearchRepository.save(new GuideSearch(user, filterDto, guideIds));
+            var guideSearch = guideSearchRepository.save(new GuideSearch(user, filterDto, guideIds, totalCount));
             log.info("Guide search saved: {}", guideSearch);
             //return result
-            return new SearchResultDto<>(searchResult.getCount(), guideDtos);
+            return new SearchResultDto<>(totalCount, guideDtos);
         } catch (Exception e) {
             log.error("Error while getting filtered guides: {}", e.getMessage(), e);
             throw new FindGuideException(ResponseCode.INTERNAL_ERROR, "Error while getting filtered guides: %s", e.getMessage());

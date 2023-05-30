@@ -2,6 +2,7 @@ package me.timur.findguideback.model.dto;
 
 import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,5 +17,13 @@ public class CriteriaSearchResult<T> {
     public CriteriaSearchResult(Long count, List<T> resultList) {
         this.count = count;
         this.resultList = resultList;
+    }
+
+    @Override
+    public String toString() {
+        return "CriteriaSearchResult{" +
+                "count=" + count +
+                ", resultList=" + Arrays.toString(resultList.toArray()) +
+                '}';
     }
 }

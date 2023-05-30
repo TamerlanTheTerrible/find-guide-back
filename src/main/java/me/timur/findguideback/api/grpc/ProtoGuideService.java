@@ -4,7 +4,6 @@ import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.GrpcRequestHandler;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideDto;
 import me.timur.findguideback.model.dto.GuideFilterDto;
