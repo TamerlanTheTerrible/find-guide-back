@@ -8,12 +8,12 @@ import me.timur.findguideback.GrpcRequestHandler;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideDto;
 import me.timur.findguideback.model.dto.GuideFilterDto;
+import me.timur.findguideback.model.dto.SearchResultDto;
+import me.timur.findguideback.service.GuideSearchService;
 import me.timur.findguideback.service.GuideService;
 import me.timur.findguideback.util.LocalDateTimeUtil;
 import me.timur.findguideback.util.StringUtil;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Created by Temurbek Ismoilov on 14/05/23.
@@ -25,6 +25,7 @@ import java.util.List;
 public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceImplBase{
 
     private final GuideService guideService;
+    private final GuideSearchService guideSearchService;
     private final GrpcRequestHandler requestHandler;
 
     @Override
@@ -52,7 +53,7 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
     @Override
     public void search(ProtoGuideFilterDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
         requestHandler.handle(
-                guideService::getFiltered,
+                guideSearchService::getFiltered,
                 new GuideFilterDto(request),
                 this::toProtoGuideDtoList,
                 responseObserver,
@@ -60,11 +61,12 @@ public class ProtoGuideService extends ProtoGuideServiceGrpc.ProtoGuideServiceIm
         );
     }
 
-    private ProtoGuideDtoList toProtoGuideDtoList(List<GuideDto> guideDtoList) {
+    private ProtoGuideDtoList toProtoGuideDtoList(SearchResultDto<GuideDto> result) {
         return ProtoGuideDtoList.newBuilder()
                 .addAllItems(
-                        guideDtoList.stream().map(this::toProtoGuideDto).toList()
+                        result.getResultList().stream().map(this::toProtoGuideDto).toList()
                 )
+                .setTotalCount(result.getCount())
                 .build();
     }
 

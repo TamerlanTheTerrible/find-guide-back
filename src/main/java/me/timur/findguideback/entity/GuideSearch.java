@@ -2,8 +2,13 @@ package me.timur.findguideback.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import me.timur.findguideback.mapper.ListToStringConverter;
+import me.timur.findguideback.model.dto.GuideFilterDto;
+import me.timur.findguideback.model.enums.SearchStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -16,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "guide")
+@Table(name = "guide_search")
 public class GuideSearch extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -41,9 +46,37 @@ public class GuideSearch extends BaseEntity{
     @Column(name = "comment")
     private String comment;
 
-    @Convert
+    @Convert(converter = ListToStringConverter.class)
     @Column(name = "guides")
-    private List<Integer> guides;
+    private List<Long> guides;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private SearchStatus status;
 
+    public GuideSearch(User user, GuideFilterDto filterDto, HashSet<Long> guideIds) {
+        this.client = user;
+        this.fromDate = filterDto.getFromDate();
+        this.toDate = filterDto.getToDate();
+        this.language = filterDto.getLanguage();
+        this.region = filterDto.getRegion();
+        this.hasCar = filterDto.getHasCar();
+        this.comment = filterDto.getComment();
+        this.guides = new ArrayList<>(guideIds);
+    }
+
+    @Override
+    public String toString() {
+        return "GuideSearch{" +
+                "client=" + client +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                ", language='" + language + '\'' +
+                ", region='" + region + '\'' +
+                ", hasCar=" + hasCar +
+                ", comment='" + comment + '\'' +
+                ", guides=" + guides +
+                ", status=" + status +
+                '}';
+    }
 }

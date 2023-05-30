@@ -33,6 +33,7 @@ message ProtoGuideDto {
 
 message ProtoGuideDtoList {
   repeated ProtoGuideDto items = 1;
+  int64 total_count = 2;
 }
 
 message ProtoUserDto {
@@ -50,14 +51,16 @@ message ProtoUserDto {
 }
 
 message ProtoGuideFilterDto {
-  string from = 1;
-  string to = 2;
-  string language_names = 3;
-  string region_names = 4;
-  string comment = 5;
-  bool has_car = 6;
-  int32 page = 7;
-  int32 page_size = 8;
+  int64 user_id = 1;
+  int64 user_telegram_id = 2;
+  string from_date = 3;
+  string to_date = 4;
+  string language_names = 5;
+  string region_names = 6;
+  string comment = 7;
+  bool has_car = 8;
+  int32 page = 9;
+  int32 page_size = 10;
 }
 
 service ProtoGuideService {

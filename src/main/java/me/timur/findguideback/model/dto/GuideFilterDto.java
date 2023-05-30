@@ -26,35 +26,53 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class GuideFilterDto extends BaseFilter {
+    private Long userId;
+    private Long telegramId;
     private String language;
     private String region;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIME_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime from;
+    private LocalDateTime fromDate;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = LocalDateTimeUtil.DATE_TIME_PATTERN) @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime to;
+    private LocalDateTime toDate;
     private Boolean hasCar;
-    private String comments;
+    private String comment;
 
     public GuideFilterDto(ProtoGuideFilterDto request) {
+        this.userId = request.getUserId();
+        this.telegramId = request.getUserTelegramId();
         this.language = request.getLanguageNames();
         this.region = request.getRegionNames();
-        if (request.getFrom() == null || request.getFrom().isEmpty()) {
-            this.from = LocalDateTime.now();
+        if (request.getFromDate() == null || request.getFromDate().isEmpty()) {
+            this.fromDate = LocalDateTime.now();
         } else {
-            this.from = LocalDateTimeUtil.toLocalDateTime(request.getFrom());
+            this.fromDate = LocalDateTimeUtil.toLocalDateTime(request.getFromDate());
         }
-        if (request.getTo() == null || request.getTo().isEmpty()) {
-            this.to = LocalDateTime.now();
+        if (request.getToDate() == null || request.getToDate().isEmpty()) {
+            this.toDate = LocalDateTime.now();
         } else {
-            this.to = LocalDateTimeUtil.toLocalDateTime(request.getTo());
+            this.toDate = LocalDateTimeUtil.toLocalDateTime(request.getToDate());
         }
         this.hasCar = request.getHasCar();
-        this.comments = request.getComment();
+        this.comment = request.getComment();
         this.pageNumber = request.getPage();
         if (request.getPageSize() == 0) {
             this.pageSize = 10;
         } else{
             this.pageSize = request.getPageSize();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "GuideFilterDto{" +
+                "userId=" + userId +
+                ", telegramId=" + telegramId +
+                ", language='" + language + '\'' +
+                ", region='" + region + '\'' +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                ", hasCar=" + hasCar +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

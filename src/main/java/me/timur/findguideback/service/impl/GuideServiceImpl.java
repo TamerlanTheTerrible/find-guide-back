@@ -7,14 +7,12 @@ import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.dto.FileCreateDto;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideDto;
-import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.repository.*;
 import me.timur.findguideback.service.GuideService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,9 +35,23 @@ public class GuideServiceImpl implements GuideService {
         var regions = getRegions(requestDto.getRegionNames());
         var transports = getTransports(requestDto.getTransports());
         var files = getFiles(requestDto.getFiles());
-        var user = userRepository.findByTelegramId(requestDto.getUserTelegramId()).orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find user with telegram id: " + requestDto.getUserTelegramId()));
+        var user = getUser(requestDto.getUserId(), requestDto.getUserTelegramId());
         var guide = guideRepository.save(new Guide(requestDto, user, languages, regions, transports, files));
         return new GuideDto(guide);
+    }
+
+    private User getUser(Long userId, Long userTelegramId) {
+        if (userId != null && userId > 0) {
+            return userRepository.findById(userId).orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find user with id: " + userId));
+        } else if (userTelegramId != null && userTelegramId > 0) {
+            return userRepository.findByTelegramId(userTelegramId).orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find user with telegram id: " + userTelegramId));
+        } else {
+            throw new FindGuideException(ResponseCode.INVALID_PARAMETERS, "User id or user telegram id must be provided");
+        }
+    }
+
+    private User getUser(GuideCreateOrUpdateDto requestDto) {
+        return userRepository.findByTelegramId(requestDto.getUserTelegramId()).orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find user with telegram id: " + requestDto.getUserTelegramId()));
     }
 
     @Override
@@ -80,16 +92,6 @@ public class GuideServiceImpl implements GuideService {
         return guideRepository.findById(telegramId)
                 .map(GuideDto::new)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with telegram id: " + telegramId));
-    }
-
-    @Override
-    public List<GuideDto> getFiltered(GuideFilterDto filterDto) {
-        try {
-            return guideRepository.findAllFiltered(filterDto).stream().map(GuideDto::new).collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error while getting filtered guides", e);
-            throw new FindGuideException(ResponseCode.INTERNAL_ERROR, "Error while getting filtered guides: %s", e.getMessage());
-        }
     }
 
     private Set<File> getFiles(Collection<FileCreateDto> args) {

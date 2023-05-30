@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface GuideRepository extends JpaRepository<Guide, Long>, GuideSearchRepository {
+public interface GuideRepository extends JpaRepository<Guide, Long>, GuideRepositoryCustom {
     Optional<Guide> findByUserTelegramId(Long telegramId);
     Optional<Guide> findByUserIdOrUserTelegramId(Long userId, Long telegramId);
 }
