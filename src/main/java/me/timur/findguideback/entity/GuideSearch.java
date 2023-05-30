@@ -54,8 +54,8 @@ public class GuideSearch extends BaseEntity{
     private Long searchCount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private SearchStatus status;
+    @Column(name = "status", nullable = false)
+    private SearchStatus status = SearchStatus.CREATED;
 
     public GuideSearch(User user, GuideFilterDto filterDto, HashSet<Long> guideIds, Long totalCount) {
         this.client = user;
@@ -67,6 +67,7 @@ public class GuideSearch extends BaseEntity{
         this.comment = filterDto.getComment();
         this.guides = new ArrayList<>(guideIds);
         this.searchCount = totalCount;
+        this.status = SearchStatus.CREATED;
     }
 
     @Override

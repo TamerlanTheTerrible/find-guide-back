@@ -33,17 +33,17 @@ public class GuideRepositoryCustomImpl implements GuideRepositoryCustom {
             CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
             Root<Guide> root = countQuery.from(Guide.class);
             //count query
-            countQuery.select(cb.count(root));
-            countQuery.where(buildPredicate(filter, cb, root));
-            var countTypedQuery = em.createQuery(countQuery);
-            var totalResults = countTypedQuery.getSingleResult();
+            countQuery.select(cb.count(root))
+                    .where(buildPredicate(filter, cb, root));
+            var totalResults = em.createQuery(countQuery)
+                    .getSingleResult();
 
             //init select query objects
             var dataQuery = cb.createQuery(Guide.class);
             root = dataQuery.from(Guide.class);
             //select query
-            dataQuery.select(root);
-            dataQuery.where(buildPredicate(filter, cb, root));
+            dataQuery.select(root)
+                    .where(buildPredicate(filter, cb, root));
             var dataTypedQuery = em.createQuery(dataQuery);
             dataTypedQuery.setFirstResult(filter.getPageNumber() * filter.getPageSize());
             dataTypedQuery.setMaxResults(filter.getPageSize());
