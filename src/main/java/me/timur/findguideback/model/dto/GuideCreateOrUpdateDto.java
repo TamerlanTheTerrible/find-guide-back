@@ -40,8 +40,8 @@ public class GuideCreateOrUpdateDto implements Serializable {
     public GuideCreateOrUpdateDto(ProtoGuideCreateDto request) {
         this.userId = request.getUserId();
         this.userTelegramId = request.getUserTelegramId();
-        this.languageNames = StringUtil.splitToSet(request.getLanguageNames(), ",");
-        this.regionNames = StringUtil.splitToSet(request.getRegionNames(), ",");
+        this.languageNames = StringUtil.splitToSet(request.getLanguageName(), ",");
+        this.regionNames = StringUtil.splitToSet(request.getRegionName(), ",");
         this.description = request.getDescription();
         this.hasCar = request.getHasCar();
         this.transports = StringUtil.splitToSet(request.getTransport(), ",");

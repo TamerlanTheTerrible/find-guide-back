@@ -40,8 +40,8 @@ public class GuideFilterDto extends BaseFilter {
     public GuideFilterDto(ProtoGuideFilterDto request) {
         this.userId = request.getUserId();
         this.telegramId = request.getUserTelegramId();
-        this.language = request.getLanguageNames();
-        this.region = request.getRegionNames();
+        this.language = request.getLanguageName();
+        this.region = request.getRegionName();
         if (request.getFromDate() == null || request.getFromDate().isEmpty()) {
             this.fromDate = LocalDateTime.now();
         } else {

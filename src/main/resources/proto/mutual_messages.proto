@@ -15,8 +15,8 @@ message ProtoGuideDto {
   int64 id = 1;
   string date_created = 2;
   string date_updated = 3;
-  string language_names = 4;
-  string region_names = 5;
+  repeated string language_names = 4;
+  repeated string region_names = 5;
   string files = 6;
   string description = 7;
   bool is_verified = 8;

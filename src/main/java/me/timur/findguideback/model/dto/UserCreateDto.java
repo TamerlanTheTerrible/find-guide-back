@@ -39,7 +39,6 @@ public class UserCreateDto {
         dto.birthDate = LocalDateTimeUtil.toLocalDateTime(request.getBirthDate());
         dto.telegramId = request.getTelegramId();
         dto.telegramUsername = request.getTelegramUsername();
-        request.getPhoneNumbers();
         if (!request.getPhoneNumbers().isEmpty()) {
             dto.phoneNumbers = StringUtil.splitToList(request.getPhoneNumbers(), StringUtil.StringFormat.PHONE);
         }

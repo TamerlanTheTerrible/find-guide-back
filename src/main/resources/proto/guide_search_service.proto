@@ -16,8 +16,8 @@ message ProtoGuideFilterDto {
   int64 user_telegram_id = 2;
   string from_date = 3;
   string to_date = 4;
-  string language_names = 5;
-  string region_names = 6;
+  string language_name = 5;
+  string region_name = 6;
   string comment = 7;
   bool has_car = 8;
   int32 page = 9;
