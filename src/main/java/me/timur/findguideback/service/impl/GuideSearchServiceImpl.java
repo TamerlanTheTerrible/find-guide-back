@@ -6,8 +6,10 @@ import me.timur.findguideback.entity.BaseEntity;
 import me.timur.findguideback.entity.GuideSearch;
 import me.timur.findguideback.entity.User;
 import me.timur.findguideback.exception.FindGuideException;
+import me.timur.findguideback.model.GetGuideSearchesRequest;
 import me.timur.findguideback.model.dto.GuideDto;
 import me.timur.findguideback.model.dto.GuideFilterDto;
+import me.timur.findguideback.model.dto.GuideSearchDto;
 import me.timur.findguideback.model.dto.SearchResultDto;
 import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.model.enums.SearchStatus;
@@ -18,7 +20,9 @@ import me.timur.findguideback.service.GuideSearchService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by Temurbek Ismoilov on 29/05/23.
@@ -63,13 +67,38 @@ public class GuideSearchServiceImpl implements GuideSearchService {
 
     @Override
     public void notifyGuides(Long guideSearchId) {
-        var guideSearch = guideSearchRepository.findById(guideSearchId)
-                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide search with id: " + guideSearchId));
+        var guideSearch = getGuideSearch(guideSearchId);
         Long[] guideIds = guideSearch.getGuideIds().toArray(new Long[0]);
         log.info("Sending notification on search with id {} to guides {}", guideSearchId, guideIds);
         //TODO: send notification to guides
         guideSearch.setStatus(SearchStatus.SEARCHING);
         guideSearchRepository.save(guideSearch);
+    }
+
+    @Override
+    public boolean closeSearch(Long guideSearchId) {
+        var guideSearch = getGuideSearch(guideSearchId);
+        guideSearch.setStatus(SearchStatus.CLOSED);
+        guideSearchRepository.save(guideSearch);
+        log.info("Guide search with id {} closed", guideSearchId);
+        return true;
+    }
+
+    @Override
+    public List<GuideSearchDto> getGuideSearches(GetGuideSearchesRequest request) {
+        log.info("Getting guide searches: {}", request);
+        var guideSearches = guideSearchRepository.findAllByClientAndStatusIn(
+                getUser(request.getUserId(), request.getTelegramId()),
+                request.getStatuses()
+        );
+        log.info("Guide searches found: {}", Arrays.toString(guideSearches.stream().map(BaseEntity::getId).toList().toArray()));
+
+        return guideSearches.stream().map(GuideSearchDto::new).toList();
+    }
+
+    private GuideSearch getGuideSearch(Long guideSearchId) {
+        return guideSearchRepository.findById(guideSearchId)
+                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide search with id: " + guideSearchId));
     }
 
     private User getUser(Long userId, Long userTelegramId) {
