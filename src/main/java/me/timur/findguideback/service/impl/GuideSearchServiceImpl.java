@@ -80,7 +80,7 @@ public class GuideSearchServiceImpl implements GuideSearchService {
         var guideSearch = getGuideSearch(guideSearchId);
         guideSearch.setStatus(SearchStatus.CLOSED);
         guideSearchRepository.save(guideSearch);
-        log.info("Guide search with id {} closed", guideSearchId);
+        log.info("Close guide search with id {}", guideSearchId);
         return true;
     }
 
@@ -91,7 +91,7 @@ public class GuideSearchServiceImpl implements GuideSearchService {
                 getUser(request.getUserId(), request.getTelegramId()),
                 request.getStatuses()
         );
-        log.info("Guide searches found: {}", Arrays.toString(guideSearches.stream().map(BaseEntity::getId).toList().toArray()));
+        log.info("Found guide searches: {}", Arrays.toString(guideSearches.stream().map(BaseEntity::getId).toList().toArray()));
 
         return guideSearches.stream().map(GuideSearchDto::new).toList();
     }

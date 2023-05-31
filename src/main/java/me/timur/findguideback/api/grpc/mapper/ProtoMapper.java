@@ -1,13 +1,11 @@
 package me.timur.findguideback.api.grpc.mapper;
 
-import com.proto.ProtoGuideDto;
-import com.proto.ProtoGuideDtoList;
-import com.proto.ProtoUserDto;
-import me.timur.findguideback.model.dto.GuideDto;
-import me.timur.findguideback.model.dto.SearchResultDto;
-import me.timur.findguideback.model.dto.UserDto;
+import com.proto.*;
+import me.timur.findguideback.model.dto.*;
 import me.timur.findguideback.util.LocalDateTimeUtil;
 import me.timur.findguideback.util.StringUtil;
+
+import java.util.List;
 
 /**
  * Created by Temurbek Ismoilov on 30/05/23.
@@ -71,5 +69,31 @@ public class ProtoMapper {
                 .setDateCreated(LocalDateTimeUtil.toStringOrBlankIfNull(guideDto.getUser().getDateCreated()))
                 .setDateUpdated(LocalDateTimeUtil.toStringOrBlankIfNull(guideDto.getUser().getDateUpdated()))
                 .build();
+    }
+
+    public static ProtoGetGuideSearchesResponse toProtoGetGuideSearchesResponse(List<GuideSearchDto> dtoList) {
+        return ProtoGetGuideSearchesResponse.newBuilder()
+                .addAllItems(
+                        dtoList.stream().map(ProtoMapper::toProtoGuideSearchDto).toList()
+                )
+                .build();
+    }
+
+    private static ProtoGuideSearchDto toProtoGuideSearchDto(GuideSearchDto guideSearchDto) {
+        return ProtoGuideSearchDto.newBuilder()
+                .setSearchId(guideSearchDto.getId())
+                .setClientId(guideSearchDto.getClientId())
+                .setClientTelegramId(guideSearchDto.getClientTelegramId())
+                .setFromDate(LocalDateTimeUtil.toStringOrBlankIfNull(guideSearchDto.getFromDate()))
+                .setToDate(LocalDateTimeUtil.toStringOrBlankIfNull(guideSearchDto.getToDate()))
+                .setLanguage(guideSearchDto.getLanguage())
+                .setRegion(guideSearchDto.getRegion())
+                .setComment(guideSearchDto.getComment())
+                .setHasCar(guideSearchDto.getHasCar())
+                .setStatus(guideSearchDto.getStatus().name())
+                .addAllGuideIds(guideSearchDto.getGuideIds())
+                .setSearchCount(guideSearchDto.getSearchCount())
+                .build();
+
     }
 }

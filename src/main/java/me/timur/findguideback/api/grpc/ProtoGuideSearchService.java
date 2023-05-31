@@ -1,13 +1,11 @@
 package me.timur.findguideback.api.grpc;
 
-import com.proto.ProtoBaseResponse;
-import com.proto.ProtoGuideFilterDto;
-import com.proto.ProtoGuideSearchNotificationRequestDto;
-import com.proto.ProtoGuideSearchServiceGrpc;
+import com.proto.*;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.api.grpc.mapper.ProtoMapper;
+import me.timur.findguideback.model.GetGuideSearchesRequest;
 import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.service.GuideSearchService;
 import org.springframework.stereotype.Component;
@@ -36,12 +34,33 @@ public class ProtoGuideSearchService extends ProtoGuideSearchServiceGrpc.ProtoGu
     }
 
     @Override
-    public void notify(ProtoGuideSearchNotificationRequestDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
+    public void notifyGuides(ProtoGuideSearchIdentificationDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
         requestHandler.handle(
                 guideSearchService::notifyGuides,
                 request.getSearchId(),
                 responseObserver,
                 "guide search notification"
+        );
+    }
+
+    @Override
+    public void close(ProtoGuideSearchIdentificationDto request, StreamObserver<ProtoBaseResponse> responseObserver) {
+        requestHandler.handle(
+                guideSearchService::closeSearch,
+                request.getSearchId(),
+                responseObserver,
+                "guide search closing"
+        );
+    }
+
+    @Override
+    public void get(ProtoGetGuideSearchesRequest request, StreamObserver<ProtoBaseResponse> responseObserver) {
+        requestHandler.handle(
+                guideSearchService::getGuideSearches,
+                new GetGuideSearchesRequest(request),
+                ProtoMapper::toProtoGetGuideSearchesResponse,
+                responseObserver,
+                "get guide searches"
         );
     }
 }
