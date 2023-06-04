@@ -77,10 +77,12 @@ public class Guide extends BaseEntity {
     }
 
     public Set<String> getLanguageNames() {
+        if (languages == null) return null;
         return languages.stream().map(Language::getEngName).collect(Collectors.toSet());
     }
 
     public Set<String> getRegionNames() {
+        if (regions == null) return null;
         return regions.stream().map(Region::getEngName).collect(Collectors.toSet());
     }
 }
