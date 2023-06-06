@@ -29,4 +29,8 @@ public class Language {
 
     @Column(name = "uz_name")
     String uzName;
+
+    public Language(String engName) {
+        this.engName = engName;
+    }
 }

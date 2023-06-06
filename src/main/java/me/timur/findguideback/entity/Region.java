@@ -29,4 +29,8 @@ public class Region {
 
     @Column(name = "uz_name")
     String uzName;
+
+    public Region(String engName) {
+        this.engName = engName;
+    }
 }

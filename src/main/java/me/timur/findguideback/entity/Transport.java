@@ -29,4 +29,8 @@ public class Transport {
 
     @Column(name = "uz_name")
     String uzName;
+
+    public Transport(String engName) {
+        this.engName = engName;
+    }
 }

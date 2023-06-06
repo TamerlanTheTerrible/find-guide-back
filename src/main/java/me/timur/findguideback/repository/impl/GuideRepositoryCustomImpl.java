@@ -23,7 +23,7 @@ import java.util.List;
 public class GuideRepositoryCustomImpl implements GuideRepositoryCustom {
 
     @PersistenceContext
-    EntityManager em;
+    public EntityManager em;
 
     @Override
     public CriteriaSearchResult<Guide> findAllFiltered(GuideFilterDto filter) {
@@ -56,10 +56,10 @@ public class GuideRepositoryCustomImpl implements GuideRepositoryCustom {
         }
     }
 
-    private Predicate buildPredicate(GuideFilterDto filter, CriteriaBuilder cb, Root<Guide> root) {
+    private Predicate[] buildPredicate(GuideFilterDto filter, CriteriaBuilder cb, Root<Guide> root) {
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(root.get("isVerified"), true));
         predicates.add(cb.equal(root.get("isActive"), true));
+        predicates.add(cb.equal(root.get("isVerified"), true));
         predicates.add(cb.equal(root.get("isBlocked"), false));
         if (filter.getRegion() != null && !filter.getRegion().isEmpty()) {
             predicates.add(root.join("regions").get("engName").in(filter.getRegion()));
@@ -70,6 +70,6 @@ public class GuideRepositoryCustomImpl implements GuideRepositoryCustom {
         if (filter.getHasCar() != null) {
             predicates.add(cb.equal(root.get("hasCar"), filter.getHasCar()));
         }
-        return predicates.get(0);
+        return predicates.toArray(new Predicate[0]);
     }
 }
