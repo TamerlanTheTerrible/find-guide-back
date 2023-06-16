@@ -1,12 +1,10 @@
 package me.timur.findguideback.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.proto.ProtoGuideCreateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.timur.findguideback.util.StringUtil;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -36,14 +34,4 @@ public class GuideCreateOrUpdateDto implements Serializable {
     private Boolean hasCar;
     @JsonProperty("files")
     private Set<String> transports;
-
-    public GuideCreateOrUpdateDto(ProtoGuideCreateDto request) {
-        this.userId = request.getUserId();
-        this.userTelegramId = request.getUserTelegramId();
-        this.languageNames = StringUtil.splitToSet(request.getLanguageName(), ",");
-        this.regionNames = StringUtil.splitToSet(request.getRegionName(), ",");
-        this.description = request.getDescription();
-        this.hasCar = request.getHasCar();
-        this.transports = StringUtil.splitToSet(request.getTransport(), ",");
-    }
 }

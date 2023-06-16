@@ -1,4 +1,4 @@
-package me.timur.findguideback.api.controller;
+package me.timur.findguideback.controller;
 
 import lombok.RequiredArgsConstructor;
 import me.timur.findguideback.model.dto.UserCreateDto;

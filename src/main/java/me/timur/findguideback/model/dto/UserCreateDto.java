@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.proto.ProtoUserCreateDto;
 import lombok.Data;
 import me.timur.findguideback.util.LocalDateTimeUtil;
-import me.timur.findguideback.util.StringUtil;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,19 +29,6 @@ public class UserCreateDto {
     private String telegramUsername;
     @JsonProperty("phone_numbers")
     private List<String> phoneNumbers;
-
-    public static UserCreateDto create(ProtoUserCreateDto request) {
-        var dto = new UserCreateDto();
-        dto.firstName = request.getFirstName();
-        dto.lastName = request.getLastName();
-        dto.birthDate = LocalDateTimeUtil.toLocalDateTime(request.getBirthDate());
-        dto.telegramId = request.getTelegramId();
-        dto.telegramUsername = request.getTelegramUsername();
-        if (!request.getPhoneNumbers().isEmpty()) {
-            dto.phoneNumbers = StringUtil.splitToList(request.getPhoneNumbers(), StringUtil.StringFormat.PHONE);
-        }
-        return dto;
-    }
 
     @Override
     public String toString() {

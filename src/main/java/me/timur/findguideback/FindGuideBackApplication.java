@@ -1,17 +1,13 @@
 package me.timur.findguideback;
 
-import me.timur.findguideback.api.controller.config.TomcatConfig;
-import me.timur.findguideback.api.grpc.config.GrpcConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@Import({TomcatConfig.class, GrpcConfig.class})
 @EnableScheduling
 @EnableJpaRepositories
 public class FindGuideBackApplication {
