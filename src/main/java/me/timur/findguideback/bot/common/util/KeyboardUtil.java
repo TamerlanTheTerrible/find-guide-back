@@ -1,13 +1,13 @@
-package me.timur.findguideback.bot.util;
+package me.timur.findguideback.bot.common.util;
 
-import me.timur.findguideback.bot.constant.Command;
+import me.timur.findguideback.bot.client.model.constant.ClientCommand;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.timur.findguideback.bot.util.UpdateUtil.callbackDataPrefixed;
+import static me.timur.findguideback.bot.common.util.UpdateUtil.callbackDataPrefixed;
 
 /**
  * Created by Temurbek Ismoilov on 25/04/23.
@@ -15,7 +15,7 @@ import static me.timur.findguideback.bot.util.UpdateUtil.callbackDataPrefixed;
 
 public class KeyboardUtil {
 
-    public static InlineKeyboardMarkup createInlineKeyboard(List<String> values, Command prefix, int rowLength) {
+    public static InlineKeyboardMarkup createInlineKeyboard(List<String> values, ClientCommand prefix, int rowLength) {
         return createInlineKeyboard(values, prefix.command, rowLength);
     }
 

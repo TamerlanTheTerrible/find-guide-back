@@ -1,16 +1,15 @@
-package me.timur.findguideback.bot.service.impl;
+package me.timur.findguideback.bot.client.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.constant.Command;
-import me.timur.findguideback.bot.constant.Language;
-import me.timur.findguideback.bot.dto.GuideDto;
-import me.timur.findguideback.bot.dto.RequestDto;
-import me.timur.findguideback.bot.dto.UserProgress;
-import me.timur.findguideback.bot.service.BotApiMethodService;
-import me.timur.findguideback.bot.service.BotUpdateHandlerService;
-import me.timur.findguideback.bot.util.CalendarUtil;
-import me.timur.findguideback.bot.util.KeyboardUtil;
+import me.timur.findguideback.bot.client.model.constant.ClientCommand;
+import me.timur.findguideback.bot.client.model.dto.GuideDto;
+import me.timur.findguideback.bot.client.model.dto.RequestDto;
+import me.timur.findguideback.bot.client.model.dto.UserProgress;
+import me.timur.findguideback.bot.common.constant.Language;
+import me.timur.findguideback.bot.common.service.BotUpdateHandlerService;
+import me.timur.findguideback.bot.common.util.CalendarUtil;
+import me.timur.findguideback.bot.common.util.KeyboardUtil;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -22,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
+
 /**
  * Created by Temurbek Ismoilov on 14/04/23.
  */
@@ -31,13 +32,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class BotGuideSearchServiceImplBot implements BotUpdateHandlerService {
 
-    private final BotApiMethodService botApiMethodService;
     private final ConcurrentHashMap<Long, UserProgress> userProgressMap;
-    private final static String callbackPrefix = Command.GUIDE_PARAMS.command;
+    private final static String callbackPrefix = ClientCommand.GUIDE_PARAMS.command;
 
     @Override
-    public Command getType() {
-        return Command.GUIDE_PARAMS;
+    public ClientCommand getType() {
+        return ClientCommand.GUIDE_PARAMS;
     }
 
     @Override
@@ -54,14 +54,14 @@ public class BotGuideSearchServiceImplBot implements BotUpdateHandlerService {
         if (progress == null) {
             log.info("Creating new progress for chatId: {}", chatId);
             userProgressMap.put(chatId, new UserProgress());
-            methodList = botApiMethodService.sendMessage(chatId,"Please select a language:", createLanguageOptionsKeyboard());
+            methodList = sendMessage(chatId,"Please select a language:", createLanguageOptionsKeyboard());
         } else if (progress.isSelectingLanguage()) {
             log.info("Selecting language for chatId: {}", chatId);
             // Store the selected language and ask for the region
             progress.setLanguage(Language.get(data));
             progress.setSelectingLanguage(false);
             progress.setSelectingRegion(true);
-            methodList = botApiMethodService.sendMessage(chatId, prevMessageId,"Please select a region:", createRegionOptionsKeyboard());
+            methodList = sendMessage(chatId, prevMessageId,"Please select a region:", createRegionOptionsKeyboard());
         } else if (progress.isSelectingRegion()) {
             log.info("Selecting region for chatId: {}", chatId);
             // Store the selected region and ask for the start year
@@ -124,7 +124,7 @@ public class BotGuideSearchServiceImplBot implements BotUpdateHandlerService {
 
         List<GuideDto> guideDtos = searchGuides(language, region, startDateFormatted, endDateFormatted);
         if (guideDtos.isEmpty()) {
-            methodList = botApiMethodService.sendMessage(
+            methodList = sendMessage(
                     chatId,
                     "No guides available for the selected criteria. "
                             + "Please try again with different criteria.");
@@ -140,7 +140,7 @@ public class BotGuideSearchServiceImplBot implements BotUpdateHandlerService {
                         .append(guideDto.getLanguage())
                         .append(")");
             }
-            methodList = botApiMethodService.sendMessage(chatId, messageText.toString());
+            methodList = sendMessage(chatId, messageText.toString());
         }
         userProgressMap.remove(chatId);
         return methodList;
@@ -162,13 +162,13 @@ public class BotGuideSearchServiceImplBot implements BotUpdateHandlerService {
     private List<BotApiMethod<? extends Serializable>> sendYear(long chatId, String messageText, int prevMessageId) {
         // Create a reply keyboard markup with a calendar
         InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(List.of("2023","2024","2025"), callbackPrefix, 3);
-        return botApiMethodService.sendMessage(chatId, prevMessageId, messageText, markup);
+        return sendMessage(chatId, prevMessageId, messageText, markup);
     }
 
     private List<BotApiMethod<? extends Serializable>> sendMonth(long chatId, String messageText, int prevMessageId) {
         // Create a reply keyboard markup with a calendar
         InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(CalendarUtil.monthNames(), callbackPrefix, 3);
-        return botApiMethodService.sendMessage(chatId, prevMessageId, messageText, markup);
+        return sendMessage(chatId, prevMessageId, messageText, markup);
     }
 
     private List<BotApiMethod<? extends Serializable>> sendDay(long chatId, String messageText, int prevMessageId) {
@@ -178,7 +178,7 @@ public class BotGuideSearchServiceImplBot implements BotUpdateHandlerService {
             days.add(String.valueOf(i));
         }
         InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(days, callbackPrefix, 7);
-        return botApiMethodService.sendMessage(chatId, prevMessageId, messageText, markup);
+        return sendMessage(chatId, prevMessageId, messageText, markup);
     }
 
     private List<GuideDto> searchGuides(String language, String region, String startDate, String endDate) {

@@ -1,6 +1,6 @@
-package me.timur.findguideback.bot;
+package me.timur.findguideback.bot.client;
 
-import me.timur.findguideback.bot.dto.UserProgress;
+import me.timur.findguideback.bot.client.model.dto.UserProgress;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Configuration
-public class BotBeanConfig {
+public class ClientBotBeanConfig {
 
     @Bean
     public ConcurrentHashMap<Long, UserProgress> userProgressMap() {

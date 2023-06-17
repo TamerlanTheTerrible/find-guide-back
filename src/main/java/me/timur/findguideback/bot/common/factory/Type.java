@@ -1,4 +1,4 @@
-package me.timur.findguideback.bot.service.factory;
+package me.timur.findguideback.bot.common.factory;
 
 /**
  * Created by Temurbek Ismoilov on 10/04/23.

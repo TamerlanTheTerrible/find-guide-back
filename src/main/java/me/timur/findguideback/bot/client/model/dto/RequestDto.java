@@ -1,9 +1,9 @@
-package me.timur.findguideback.bot.dto;
+package me.timur.findguideback.bot.client.model.dto;
 
 import lombok.Getter;
 import lombok.NonNull;
-import me.timur.findguideback.bot.exception.FindGuideBotException;
-import me.timur.findguideback.bot.util.UpdateUtil;
+import me.timur.findguideback.bot.client.exception.ClinetException;
+import me.timur.findguideback.bot.common.util.UpdateUtil;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -23,7 +23,7 @@ public class RequestDto {
 
     public RequestDto(@NonNull CallbackQuery query) {
         if (query == null) {
-            throw new FindGuideBotException("CallbackQuery cannot be null");
+            throw new ClinetException("CallbackQuery cannot be null");
         }
         this.chatId = query.getMessage().getChatId();
         this.username = query.getFrom().getUserName();
@@ -38,7 +38,7 @@ public class RequestDto {
 
     public RequestDto(@NonNull Message message) {
         if (message == null) {
-            throw new FindGuideBotException("Message cannot be null");
+            throw new ClinetException("Message cannot be null");
         }
         this.chatId = message.getChatId();
         this.username = message.getFrom().getUserName();

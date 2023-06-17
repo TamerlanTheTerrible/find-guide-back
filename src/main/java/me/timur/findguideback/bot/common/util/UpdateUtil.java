@@ -1,4 +1,4 @@
-package me.timur.findguideback.bot.util;
+package me.timur.findguideback.bot.common.util;
 
 /**
  * Created by Temurbek Ismoilov on 14/04/23.

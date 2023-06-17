@@ -1,4 +1,4 @@
-package me.timur.findguideback.bot.dto;
+package me.timur.findguideback.bot.client.model.dto;
 
 import lombok.Data;
 

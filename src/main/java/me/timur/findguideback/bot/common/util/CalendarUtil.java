@@ -1,6 +1,6 @@
-package me.timur.findguideback.bot.util;
+package me.timur.findguideback.bot.common.util;
 
-import me.timur.findguideback.bot.exception.FindGuideBotException;
+import me.timur.findguideback.bot.client.exception.ClinetException;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDate;
@@ -47,7 +47,7 @@ public class CalendarUtil {
     public static List<String> monthsOf(int year) {
         final LocalDate now = LocalDate.now();
         if (year < now.getYear()) {
-            throw new FindGuideBotException("Invalid value of year %s", year);
+            throw new ClinetException("Invalid value of year %s", year);
         }
          List<String> monthNames = new ArrayList<>(monthMap.keySet());
         if (year != now.getYear()) {
@@ -61,11 +61,11 @@ public class CalendarUtil {
     public static List<Integer> daysOf(int year, @NonNull String month) {
         final LocalDate now = LocalDate.now();
         if (year < now.getYear()) {
-            throw new FindGuideBotException("Invalid value of year %s", year);
+            throw new ClinetException("Invalid value of year %s", year);
         }
 
         if (monthMap.get(month) == null) {
-            throw new FindGuideBotException("Invalid value of month %s", month);
+            throw new ClinetException("Invalid value of month %s", month);
         }
 
         int monthNumber = monthMap.get(month);
@@ -90,7 +90,7 @@ public class CalendarUtil {
     public static Integer monthNumber(String monthName) {
         final Integer monthNumber = monthMap.get(monthName);
         if (monthNumber == null) {
-            throw new FindGuideBotException("Invalid month name value: %s", monthName);
+            throw new ClinetException("Invalid month name value: %s", monthName);
         }
         return monthNumber;
     }

@@ -1,6 +1,6 @@
-package me.timur.findguideback.bot.constant;
+package me.timur.findguideback.bot.common.constant;
 
-import me.timur.findguideback.bot.exception.FindGuideBotException;
+import me.timur.findguideback.bot.client.exception.ClinetException;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -26,6 +26,6 @@ public enum Language {
         return Arrays.stream(Language.values())
                 .filter(l -> Objects.equals(l.text, text))
                 .findFirst()
-                .orElseThrow(() -> new FindGuideBotException("Could not find language: %s", text));
+                .orElseThrow(() -> new ClinetException("Could not find language: %s", text));
     }
 }

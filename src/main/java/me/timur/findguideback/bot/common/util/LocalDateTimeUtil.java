@@ -1,4 +1,4 @@
-package me.timur.findguideback.bot.util;
+package me.timur.findguideback.bot.common.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

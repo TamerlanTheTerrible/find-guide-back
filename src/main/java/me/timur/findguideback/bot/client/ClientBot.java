@@ -1,11 +1,11 @@
-package me.timur.findguideback.bot;
+package me.timur.findguideback.bot.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.constant.Command;
-import me.timur.findguideback.bot.dto.RequestDto;
-import me.timur.findguideback.bot.service.factory.CallbackHandlerFactory;
-import me.timur.findguideback.bot.util.UpdateUtil;
+import me.timur.findguideback.bot.client.model.constant.ClientCommand;
+import me.timur.findguideback.bot.client.model.dto.RequestDto;
+import me.timur.findguideback.bot.common.factory.CallbackHandlerFactory;
+import me.timur.findguideback.bot.common.util.UpdateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class Bot extends TelegramLongPollingBot {
+public class ClientBot extends TelegramLongPollingBot {
 
     private final CallbackHandlerFactory callbackHandlerFactory;
 
@@ -71,7 +71,7 @@ public class Bot extends TelegramLongPollingBot {
         var request = new RequestDto(query);
         log.info("BOT CallbackQuery : {}",request);
 
-        var callbackHandler = callbackHandlerFactory.get(Command.get(UpdateUtil.getPrefix(query.getData())));
+        var callbackHandler = callbackHandlerFactory.get(ClientCommand.get(UpdateUtil.getPrefix(query.getData())));
         var methods = callbackHandler.handle(request);
         execute(methods);
     }
