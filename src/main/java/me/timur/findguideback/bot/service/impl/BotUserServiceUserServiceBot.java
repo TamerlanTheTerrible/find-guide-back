@@ -6,6 +6,7 @@ import me.timur.findguideback.bot.constant.Command;
 import me.timur.findguideback.bot.dto.RequestDto;
 import me.timur.findguideback.bot.service.BotApiMethodService;
 import me.timur.findguideback.bot.service.BotUpdateHandlerService;
+import me.timur.findguideback.bot.util.KeyboardUtil;
 import me.timur.findguideback.model.dto.UserCreateDto;
 import me.timur.findguideback.service.UserService;
 import me.timur.findguideback.util.StringUtil;
@@ -31,8 +32,8 @@ public class BotUserServiceUserServiceBot implements BotUpdateHandlerService {
     @Override
     public List<BotApiMethod<? extends Serializable>> handle(RequestDto requestDto) {
         if (requestDto.getData().equals("/start")) {
-
-        UserCreateDto userCreateDto = UserCreateDto.builder()
+            // Create user
+            UserCreateDto userCreateDto = UserCreateDto.builder()
                 .telegramUsername(requestDto.getUsername())
                 .telegramId(requestDto.getChatId())
                 .firstName(requestDto.getFirstName())
@@ -41,14 +42,17 @@ public class BotUserServiceUserServiceBot implements BotUpdateHandlerService {
                 .build();
 
             var user = userService.getOrSave(userCreateDto);
+            // Send welcome message with inline keyboard to find a guide
             return botApiMethodService.sendMessage(
                     requestDto.getChatId(),
-                    "Добро пожаловать" + (user.hasNameOrUsername() ? ", " + user.getFullNameOrUsername() : "")
+                    "Welcome" + (user.hasNameOrUsername() ? ", " + user.getFullNameOrUsername() : ""),
+                    KeyboardUtil.createInlineKeyboard(List.of("Find a guide"), Command.GUIDE_PARAMS, 2)
             );
         }
+
         return botApiMethodService.sendMessage(
                 requestDto.getChatId(),
-                "Попробуйте ещё раз");
+                "Something went wrong. Try again");
     }
 
     @Override
