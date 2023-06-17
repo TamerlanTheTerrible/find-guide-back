@@ -1,15 +1,14 @@
-package me.timur.findguideback.bot.client;
+package me.timur.findguideback.bot.guide;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.client.model.constant.ClientCommand;
 import me.timur.findguideback.bot.client.model.dto.RequestDto;
 import me.timur.findguideback.bot.common.factory.CallbackHandlerFactory;
-import me.timur.findguideback.bot.common.util.UpdateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -25,13 +24,13 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class ClientBot extends TelegramLongPollingBot {
+public class GuideBot extends TelegramLongPollingBot {
 
     private final CallbackHandlerFactory callbackHandlerFactory;
 
-    @Value("${bot.client.username}")
+    @Value("${bot.guide.username}")
     private String BOT_NAME;
-    @Value("${bot.client.token}")
+    @Value("${bot.guide.token}")
     private String BOT_TOKEN;
 
     @Override
@@ -62,18 +61,24 @@ public class ClientBot extends TelegramLongPollingBot {
         var request = new RequestDto(message);
         log.info("BOT Message : {}", request);
 
-        var callbackHandler = callbackHandlerFactory.get(message.getText());
-        var methods = callbackHandler.handle(request);
-        execute(methods);
+//        var callbackHandler = callbackHandlerFactory.get(message.getText());
+//        var methods = callbackHandler.handle(request);
+        execute(List.of(
+                new SendMessage(message.getChatId().toString(), "Hello, "
+        )));
     }
 
     private void handleCallbackQuery(CallbackQuery query) {
         var request = new RequestDto(query);
         log.info("BOT CallbackQuery : {}",request);
 
-        var callbackHandler = callbackHandlerFactory.get(ClientCommand.get(UpdateUtil.getPrefix(query.getData())));
-        var methods = callbackHandler.handle(request);
-        execute(methods);
+//        var callbackHandler = callbackHandlerFactory.get(ClientCommand.get(UpdateUtil.getPrefix(query.getData())));
+//        var methods = callbackHandler.handle(request);
+        execute(
+                List.of(
+                        new SendMessage(query.getMessage().getChatId().toString(), "Hello, "
+                        )
+                ));
     }
 
     private void execute(List<BotApiMethod<? extends Serializable>> methods) {
