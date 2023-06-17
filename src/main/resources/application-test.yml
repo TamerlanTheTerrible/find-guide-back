@@ -12,3 +12,6 @@ spring:
       ddl-auto: create-drop
     show-sql: true
 
+bot:
+  username: find_guide_bot
+  token: 5957262303:AAEbQPnIvl6EGoOXswWn8xP1Dhvz8PirX-E

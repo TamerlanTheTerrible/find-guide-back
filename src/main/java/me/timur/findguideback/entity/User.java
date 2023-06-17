@@ -1,13 +1,10 @@
 package me.timur.findguideback.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.*;
 import me.timur.findguideback.mapper.StringListToStringConverter;
 import me.timur.findguideback.model.dto.UserCreateDto;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 

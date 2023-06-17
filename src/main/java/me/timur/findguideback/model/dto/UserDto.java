@@ -59,4 +59,20 @@ public class UserDto implements Serializable {
         this.isBlocked = user.getIsBlocked();
         this.telegramUsername = user.getTelegramUsername();
     }
+
+    public boolean hasNameOrUsername() {
+        return (telegramUsername != null && !telegramUsername.isBlank())
+                || (firstName != null && !firstName.isEmpty())
+                || (lastName != null && !lastName.isBlank());
+    }
+
+    public String getFullNameOrUsername() {
+        if (firstName != null && !firstName.isEmpty()) {
+            return firstName + (lastName != null && !lastName.isBlank() ? " " + lastName : "");
+        }
+        if (telegramUsername != null && !telegramUsername.isBlank()) {
+            return telegramUsername;
+        }
+        return "";
+    }
 }

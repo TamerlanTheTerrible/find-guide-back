@@ -1,10 +1,11 @@
 package me.timur.findguideback.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 import me.timur.findguideback.model.dto.FileCreateDto;
 import me.timur.findguideback.model.enums.DocumentExtension;
 import me.timur.findguideback.model.enums.DocumentType;
+
+import javax.persistence.*;
 
 /**
  * Created by Temurbek Ismoilov on 30/04/23.

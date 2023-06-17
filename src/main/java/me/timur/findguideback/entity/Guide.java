@@ -1,9 +1,9 @@
 package me.timur.findguideback.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 
+import javax.persistence.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 
