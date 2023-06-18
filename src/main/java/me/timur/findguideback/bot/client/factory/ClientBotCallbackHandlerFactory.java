@@ -30,6 +30,8 @@ public class ClientBotCallbackHandlerFactory {
     }
 
     public ClientBotUpdateHandlerService get(String commandStr) {
-        return map.get(ClientCommand.get(commandStr));
+        return map.containsKey(ClientCommand.get(commandStr))
+                ? map.get(ClientCommand.get(commandStr))
+                : map.get(ClientCommand.UNIVERSAL);
     }
 }

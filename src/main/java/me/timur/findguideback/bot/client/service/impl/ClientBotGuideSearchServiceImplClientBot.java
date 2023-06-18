@@ -61,7 +61,7 @@ public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdate
             progress.setLanguage(Language.get(data));
             progress.setSelectingLanguage(false);
             progress.setSelectingRegion(true);
-            methodList = sendMessage(chatId, prevMessageId,"Please select a region:", createRegionOptionsKeyboard());
+            methodList = sendMessage(chatId,"Please select a region:", createRegionOptionsKeyboard(), prevMessageId);
         } else if (progress.isSelectingRegion()) {
             log.info("Selecting region for chatId: {}", chatId);
             // Store the selected region and ask for the start year
@@ -162,13 +162,13 @@ public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdate
     private List<BotApiMethod<? extends Serializable>> sendYear(long chatId, String messageText, int prevMessageId) {
         // Create a reply keyboard markup with a calendar
         InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(List.of("2023","2024","2025"), callbackPrefix, 3);
-        return sendMessage(chatId, prevMessageId, messageText, markup);
+        return sendMessage(chatId, messageText, markup, prevMessageId);
     }
 
     private List<BotApiMethod<? extends Serializable>> sendMonth(long chatId, String messageText, int prevMessageId) {
         // Create a reply keyboard markup with a calendar
         InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(CalendarUtil.monthNames(), callbackPrefix, 3);
-        return sendMessage(chatId, prevMessageId, messageText, markup);
+        return sendMessage(chatId, messageText, markup, prevMessageId);
     }
 
     private List<BotApiMethod<? extends Serializable>> sendDay(long chatId, String messageText, int prevMessageId) {
@@ -178,7 +178,7 @@ public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdate
             days.add(String.valueOf(i));
         }
         InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(days, callbackPrefix, 7);
-        return sendMessage(chatId, prevMessageId, messageText, markup);
+        return sendMessage(chatId, messageText, markup, prevMessageId);
     }
 
     private List<GuideDto> searchGuides(String language, String region, String startDate, String endDate) {

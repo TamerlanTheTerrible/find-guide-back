@@ -2,9 +2,9 @@ package me.timur.findguideback.bot.client.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
+import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.common.util.KeyboardUtil;
 import me.timur.findguideback.model.dto.UserCreateDto;
 import me.timur.findguideback.service.UserService;
@@ -46,7 +46,7 @@ public class ClientBotUserService implements ClientBotUpdateHandlerService {
             return sendMessage(
                     requestDto.getChatId(),
                     "Welcome" + (user.hasNameOrUsername() ? ", " + user.getFullNameOrUsername() : ""),
-                    KeyboardUtil.createInlineKeyboard(List.of("Find a guide"), ClientCommand.GUIDE_PARAMS, 2)
+                    KeyboardUtil.requestPhone()
             );
         }
 

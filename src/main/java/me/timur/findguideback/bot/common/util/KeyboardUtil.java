@@ -2,7 +2,10 @@ package me.timur.findguideback.bot.common.util;
 
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,5 +39,30 @@ public class KeyboardUtil {
         }
 
         return new InlineKeyboardMarkup(keyboard);
+    }
+
+    public static ReplyKeyboardMarkup requestPhone() {
+        KeyboardButton button = new KeyboardButton("Please share your phone number");
+        button.setRequestContact(true);
+
+        KeyboardRow row = new KeyboardRow();
+        row.add(button);
+
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        keyboardRows.add(row);
+
+        ReplyKeyboardMarkup keyboard = replyKeyboardMarkup();
+
+        keyboard.setKeyboard(keyboardRows);
+
+        return keyboard;
+    }
+
+    private static ReplyKeyboardMarkup replyKeyboardMarkup() {
+        ReplyKeyboardMarkup keyboard = new ReplyKeyboardMarkup();
+        keyboard.setResizeKeyboard(true);
+        keyboard.setOneTimeKeyboard(true);
+        keyboard.setSelective(false);
+        return keyboard;
     }
 }
