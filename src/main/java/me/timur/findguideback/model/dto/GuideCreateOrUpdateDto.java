@@ -32,6 +32,6 @@ public class GuideCreateOrUpdateDto implements Serializable {
     private String description;
     @JsonProperty("has_car")
     private Boolean hasCar;
-    @JsonProperty("files")
+    @JsonProperty("transport")
     private Set<String> transports;
 }

@@ -29,8 +29,10 @@ public class GuideServiceImpl implements GuideService {
     private final LanguageRepository languageRepository;
     private final RegionRepository regionRepository;
     private final TransportRepository transportRepository;
+
     @Override
     public GuideDto save(GuideCreateOrUpdateDto requestDto) {
+        log.info("Saving guide: {}", requestDto);
         var languages = getLanguages(requestDto.getLanguageNames());
         var regions = getRegions(requestDto.getRegionNames());
         var transports = getTransports(requestDto.getTransports());
@@ -56,6 +58,8 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideDto update(GuideCreateOrUpdateDto requestDto) {
+        log.info("Updating guide: {}", requestDto);
+
         var user = guideRepository.findByUserIdOrUserTelegramId(requestDto.getUserId(), requestDto.getUserTelegramId())
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with user id: " + requestDto.getUserId() + " or telegram id: " + requestDto.getUserTelegramId()));
         if (requestDto.getLanguageNames() != null && !requestDto.getLanguageNames().isEmpty()) {

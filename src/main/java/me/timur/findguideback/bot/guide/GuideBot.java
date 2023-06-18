@@ -59,7 +59,7 @@ public class GuideBot extends TelegramLongPollingBot {
 
     private void handleIncomingMessage(Message message) {
         var request = new RequestDto(message);
-        log.info("BOT Message : {}", request);
+        log.info("GUIDE BOT Message : {}", request);
 
 //        var callbackHandler = callbackHandlerFactory.get(message.getText());
 //        var methods = callbackHandler.handle(request);
@@ -70,7 +70,7 @@ public class GuideBot extends TelegramLongPollingBot {
 
     private void handleCallbackQuery(CallbackQuery query) {
         var request = new RequestDto(query);
-        log.info("BOT CallbackQuery : {}",request);
+        log.info("GUIDE BOT CallbackQuery : {}",request);
 
 //        var callbackHandler = callbackHandlerFactory.get(ClientCommand.get(UpdateUtil.getPrefix(query.getData())));
 //        var methods = callbackHandler.handle(request);
