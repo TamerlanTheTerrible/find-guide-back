@@ -30,6 +30,8 @@ public class GuideBotCallbackHandlerFactory {
     }
 
     public GuideBotUpdateHandlerService get(String commandStr) {
-        return map.get(GuideCommand.get(commandStr));
+        return map.containsKey(GuideCommand.get(commandStr))
+                ? map.get(GuideCommand.get(commandStr))
+                : map.get(GuideCommand.UNIVERSAL);
     }
 }

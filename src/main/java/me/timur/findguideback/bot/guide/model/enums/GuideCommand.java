@@ -7,6 +7,7 @@ package me.timur.findguideback.bot.guide.model.enums;
 public enum GuideCommand {
     USER("/start"),
     GUIDE_PARAMS("/findguide"),
+    UNIVERSAL("universal"),
     ;
 
     public final String command;
