@@ -1,9 +1,9 @@
-package me.timur.findguideback.bot.client.service.impl;
+package me.timur.findguideback.bot.common.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.client.model.constant.ClientCommand;
 import me.timur.findguideback.bot.client.model.dto.RequestDto;
+import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.common.service.BotUpdateHandlerService;
 import me.timur.findguideback.bot.common.util.KeyboardUtil;
 import me.timur.findguideback.model.dto.UserCreateDto;
@@ -31,6 +31,7 @@ public class BotUserServiceUserServiceBot implements BotUpdateHandlerService {
     @Override
     public List<BotApiMethod<? extends Serializable>> handle(RequestDto requestDto) {
         if (requestDto.getData().equals("/start")) {
+            log.info("User {} started bot", requestDto.getChatId());
             // Create user
             UserCreateDto userCreateDto = UserCreateDto.builder()
                 .telegramUsername(requestDto.getUsername())

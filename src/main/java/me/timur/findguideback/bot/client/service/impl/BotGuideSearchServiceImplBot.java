@@ -2,7 +2,7 @@ package me.timur.findguideback.bot.client.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.client.model.constant.ClientCommand;
+import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.client.model.dto.GuideDto;
 import me.timur.findguideback.bot.client.model.dto.RequestDto;
 import me.timur.findguideback.bot.client.model.dto.UserProgress;

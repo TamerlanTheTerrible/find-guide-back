@@ -1,22 +1,22 @@
-package me.timur.findguideback.bot.client.model.constant;
+package me.timur.findguideback.bot.guide.model.enums;
 
 /**
  * Created by Temurbek Ismoilov on 14/04/23.
  */
 
-public enum ClientCommand {
+public enum GuideCommand {
     USER("/start"),
     GUIDE_PARAMS("/findguide"),
     ;
 
     public final String command;
 
-    ClientCommand(String s) {
+    GuideCommand(String s) {
         this.command = s;
     }
 
-    public static ClientCommand get(String command) {
-        for (ClientCommand c : ClientCommand.values()) {
+    public static GuideCommand get(String command) {
+        for (GuideCommand c : GuideCommand.values()) {
             if (c.command.equals(command)) {
                 return c;
             }

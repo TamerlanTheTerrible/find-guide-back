@@ -1,7 +1,7 @@
 package me.timur.findguideback.bot.common.factory;
 
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.client.model.constant.ClientCommand;
+import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.common.service.BotUpdateHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package me.timur.findguideback.bot.common.service;
 
-import me.timur.findguideback.bot.client.model.constant.ClientCommand;
+import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.client.model.dto.RequestDto;
 import me.timur.findguideback.bot.common.factory.Type;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;

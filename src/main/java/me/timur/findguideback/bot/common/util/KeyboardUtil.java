@@ -1,6 +1,6 @@
 package me.timur.findguideback.bot.common.util;
 
-import me.timur.findguideback.bot.client.model.constant.ClientCommand;
+import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
