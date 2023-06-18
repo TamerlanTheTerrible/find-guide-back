@@ -1,4 +1,4 @@
-package me.timur.findguideback.bot.client.model.dto;
+package me.timur.findguideback.bot.common.model.dto;
 
 import lombok.Getter;
 import lombok.NonNull;

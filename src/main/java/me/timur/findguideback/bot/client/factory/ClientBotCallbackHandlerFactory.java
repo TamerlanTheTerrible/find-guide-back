@@ -1,8 +1,8 @@
-package me.timur.findguideback.bot.common.factory;
+package me.timur.findguideback.bot.client.factory;
 
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
-import me.timur.findguideback.bot.common.service.BotUpdateHandlerService;
+import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,21 +15,21 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class CallbackHandlerFactory {
+public class ClientBotCallbackHandlerFactory {
 
-    private final EnumMap<ClientCommand, BotUpdateHandlerService> map;
+    private final EnumMap<ClientCommand, ClientBotUpdateHandlerService> map;
 
     @Autowired
-    public CallbackHandlerFactory(List<BotUpdateHandlerService> protocolServices) {
+    public ClientBotCallbackHandlerFactory(List<ClientBotUpdateHandlerService> protocolServices) {
         this.map = new EnumMap<>(ClientCommand.class);
         protocolServices.forEach(service -> map.put(service.getType(), service));
     }
 
-    public BotUpdateHandlerService get(ClientCommand clientCommand) {
+    public ClientBotUpdateHandlerService get(ClientCommand clientCommand) {
         return map.get(clientCommand);
     }
 
-    public BotUpdateHandlerService get(String commandStr) {
+    public ClientBotUpdateHandlerService get(String commandStr) {
         return map.get(ClientCommand.get(commandStr));
     }
 }

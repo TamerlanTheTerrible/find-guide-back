@@ -1,7 +1,7 @@
 package me.timur.findguideback.bot.client.model.dto;
 
 import lombok.Data;
-import me.timur.findguideback.bot.common.constant.Language;
+import me.timur.findguideback.bot.common.model.enums.Language;
 
 /**
  * Created by Temurbek Ismoilov on 28/03/23.

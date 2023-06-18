@@ -1,10 +1,10 @@
-package me.timur.findguideback.bot.common.service.impl;
+package me.timur.findguideback.bot.client.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.client.model.dto.RequestDto;
+import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
-import me.timur.findguideback.bot.common.service.BotUpdateHandlerService;
+import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
 import me.timur.findguideback.bot.common.util.KeyboardUtil;
 import me.timur.findguideback.model.dto.UserCreateDto;
 import me.timur.findguideback.service.UserService;
@@ -24,7 +24,7 @@ import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessag
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class BotUserServiceUserServiceBot implements BotUpdateHandlerService {
+public class ClientBotUserService implements ClientBotUpdateHandlerService {
 
     private final UserService userService;
 

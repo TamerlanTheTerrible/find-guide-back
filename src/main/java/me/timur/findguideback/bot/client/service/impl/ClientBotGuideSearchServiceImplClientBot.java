@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.client.model.dto.GuideDto;
-import me.timur.findguideback.bot.client.model.dto.RequestDto;
+import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.client.model.dto.UserProgress;
-import me.timur.findguideback.bot.common.constant.Language;
-import me.timur.findguideback.bot.common.service.BotUpdateHandlerService;
+import me.timur.findguideback.bot.common.model.enums.Language;
+import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
 import me.timur.findguideback.bot.common.util.CalendarUtil;
 import me.timur.findguideback.bot.common.util.KeyboardUtil;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessag
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class BotGuideSearchServiceImplBot implements BotUpdateHandlerService {
+public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdateHandlerService {
 
     private final ConcurrentHashMap<Long, UserProgress> userProgressMap;
     private final static String callbackPrefix = ClientCommand.GUIDE_PARAMS.command;

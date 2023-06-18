@@ -2,8 +2,8 @@ package me.timur.findguideback.bot.guide;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.client.model.dto.RequestDto;
-import me.timur.findguideback.bot.common.factory.CallbackHandlerFactory;
+import me.timur.findguideback.bot.common.model.dto.RequestDto;
+import me.timur.findguideback.bot.guide.factory.GuideBotCallbackHandlerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -26,7 +26,7 @@ import java.util.List;
 @Component
 public class GuideBot extends TelegramLongPollingBot {
 
-    private final CallbackHandlerFactory callbackHandlerFactory;
+    private final GuideBotCallbackHandlerFactory guideBotCallbackHandlerFactory;
 
     @Value("${bot.guide.username}")
     private String BOT_NAME;

@@ -1,4 +1,4 @@
-package me.timur.findguideback.bot.common.constant;
+package me.timur.findguideback.bot.common.model.enums;
 
 import me.timur.findguideback.bot.client.exception.ClinetException;
 
