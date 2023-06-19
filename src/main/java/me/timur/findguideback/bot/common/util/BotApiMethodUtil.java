@@ -22,6 +22,12 @@ public class BotApiMethodUtil {
         return List.of(new SendMessage(String.valueOf(chatId), message));
     }
 
+    public static List<BotApiMethod<? extends Serializable>> sendMessage(@NonNull Long chatId, String message, int prevMessageId) {
+        DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), prevMessageId);
+        SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
+        return List.of(deleteMessage, sendMessage);
+    }
+
     public static List<BotApiMethod<? extends Serializable>> sendMessage(@NonNull Long chatId, String message, ReplyKeyboard markup) {
         SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
         sendMessage.setReplyMarkup(markup);

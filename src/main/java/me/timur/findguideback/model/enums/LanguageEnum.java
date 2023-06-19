@@ -1,4 +1,4 @@
-package me.timur.findguideback.bot.common.model.enums;
+package me.timur.findguideback.model.enums;
 
 import me.timur.findguideback.bot.client.exception.ClinetException;
 
@@ -9,7 +9,7 @@ import java.util.Objects;
  * Created by Temurbek Ismoilov on 10/04/23.
  */
 
-public enum Language {
+public enum LanguageEnum {
     RUSSIAN("Русский"),
     ENGLISH("English"),
     GERMAN("Deutsch"),
@@ -18,12 +18,12 @@ public enum Language {
 
     public final String text;
 
-    Language(String text) {
+    LanguageEnum(String text) {
         this.text = text;
     }
 
-    public static Language get(String text){
-        return Arrays.stream(Language.values())
+    public static LanguageEnum get(String text){
+        return Arrays.stream(LanguageEnum.values())
                 .filter(l -> Objects.equals(l.text, text))
                 .findFirst()
                 .orElseThrow(() -> new ClinetException("Could not find language: %s", text));

@@ -2,14 +2,16 @@ package me.timur.findguideback.bot.client.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.client.model.dto.GuideDto;
-import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.client.model.dto.UserProgress;
-import me.timur.findguideback.bot.common.model.enums.Language;
+import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
+import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.common.util.CalendarUtil;
 import me.timur.findguideback.bot.common.util.KeyboardUtil;
+import me.timur.findguideback.entity.Language;
+import me.timur.findguideback.model.enums.LanguageEnum;
+import me.timur.findguideback.repository.LanguageRepository;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -17,7 +19,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +33,7 @@ import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessag
 @Service
 public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdateHandlerService {
 
+    private final LanguageRepository languageRepository;
     private final ConcurrentHashMap<Long, UserProgress> userProgressMap;
     private final static String callbackPrefix = ClientCommand.GUIDE_PARAMS.command;
 
@@ -58,7 +60,7 @@ public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdate
         } else if (progress.isSelectingLanguage()) {
             log.info("Selecting language for chatId: {}", chatId);
             // Store the selected language and ask for the region
-            progress.setLanguage(Language.get(data));
+            progress.setLanguageEnum(LanguageEnum.get(data));
             progress.setSelectingLanguage(false);
             progress.setSelectingRegion(true);
             methodList = sendMessage(chatId,"Please select a region:", createRegionOptionsKeyboard(), prevMessageId);
@@ -117,7 +119,7 @@ public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdate
 
     private List<BotApiMethod<? extends Serializable>> searchGuide(long chatId, UserProgress progress) {
         List<BotApiMethod<? extends Serializable>> methodList;
-        String language = progress.getLanguage().name();
+        String language = progress.getLanguageEnum().name();
         String region = progress.getRegion();
         String startDateFormatted = CalendarUtil.formatDate(LocalDate.of(progress.getStartYear(), progress.getStartMonth(), progress.getStartDate()));
         String endDateFormatted = CalendarUtil.formatDate(LocalDate.of(progress.getEndYear(), progress.getEndMonth(), progress.getEndDate()));
@@ -147,27 +149,24 @@ public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdate
     }
 
     private InlineKeyboardMarkup createLanguageOptionsKeyboard() {
-        List<String> languages =
-                Arrays.stream(Language.values())
-                        .map(l -> l.text)
-                        .toList();
-        return KeyboardUtil.createInlineKeyboard(languages, callbackPrefix,4);
+        List<String> languages = languageRepository.findAll().stream().map(Language::getEngName).toList();
+        return KeyboardUtil.inlineKeyboard(languages, callbackPrefix,4);
     }
 
     private InlineKeyboardMarkup createRegionOptionsKeyboard() {
         List<String> regions = List.of("Uzbekistan", "Tashkent", "Samarkand", "Bukhara", "Khiva", "Fergana Valley");
-        return KeyboardUtil.createInlineKeyboard(regions, callbackPrefix, 3);
+        return KeyboardUtil.inlineKeyboard(regions, callbackPrefix, 3);
     }
 
     private List<BotApiMethod<? extends Serializable>> sendYear(long chatId, String messageText, int prevMessageId) {
         // Create a reply keyboard markup with a calendar
-        InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(List.of("2023","2024","2025"), callbackPrefix, 3);
+        InlineKeyboardMarkup markup = KeyboardUtil.inlineKeyboard(List.of("2023","2024","2025"), callbackPrefix, 3);
         return sendMessage(chatId, messageText, markup, prevMessageId);
     }
 
     private List<BotApiMethod<? extends Serializable>> sendMonth(long chatId, String messageText, int prevMessageId) {
         // Create a reply keyboard markup with a calendar
-        InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(CalendarUtil.monthNames(), callbackPrefix, 3);
+        InlineKeyboardMarkup markup = KeyboardUtil.inlineKeyboard(CalendarUtil.monthNames(), callbackPrefix, 3);
         return sendMessage(chatId, messageText, markup, prevMessageId);
     }
 
@@ -177,7 +176,7 @@ public class ClientBotGuideSearchServiceImplClientBot implements ClientBotUpdate
         for (int i=1; i <=31; i++){
             days.add(String.valueOf(i));
         }
-        InlineKeyboardMarkup markup = KeyboardUtil.createInlineKeyboard(days, callbackPrefix, 7);
+        InlineKeyboardMarkup markup = KeyboardUtil.inlineKeyboard(days, callbackPrefix, 7);
         return sendMessage(chatId, messageText, markup, prevMessageId);
     }
 

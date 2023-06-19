@@ -9,7 +9,7 @@ import me.timur.findguideback.model.dto.GuideDto;
 
 public interface GuideService {
     GuideDto save(GuideCreateOrUpdateDto requestDto);
+    GuideDto addLanguage(Long telegramId, String language);
+    GuideDto addRegion(Long telegramId, String region);
     GuideDto update(GuideCreateOrUpdateDto requestDto);
-    GuideDto getById(Long id);
-    GuideDto getByTelegramId(Long telegramId);
 }

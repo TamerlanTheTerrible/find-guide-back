@@ -39,7 +39,7 @@ public class ClientBotUniversalUpdateHandler implements ClientBotUpdateHandlerSe
             return sendMessage(
                     requestDto.getChatId(),
                     "Let's search a guide for you",
-                    KeyboardUtil.createInlineKeyboard(List.of("Find a guide"), ClientCommand.GUIDE_PARAMS, 2),
+                    KeyboardUtil.inlineKeyboard(List.of("Find a guide"), ClientCommand.GUIDE_PARAMS, 2),
                     requestDto.getPrevMessageId()
             );
         }

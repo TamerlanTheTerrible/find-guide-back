@@ -1,7 +1,7 @@
 package me.timur.findguideback.bot.client.model.dto;
 
 import lombok.Data;
-import me.timur.findguideback.bot.common.model.enums.Language;
+import me.timur.findguideback.model.enums.LanguageEnum;
 
 /**
  * Created by Temurbek Ismoilov on 28/03/23.
@@ -17,7 +17,7 @@ public class UserProgress {
     private boolean selectingEndYear;
     private boolean selectingEndMonth;
     private boolean selectingEndDate;
-    private Language language;
+    private LanguageEnum languageEnum;
     private String region;
     private Integer startYear;
     private Integer startMonth;
@@ -28,9 +28,5 @@ public class UserProgress {
 
     public UserProgress() {
         selectingLanguage = true;
-    }
-
-    public void progress(String data) {
-
     }
 }

@@ -42,6 +42,26 @@ public class GuideServiceImpl implements GuideService {
         return new GuideDto(guide);
     }
 
+    @Override
+    public GuideDto addLanguage(Long telegramId, String language) {
+        var guide = getByTelegramId(telegramId);
+        guide.addLanguage(languageRepository
+                .findByEngName(language)
+                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find language with name: " + language))
+        );
+        return new GuideDto(guideRepository.save(guide));
+    }
+
+    @Override
+    public GuideDto addRegion(Long telegramId, String region) {
+        var guide = getByTelegramId(telegramId);
+        guide.addRegion(regionRepository
+                .findByEngName(region)
+                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find region with name: " + region))
+        );
+        return new GuideDto(guideRepository.save(guide));
+    }
+
     private User getUser(Long userId, Long userTelegramId) {
         if (userId != null && userId > 0) {
             return userRepository.findById(userId).orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find user with id: " + userId));
@@ -84,17 +104,13 @@ public class GuideServiceImpl implements GuideService {
         return new GuideDto(guideRepository.save(user));
     }
 
-    @Override
-    public GuideDto getById(Long id) {
+    private Guide getById(Long id) {
         return guideRepository.findById(id)
-                .map(GuideDto::new)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with id: " + id));
     }
 
-    @Override
-    public GuideDto getByTelegramId(Long telegramId) {
+    private Guide getByTelegramId(Long telegramId) {
         return guideRepository.findById(telegramId)
-                .map(GuideDto::new)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with telegram id: " + telegramId));
     }
 

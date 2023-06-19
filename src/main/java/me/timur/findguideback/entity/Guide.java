@@ -85,4 +85,12 @@ public class Guide extends BaseEntity {
         if (regions == null) return null;
         return regions.stream().map(Region::getEngName).collect(Collectors.toSet());
     }
+
+    public void addLanguage(Language language) {
+        languages.add(language);
+    }
+
+    public void addRegion(Region region) {
+        regions.add(region);
+    }
 }
