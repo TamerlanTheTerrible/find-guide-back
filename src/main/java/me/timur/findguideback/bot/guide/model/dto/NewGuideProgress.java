@@ -1,7 +1,6 @@
 package me.timur.findguideback.bot.guide.model.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,22 +10,57 @@ import java.util.Set;
  */
 
 @Getter
-@Setter
 public class NewGuideProgress {
     private boolean languageProgressing;
     private boolean regionProgressing;
     private boolean carProgressing;
     private boolean commentProgressing;
     private Set<String> languages;
-    private Set<String> region;
+    private Set<String> regions;
     private boolean hasCar;
     private String comment;
 
     public NewGuideProgress() {
         languageProgressing = true;
         this.languages = new HashSet<>();
-        this.region = new HashSet<>();
+        this.regions = new HashSet<>();
 
+    }
+
+    public void languageIsProcessing() {
+        this.languageProgressing = true;
+        this.regionProgressing = false;
+        this.carProgressing = false;
+        this.commentProgressing = false;
+    }
+
+    public void regionProcessing() {
+        this.languageProgressing = false;
+        this.regionProgressing = true;
+        this.carProgressing = false;
+        this.commentProgressing = false;
+    }
+
+    public void carProcessing() {
+        this.languageProgressing = false;
+        this.regionProgressing = false;
+        this.carProgressing = true;
+        this.commentProgressing = false;
+    }
+
+    public void commentProcessing() {
+        this.languageProgressing = false;
+        this.regionProgressing = false;
+        this.carProgressing = false;
+        this.commentProgressing = true;
+    }
+
+    public void setHasCar(boolean hasCar) {
+        this.hasCar = hasCar;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public void addLanguage(String language) {
@@ -34,6 +68,6 @@ public class NewGuideProgress {
     }
 
     public void addRegion(String region) {
-        this.region.add(region);
+        this.regions.add(region);
     }
 }

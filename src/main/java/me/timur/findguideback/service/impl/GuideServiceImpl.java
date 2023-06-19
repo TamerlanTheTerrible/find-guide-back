@@ -32,7 +32,7 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideDto save(GuideCreateOrUpdateDto requestDto) {
-        log.info("Saving guide: {}", requestDto);
+        log.info("Creating guide: {}", requestDto);
         var languages = getLanguages(requestDto.getLanguageNames());
         var regions = getRegions(requestDto.getRegionNames());
         var transports = getTransports(requestDto.getTransports());
@@ -42,9 +42,10 @@ public class GuideServiceImpl implements GuideService {
         return new GuideDto(guide);
     }
 
+
     @Override
     public GuideDto addLanguage(Long telegramId, String language) {
-        var guide = getByTelegramId(telegramId);
+        var guide = getEntityByTelegramId(telegramId);
         guide.addLanguage(languageRepository
                 .findByEngName(language)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find language with name: " + language))
@@ -54,7 +55,7 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideDto addRegion(Long telegramId, String region) {
-        var guide = getByTelegramId(telegramId);
+        var guide = getEntityByTelegramId(telegramId);
         guide.addRegion(regionRepository
                 .findByEngName(region)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find region with name: " + region))
@@ -104,12 +105,13 @@ public class GuideServiceImpl implements GuideService {
         return new GuideDto(guideRepository.save(user));
     }
 
-    private Guide getById(Long id) {
-        return guideRepository.findById(id)
-                .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with id: " + id));
+    @Override
+    public GuideDto getByTelegramId(Long telegramId) {
+        var guideOptional = guideRepository.findByUserTelegramId(telegramId);
+        return guideOptional.map(GuideDto::new).orElse(null);
     }
 
-    private Guide getByTelegramId(Long telegramId) {
+    private Guide getEntityByTelegramId(Long telegramId) {
         return guideRepository.findById(telegramId)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with telegram id: " + telegramId));
     }

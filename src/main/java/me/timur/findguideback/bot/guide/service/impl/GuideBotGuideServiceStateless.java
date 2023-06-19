@@ -26,13 +26,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
 
 /**
- * Created by Temurbek Ismoilov on 18/06/23.
+ * Handle request.
+ * With every request GuideProgress will be updated.
+ * The flow should be strictly followed the order of steps: language -> region -> car -> done
+ * If the previous step is not completed (e.g. the previous step's field is empty), the previous step will be repeated.
  */
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class GuideBotGuideService implements GuideBotUpdateHandlerService {
+public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerService {
 
     private final LanguageRepository languageRepository;
     private final RegionRepository regionRepository;
@@ -62,31 +65,39 @@ public class GuideBotGuideService implements GuideBotUpdateHandlerService {
             newGuideProgressMap.put(chatId, progress);
         }
 
-        // handle request
         if (progress.isLanguageProgressing()) {
             if (Objects.equals(data, "Skip")) {
-                progress.setLanguageProgressing(false);
-                progress.setRegionProgressing(true);
+                progress.regionProcessing();
                 methodList = sendMessage(chatId, "Select region", createRegionsKeyboard(), prevMessageId);
             } else {
                 progress.addLanguage(data);
                 methodList = sendMessage(chatId, "You can select more language or skip", createLanguagesKeyboard(), prevMessageId);
             }
         } else if (progress.isRegionProgressing()) {
-            if (Objects.equals(data, "Skip")) {
-                progress.setRegionProgressing(false);
-                progress.setCarProgressing(true);
-                methodList = sendMessage(chatId, "Do you have a car for an excursion?", createHasCarKeyboard(), prevMessageId);
+            // if no language is selected, repeat language step
+            if (progress.getLanguages().isEmpty()) {
+                progress.languageIsProcessing();
+                methodList = sendMessage(chatId, "Select language", createLanguagesKeyboard(), prevMessageId);
             } else {
-                progress.addRegion(data);
-                methodList = sendMessage(chatId, "You can select more region or skip", createRegionsKeyboard(), prevMessageId);
+                // else continue with region step
+                if (Objects.equals(data, "Skip")) {
+                    progress.carProcessing();
+                    methodList = sendMessage(chatId, "Do you have a car for an excursion?", createHasCarKeyboard(), prevMessageId);
+                } else {
+                    progress.addRegion(data);
+                    methodList = sendMessage(chatId, "You can select more region or skip", createRegionsKeyboard(), prevMessageId);
+                }
             }
         } else if (progress.isCarProgressing()) {
-            progress.setCarProgressing(false);
-//            progress.setCommentProgressing(true);
-            progress.setHasCar(Objects.equals(data, "yes"));
-            guideService.save(new GuideCreateOrUpdateDto(chatId, progress));
-            methodList = sendMessage(chatId, "A new guide successfully saved", prevMessageId);
+            if (progress.getRegions().isEmpty()) {
+                progress.regionProcessing();
+                methodList = sendMessage(chatId, "Select region", createRegionsKeyboard(), prevMessageId);
+            } else {
+                progress.commentProcessing();
+                progress.setHasCar(Objects.equals(data, "yes"));
+                methodList = sendMessage(chatId, "A new guide successfully saved", prevMessageId);
+                guideService.save(new GuideCreateOrUpdateDto(chatId, progress));
+            }
         }
 
         return methodList;

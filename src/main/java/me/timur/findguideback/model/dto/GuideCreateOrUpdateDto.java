@@ -39,7 +39,7 @@ public class GuideCreateOrUpdateDto implements Serializable {
     public GuideCreateOrUpdateDto(Long userTelegramId, NewGuideProgress progress) {
         this.userTelegramId = userTelegramId;
         this.languageNames = progress.getLanguages();
-        this.regionNames = progress.getRegion();
+        this.regionNames = progress.getRegions();
         this.hasCar = progress.isHasCar();
         this.description = progress.getComment();
     }
