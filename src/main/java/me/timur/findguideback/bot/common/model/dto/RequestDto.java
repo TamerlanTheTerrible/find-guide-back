@@ -6,6 +6,9 @@ import me.timur.findguideback.bot.client.exception.ClinetException;
 import me.timur.findguideback.bot.common.util.UpdateUtil;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
+
+import java.util.List;
 
 /**
  * Created by Temurbek Ismoilov on 14/04/23.
@@ -20,6 +23,7 @@ public class RequestDto {
     private String phone;
     private String firstName;
     private String lastName;
+    private List<PhotoSize> photos;
 
     public RequestDto(@NonNull CallbackQuery query) {
         if (query == null) {
@@ -50,6 +54,9 @@ public class RequestDto {
         }
         this.firstName = message.getFrom().getFirstName();
         this.lastName = message.getFrom().getLastName();
+        if (message.hasPhoto()) {
+            this.photos = message.getPhoto();
+        }
     }
 
     @Override

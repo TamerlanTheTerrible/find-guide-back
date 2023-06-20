@@ -95,9 +95,10 @@ public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerServi
             } else {
                 progress.commentProcessing();
                 progress.setHasCar(Objects.equals(data, "yes"));
-                methodList = sendMessage(chatId, "A new guide successfully saved", prevMessageId);
                 guideService.save(new GuideCreateOrUpdateDto(chatId, progress));
                 newGuideProgressMap.remove(chatId);
+
+                methodList = sendMessage(chatId, "Congratulations, it's almost done. Please attach your license to verify your account", prevMessageId);
             }
         }
 

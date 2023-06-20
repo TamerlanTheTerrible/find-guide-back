@@ -12,8 +12,11 @@ import me.timur.findguideback.repository.LanguageRepository;
 import me.timur.findguideback.service.UserService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -57,6 +60,11 @@ public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerServ
                     KeyboardUtil.inlineKeyboard(languages, GuideCommand.NEW_GUIDE.command, 2),
                     requestDto.getPrevMessageId()
             );
+        } else if (requestDto.getPhotos() != null && !requestDto.getPhotos().isEmpty()) {
+            PhotoSize photo = requestDto.getPhotos().stream()
+                    .max(Comparator.comparingInt(PhotoSize::getFileSize))
+                    .orElse(null);
+            GetFile getFileRequest = new GetFile(photo.getFileId());
         }
 
         return sendMessage(requestDto.getChatId(), "Something went wrong. Try again");
