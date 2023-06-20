@@ -40,7 +40,7 @@ public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerServi
     private final LanguageRepository languageRepository;
     private final RegionRepository regionRepository;
     private final GuideService guideService;
-    private final ConcurrentHashMap<Long, NewGuideProgress> newGuideProgressMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, NewGuideProgress> newGuideProgressMap;
 
     @Override
     public GuideCommand getType() {
@@ -97,6 +97,7 @@ public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerServi
                 progress.setHasCar(Objects.equals(data, "yes"));
                 methodList = sendMessage(chatId, "A new guide successfully saved", prevMessageId);
                 guideService.save(new GuideCreateOrUpdateDto(chatId, progress));
+                newGuideProgressMap.remove(chatId);
             }
         }
 

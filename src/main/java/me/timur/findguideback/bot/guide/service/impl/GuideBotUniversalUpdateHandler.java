@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.common.util.KeyboardUtil;
+import me.timur.findguideback.bot.guide.model.dto.NewGuideProgress;
 import me.timur.findguideback.bot.guide.model.enums.GuideCommand;
 import me.timur.findguideback.bot.guide.service.GuideBotUpdateHandlerService;
 import me.timur.findguideback.entity.Language;
@@ -14,6 +15,7 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
 
@@ -28,6 +30,7 @@ public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerServ
 
     private final UserService userService;
     private final LanguageRepository languageRepository;
+    private final ConcurrentHashMap<Long, NewGuideProgress> newGuideProgressMap;
 
     @Override
     public GuideCommand getType() {
@@ -40,8 +43,14 @@ public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerServ
             //save a phone
             log.info("Telegram user {} saving phone number {}", requestDto.getChatId(), requestDto.getPhone());
             userService.savePhone(requestDto.getChatId(), requestDto.getPhone());
+
+            // add new progress into the map
+            log.info("Creating new progress for chatId: {}", requestDto.getChatId());
+            newGuideProgressMap.put(requestDto.getChatId(), new NewGuideProgress());
+
             //send a message with inline keyboard to select a language
             var languages = languageRepository.findAll().stream().map(Language::getEngName).toList();
+
             return sendMessage(
                     requestDto.getChatId(),
                     "Please select the language you use during the excursion",
@@ -50,8 +59,6 @@ public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerServ
             );
         }
 
-        return sendMessage(
-                requestDto.getChatId(),
-                "Something went wrong. Try again");
+        return sendMessage(requestDto.getChatId(), "Something went wrong. Try again");
     }
 }

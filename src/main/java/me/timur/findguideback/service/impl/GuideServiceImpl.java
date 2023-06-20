@@ -38,6 +38,14 @@ public class GuideServiceImpl implements GuideService {
         var transports = getTransports(requestDto.getTransports());
         var files = getFiles(requestDto.getFiles());
         var user = getUser(requestDto.getUserId(), requestDto.getUserTelegramId());
+
+        // check if the user has already created a guide
+        guideRepository.findByUserTelegramId(requestDto.getUserTelegramId())
+                .ifPresent(oldGuide -> {
+                    log.info("User {} is already a guide Deleting the old guide record before creating new one", oldGuide);
+                    guideRepository.delete(oldGuide);
+                });
+
         var guide = guideRepository.save(new Guide(requestDto, user, languages, regions, transports, files));
         return new GuideDto(guide);
     }
