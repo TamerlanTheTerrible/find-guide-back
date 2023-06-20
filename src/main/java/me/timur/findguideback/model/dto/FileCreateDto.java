@@ -13,12 +13,31 @@ import java.io.Serializable;
 
 @Data
 public class FileCreateDto implements Serializable {
+    @JsonProperty("guide_id")
+    private Long guideId;
+    @JsonProperty("guide_telegram_id")
+    private Long guideTelegramId;
     @JsonProperty("type")
     private DocumentType type;
+    @JsonProperty("file_telegram_id")
+    private Long fileTelegramId;
     @JsonProperty("path")
     private String path;
     @JsonProperty("extension")
     private DocumentExtension extension;
     @JsonProperty("size")
     private Long size;
+
+    @Override
+    public String toString() {
+        return "FileCreateDto{" +
+                "guideId=" + guideId +
+                ", guideTelegramId=" + guideTelegramId +
+                ", type=" + type +
+                ", fileTelegramId=" + fileTelegramId +
+                ", path='" + path + '\'' +
+                ", extension=" + extension +
+                ", size=" + size +
+                '}';
+    }
 }

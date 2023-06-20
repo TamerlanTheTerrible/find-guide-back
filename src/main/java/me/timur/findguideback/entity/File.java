@@ -24,7 +24,10 @@ public class File extends BaseEntity {
     @Column(name = "type", nullable = false)
     private DocumentType type;
 
-    @Column(name = "path", nullable = false)
+    @Column(name = "file_telegram_id")
+    private Long fileTelegramId;
+
+    @Column(name = "path")
     private String path;
 
     @Enumerated(EnumType.STRING)
@@ -41,10 +44,11 @@ public class File extends BaseEntity {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
     private Boolean isDeleted;
 
-    public File(FileCreateDto createDto) {
+    public File(FileCreateDto createDto, Guide guide) {
         if (createDto == null) {
             return;
         }
+        this.fileTelegramId = createDto.getFileTelegramId();
         this.type = createDto.getType();
         this.path = createDto.getPath();
         this.extension = createDto.getExtension();

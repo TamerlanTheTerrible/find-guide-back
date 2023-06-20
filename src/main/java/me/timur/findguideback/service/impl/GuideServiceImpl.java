@@ -119,6 +119,13 @@ public class GuideServiceImpl implements GuideService {
         return guideOptional.map(GuideDto::new).orElse(null);
     }
 
+    @Override
+    public GuideDto confirmGuide(Long telegramId) {
+        var guide = getEntityByTelegramId(telegramId);
+        guide.setIsVerified(true);
+        return new GuideDto(guideRepository.save(guide));
+    }
+
     private Guide getEntityByTelegramId(Long telegramId) {
         return guideRepository.findById(telegramId)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with telegram id: " + telegramId));

@@ -29,6 +29,8 @@ public class FileDto implements Serializable {
     private LocalDateTime dateUpdated;
     @JsonProperty("type")
     private DocumentType type;
+    @JsonProperty("file_telegram_id")
+    private String fileTelegramId;
     @JsonProperty("path")
     private String path;
     @JsonProperty("extension")
