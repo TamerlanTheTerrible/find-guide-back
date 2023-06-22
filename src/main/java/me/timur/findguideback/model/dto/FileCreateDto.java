@@ -1,6 +1,7 @@
 package me.timur.findguideback.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 import me.timur.findguideback.model.enums.DocumentExtension;
 import me.timur.findguideback.model.enums.DocumentType;
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * Created by Temurbek Ismoilov on 30/04/23.
  */
 
+@Builder
 @Data
 public class FileCreateDto implements Serializable {
     @JsonProperty("guide_id")
@@ -20,7 +22,7 @@ public class FileCreateDto implements Serializable {
     @JsonProperty("type")
     private DocumentType type;
     @JsonProperty("file_telegram_id")
-    private Long fileTelegramId;
+    private String fileTelegramId;
     @JsonProperty("path")
     private String path;
     @JsonProperty("extension")

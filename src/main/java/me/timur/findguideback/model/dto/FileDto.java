@@ -46,5 +46,6 @@ public class FileDto implements Serializable {
         this.path = file.getPath();
         this.extension = file.getExtension();
         this.size = file.getSize();
+        this.fileTelegramId = file.getFileTelegramId();
     }
 }

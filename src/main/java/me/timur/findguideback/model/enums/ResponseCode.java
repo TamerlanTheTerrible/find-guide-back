@@ -18,7 +18,9 @@ public enum ResponseCode {
     NOT_FOUND(-201),
     INVALID_PARAMETERS(-202),
 
-    FEIGN_EXCEPTION(-300)
+    HTTP_ERROR(-300),
+
+    TELEGRAM_ERROR(-400)
     ;
 
     private final int code;

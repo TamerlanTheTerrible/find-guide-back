@@ -25,13 +25,13 @@ public class File extends BaseEntity {
     private DocumentType type;
 
     @Column(name = "file_telegram_id")
-    private Long fileTelegramId;
+    private String fileTelegramId;
 
     @Column(name = "path")
     private String path;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "extension", nullable = false)
+    @Column(name = "extension")
     private DocumentExtension extension;
 
     @Column(name = "size")
@@ -44,7 +44,7 @@ public class File extends BaseEntity {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
     private Boolean isDeleted;
 
-    public File(FileCreateDto createDto, Guide guide) {
+    public File(FileCreateDto createDto) {
         if (createDto == null) {
             return;
         }
@@ -54,5 +54,10 @@ public class File extends BaseEntity {
         this.extension = createDto.getExtension();
         this.size = createDto.getSize();
         this.isDeleted = false;
+    }
+
+    public File(FileCreateDto createDto, Guide guide) {
+        this(createDto);
+        this.guide = guide;
     }
 }
