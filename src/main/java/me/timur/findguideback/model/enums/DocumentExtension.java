@@ -10,6 +10,8 @@ public enum DocumentExtension {
     PDF("pdf"),
     DOC("doc"),
     DOCX("docx"),
+    XLS("xls"),
+    XLSX("xlsx"),
     OTHER("other")
     ;
 

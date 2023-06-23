@@ -10,9 +10,7 @@ import me.timur.findguideback.util.LocalDateTimeUtil;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by Temurbek Ismoilov on 30/04/23.
@@ -34,8 +32,8 @@ public class GuideDto implements Serializable {
     private Set<String> languageNames;
     @JsonProperty("region_names")
     private Set<String> regionNames;
-    @JsonProperty("files")
-    private List<FileDto> files;
+//    @JsonProperty("files")
+//    private List<FileDto> files;
     @JsonProperty("description")
     private String description;
     @JsonProperty("is_verified")
@@ -54,7 +52,7 @@ public class GuideDto implements Serializable {
         this.user = new UserDto(guide.getUser());
         this.languageNames = guide.getLanguageNames();
         this.regionNames = guide.getRegionNames();
-        this.files = guide.getFiles() == null ? null : guide.getFiles().stream().map(FileDto::new).collect(Collectors.toList());
+//        this.files = guide.getFiles() == null ? null : guide.getFiles().stream().map(FileDto::new).collect(Collectors.toList());
         this.description = guide.getDescription();
         this.isVerified = guide.getIsVerified();
         this.hasCar = guide.getHasCar();
@@ -71,7 +69,7 @@ public class GuideDto implements Serializable {
                 ", phone=" + user.getPhoneNumbers() +
                 ", languageNames=" + languageNames +
                 ", regionNames=" + regionNames +
-                ", files=" + files +
+//                ", files=" + files +
                 ", description='" + description + '\'' +
                 ", isVerified=" + isVerified +
                 ", hasCar=" + hasCar +

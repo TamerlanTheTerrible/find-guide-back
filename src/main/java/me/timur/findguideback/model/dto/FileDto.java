@@ -37,6 +37,8 @@ public class FileDto implements Serializable {
     private DocumentExtension extension;
     @JsonProperty("size")
     private Long size;
+    @JsonProperty("guide")
+    private GuideDto guide;
 
     public FileDto(File file) {
         this.id = file.getId();
@@ -47,5 +49,6 @@ public class FileDto implements Serializable {
         this.extension = file.getExtension();
         this.size = file.getSize();
         this.fileTelegramId = file.getFileTelegramId();
+        this.guide = new GuideDto(file.getGuide());
     }
 }
