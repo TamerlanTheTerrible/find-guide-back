@@ -39,12 +39,12 @@ public class RestTemplateHelper<T> implements HttpHelper {
     }
 
     @Override
-    public ResponseEntity<String> sendResource(String url, MultiValueMap<String, Object> requestBody) {
+    public ResponseEntity<String> post(String url, MultiValueMap<String, Object> requestBody) {
         log.info("POST request to {}", url);
         try {
             // Create headers with Content-Type as multipart/form-data
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
             // Create the HTTP entity with request body and headers
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
@@ -56,6 +56,22 @@ public class RestTemplateHelper<T> implements HttpHelper {
             log.error("Error while sending request to {}", url);
             throw new FindGuideException(ResponseCode.HTTP_ERROR, "Error while sending request to {}. ERROR: ", url, e.getMessage());
         }
+    }
 
+
+    @Override
+    public ResponseEntity<String> post(String url, MultiValueMap<String, Object> requestBody, HttpHeaders headers) {
+        log.info("POST request to {}", url);
+        try {
+            // Create the HTTP entity with request body and headers
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+            final ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+            log.info("Response from admin bot: {}", response.getBody());
+
+            return response;
+        } catch (Exception e) {
+            log.error("Error while sending request to {}", url);
+            throw new FindGuideException(ResponseCode.HTTP_ERROR, "Error while sending request to {}. ERROR: ", url, e.getMessage());
+        }
     }
 }

@@ -16,6 +16,8 @@ import me.timur.findguideback.service.FileService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -83,6 +85,9 @@ public class ForConfirmationSender {
             var adminChatId = 3728614L;
             var extension = FilenameUtils.getExtension(filePath.toString());
             var url = "https://api.telegram.org/bot" + ADMIN_BOT_TOKEN + (extension.equals("jpg") ? "/sendPhoto" : "/sendDocument") + "?chat_id=" + adminChatId;
+            // prepare headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             // prepare body
             var guideTgId = fileDto.getGuide().getUser().getTelegramId();
             var keyboardJson = "{\n" +
@@ -90,11 +95,11 @@ public class ForConfirmationSender {
                     "        [\n" +
                     "            {\n" +
                     "                \"text\": \"confirm\",\n" +
-                    "                \"callback_data\": \"" + CommonCommand.REJECT.command + "-" + guideTgId + "\"\n" +
+                    "                \"callback_data\": \"" + CommonCommand.CONFIRM.command + "-" + guideTgId + "\"\n" +
                     "            },\n" +
                     "            {\n" +
                     "                \"text\": \"reject\",\n" +
-                    "                \"callback_data\": \"" + CommonCommand.CONFIRM.command + "-" + guideTgId + "\"\n" +
+                    "                \"callback_data\": \"" + CommonCommand.REJECT.command + "-" + guideTgId + "\"\n" +
                     "            }\n" +
                     "        ]\n" +
                     "    ]\n" +
@@ -115,7 +120,7 @@ public class ForConfirmationSender {
             requestBody.add("caption", caption);
             requestBody.add("reply_markup", keyboardJson);
             // send a photo
-            httpHelper.sendResource(url, requestBody);
+            httpHelper.post(url, requestBody, headers);
 
             // delete a photo after sending
             Files.deleteIfExists(filePath);

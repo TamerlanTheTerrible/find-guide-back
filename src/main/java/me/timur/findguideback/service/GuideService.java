@@ -14,5 +14,5 @@ public interface GuideService {
     GuideDto addRegion(Long telegramId, String region);
     GuideDto update(GuideCreateOrUpdateDto requestDto);
     GuideDto getByTelegramId(Long telegramId);
-    GuideDto confirmGuide(Long telegramId);
+    GuideDto confirmGuide(Long telegramId, boolean isConfirmed);
 }

@@ -120,14 +120,15 @@ public class GuideServiceImpl implements GuideService {
     }
 
     @Override
-    public GuideDto confirmGuide(Long telegramId) {
+    public GuideDto confirmGuide(Long telegramId, boolean isConfirmed) {
+        log.info("Confirming/rejecting guide with telegram id: {} isConfirmed: {}", telegramId, isConfirmed);
         var guide = getEntityByTelegramId(telegramId);
-        guide.setIsVerified(true);
+        guide.setIsVerified(isConfirmed);
         return new GuideDto(guideRepository.save(guide));
     }
 
     private Guide getEntityByTelegramId(Long telegramId) {
-        return guideRepository.findById(telegramId)
+        return guideRepository.findByUserTelegramId(telegramId)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with telegram id: " + telegramId));
     }
 

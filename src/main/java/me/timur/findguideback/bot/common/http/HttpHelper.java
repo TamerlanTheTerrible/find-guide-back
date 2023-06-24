@@ -1,5 +1,6 @@
 package me.timur.findguideback.bot.common.http;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
@@ -9,5 +10,7 @@ import org.springframework.util.MultiValueMap;
 
 public interface HttpHelper {
     ResponseEntity<String> get(String url);
-    ResponseEntity<String> sendResource(String url, MultiValueMap<String, Object> requestBody);
+    ResponseEntity<String> post(String url, MultiValueMap<String, Object> requestBody);
+
+    ResponseEntity<String> post(String url, MultiValueMap<String, Object> requestBody, HttpHeaders headers);
 }

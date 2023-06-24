@@ -2,7 +2,9 @@ package me.timur.findguideback.bot.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.timur.findguideback.bot.admin.service.AdminService;
 import me.timur.findguideback.bot.common.model.dto.RequestDto;
+import me.timur.findguideback.bot.common.model.enums.CommonCommand;
 import me.timur.findguideback.bot.common.util.UpdateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,8 @@ import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessag
 @RequiredArgsConstructor
 @Component
 public class AdminBot extends TelegramLongPollingBot {
+
+    private final AdminService adminService;
 
     @Value("${bot.admin.username}")
     private String BOT_NAME;
@@ -70,10 +74,10 @@ public class AdminBot extends TelegramLongPollingBot {
         var request = new RequestDto(query);
         log.info("ADMIN BOT CallbackQuery : {}",request);
         final String prefix = UpdateUtil.getPrefix(query.getData());
-        if (prefix.equals("confirm")) {
-            execute(sendMessage(request.getChatId(), "Confirmed"));
-        } else if (prefix.equals("reject")) {
-            execute(sendMessage(request.getChatId(), "Rejected"));
+        if (prefix.equals(CommonCommand.CONFIRM.command)) {
+            execute(adminService.confirmGuide(new RequestDto(query), true));
+        } else if (prefix.equals(CommonCommand.REJECT.command)) {
+            execute(adminService.confirmGuide(new RequestDto(query), false));
         } else {
             execute(sendMessage(request.getChatId(), "I don't understand you"));
         }

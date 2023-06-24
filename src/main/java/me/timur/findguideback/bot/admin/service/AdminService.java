@@ -11,5 +11,5 @@ import java.util.List;
  */
 
 public interface AdminService {
-    List<BotApiMethod<? extends Serializable>> confirmGuide(RequestDto requestDto);
+    List<BotApiMethod<? extends Serializable>> confirmGuide(RequestDto requestDto, boolean isConfirmed);
 }
