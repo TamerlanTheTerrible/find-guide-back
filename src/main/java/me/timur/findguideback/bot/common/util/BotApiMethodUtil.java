@@ -40,4 +40,10 @@ public class BotApiMethodUtil {
         sendMessage.setReplyMarkup(markup);
         return List.of(deleteMessage, sendMessage);
     }
+
+    public static List<BotApiMethod<? extends Serializable>> removeKeyboard(@NonNull Long chatId, int prevMessageId) {
+        DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), prevMessageId);
+        return List.of(deleteMessage);
+    }
+
 }

@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.removeKeyboard;
 import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
 
 /**
@@ -51,12 +53,14 @@ public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerServ
             //send a message with inline keyboard to select a language
             var languages = languageRepository.findAll().stream().map(Language::getEngName).toList();
 
-            return sendMessage(
+            var messages = new ArrayList<>(removeKeyboard(requestDto.getChatId(), requestDto.getPrevMessageId()));
+            messages.addAll(sendMessage(
                     requestDto.getChatId(),
                     "Please select the language you use during the excursion",
-                    KeyboardUtil.inlineKeyboard(languages, GuideCommand.NEW_GUIDE.command, 2),
-                    requestDto.getPrevMessageId()
-            );
+                    KeyboardUtil.inlineKeyboard(languages, GuideCommand.NEW_GUIDE.command, 2)
+            ));
+
+            return messages;
         } else if ((requestDto.getPhotos() != null && !requestDto.getPhotos().isEmpty()) || requestDto.getDocument() != null) {
             log.info("Telegram user {} sending photos", requestDto.getChatId());
             // send a message to the admin bot to confirm the guide

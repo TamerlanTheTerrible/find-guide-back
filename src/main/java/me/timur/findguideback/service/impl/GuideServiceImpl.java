@@ -50,7 +50,6 @@ public class GuideServiceImpl implements GuideService {
         return new GuideDto(guide);
     }
 
-
     @Override
     public GuideDto addLanguage(Long telegramId, String language) {
         var guide = getEntityByTelegramId(telegramId);
