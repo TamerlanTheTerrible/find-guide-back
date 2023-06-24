@@ -3,10 +3,7 @@ package me.timur.findguideback.bot.common.http;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.enums.ResponseCode;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -17,58 +14,47 @@ import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Service
-public class RestTemplateHelper<T> implements HttpHelper {
+public class RestTemplateHelper implements HttpHelper {
 
     private final static RestTemplate restTemplate = new RestTemplate();
 
     @Override
     public ResponseEntity<String> get(String url) {
-        log.info("GET request to {}", url);
-        try {
-            final ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            if (response.getStatusCode().is2xxSuccessful()) {
-                return response;
-            } else {
-                log.error("Error while sending request to {}", url);
-                throw new FindGuideException(ResponseCode.HTTP_ERROR, "Error while sending request to {}", url);
-            }
-        } catch (Exception e) {
-            log.error("Error while sending request to {}", url);
-            throw new FindGuideException(ResponseCode.HTTP_ERROR, "Error while sending request to {}. ERROR: ", url, e.getMessage());
-        }
+        return sendRequest(url);
     }
 
     @Override
     public ResponseEntity<String> post(String url, MultiValueMap<String, Object> requestBody) {
-        log.info("POST request to {}", url);
-        try {
-            // Create headers with Content-Type as multipart/form-data
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            // Create the HTTP entity with request body and headers
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
-            final ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
-            log.info("Response from admin bot: {}", response.getBody());
-
-            return response;
-        } catch (Exception e) {
-            log.error("Error while sending request to {}", url);
-            throw new FindGuideException(ResponseCode.HTTP_ERROR, "Error while sending request to {}. ERROR: ", url, e.getMessage());
-        }
+        var headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return post(url, requestBody, headers);
     }
-
 
     @Override
     public ResponseEntity<String> post(String url, MultiValueMap<String, Object> requestBody, HttpHeaders headers) {
-        log.info("POST request to {}", url);
-        try {
-            // Create the HTTP entity with request body and headers
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
-            final ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
-            log.info("Response from admin bot: {}", response.getBody());
+        return sendRequest( url, new HttpEntity<>(requestBody, headers));
+    }
 
-            return response;
+    private ResponseEntity<String> sendRequest(String url) {
+        return sendRequest(url, null);
+    }
+
+    private ResponseEntity<String> sendRequest(String url, HttpEntity<MultiValueMap<String, Object>> requestEntity) {
+        log.info("HTTP request to {}{}", url, requestEntity != null ? " with body: " + requestEntity.getBody() : "");
+        try {
+            var responseEntity = requestEntity != null
+                    ? restTemplate.postForEntity(url, requestEntity, String.class)
+                    : restTemplate.getForEntity(url, String.class);
+
+            log.info("Response from admin bot: {}", responseEntity.getBody());
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                return responseEntity;
+            } else {
+                log.error("Error while sending request to {}", url);
+                throw new FindGuideException(ResponseCode.HTTP_ERROR, "Error while sending request to {}", url);
+            }
+
         } catch (Exception e) {
             log.error("Error while sending request to {}", url);
             throw new FindGuideException(ResponseCode.HTTP_ERROR, "Error while sending request to {}. ERROR: ", url, e.getMessage());
