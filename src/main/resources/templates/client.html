@@ -116,21 +116,15 @@
 
         // Create an object with the search parameters
         let searchParams = {
-            fromDate: fromDate,
-            toDate: toDate,
+            from_date: fromDate,
+            to_date: toDate,
             language: language,
             region: region,
-            hasCar: hasCar
+            has_car: hasCar
         };
 
         // Convert the object to a JSON string
         let searchData = JSON.stringify(searchParams);
-
-        // Send the JSON string to the bot
-        tg.request({
-            method: 'send',
-            payload: "/webapp"
-        });
 
         // Close the WebApp after sending the data
         tg.close();
