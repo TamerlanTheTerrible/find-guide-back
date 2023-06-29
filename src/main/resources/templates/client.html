@@ -90,30 +90,27 @@
 </div>
 
 <script>
-    let tg = window.Telegram.WebApp;
+    let fromDate = document.getElementById("fromDate").value;
+    let toDate = document.getElementById("toDate").value;
+    let language = document.getElementById("language").value;
+    let region = document.getElementById("region").value;
+    let hasCar = document.getElementById("hasCar").checked;
 
+    let searchButton = document.getElementById("searchButton");
+    let guideName = document.getElementById("guideName");
+    let guideLanguage = document.getElementById("guideLanguage");
+    let guideRegion = document.getElementById("guideRegion");
+    let guideCar = document.getElementById("guideCar");
+
+    let tg = window.Telegram.WebApp;
     tg.expand();
 
     tg.MainButton.text = "Changed Text"; //изменяем текст кнопки
-    // tg.MainButton.setText("Changed Text1"); //изменяем текст кнопки иначе
-    // tg.MainButton.textColor = "#F55353"; //изменяем цвет текста кнопки
     tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
-    // tg.MainButton.setParams({"color": "#143F6B"}); //так изменяются все параметры
     tg.MainButton.enable()
     tg.MainButton.show()
 
-    // tg.MainButton.onClick(function(){
-    //     tg.sendData("/webapp");
-    //     //при клике на основную кнопку отправляем данные в строковом виде
-    // });
-
-    Telegram.WebApp.onEvent('mainButtonClicked', function(){
-        let fromDate = document.getElementById("fromDate").value;
-        let toDate = document.getElementById("toDate").value;
-        let language = document.getElementById("language").value;
-        let region = document.getElementById("region").value;
-        let hasCar = document.getElementById("hasCar").checked;
-
+    function sendData() {
         // Create an object with the search parameters
         let searchParams = {
             from_date: fromDate,
@@ -126,15 +123,39 @@
         // Convert the object to a JSON string
         let searchData = JSON.stringify(searchParams);
 
+        fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/client', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Data sent successfully to the backend');
+                    guideName.innerText = "Success!";
+                    // Handle the response from your backend if needed
+                } else {
+                    console.error('Failed to send data to the backend');
+                    guideName.innerText = "Error";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                guideName.innerText = "serious error";
+            });
+
         // Close the WebApp after sending the data
         tg.close();
+    }
+
+    Telegram.WebApp.onEvent('mainButtonClicked', function(){
+        sendData();
     });
 
-    let searchButton = document.getElementById("searchButton");
-    let guideName = document.getElementById("guideName");
-    let guideLanguage = document.getElementById("guideLanguage");
-    let guideRegion = document.getElementById("guideRegion");
-    let guideCar = document.getElementById("guideCar");
+    searchButton.addEventListener('click', function () {
+        sendData();
+    });
 
     // searchButton.addEventListener('click', function () {
     //         let fromDate = document.getElementById("fromDate").value;
