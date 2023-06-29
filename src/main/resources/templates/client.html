@@ -110,6 +110,14 @@
     tg.MainButton.enable()
     tg.MainButton.show()
 
+    Telegram.WebApp.onEvent('mainButtonClicked', function(){
+        sendData();
+    });
+
+    searchButton.addEventListener('click', function () {
+        sendData();
+    });
+
     function sendData() {
         // Create an object with the search parameters
         let searchParams = {
@@ -146,16 +154,8 @@
             });
 
         // Close the WebApp after sending the data
-        tg.close();
+        // tg.close();
     }
-
-    Telegram.WebApp.onEvent('mainButtonClicked', function(){
-        sendData();
-    });
-
-    searchButton.addEventListener('click', function () {
-        sendData();
-    });
 
     // searchButton.addEventListener('click', function () {
     //         let fromDate = document.getElementById("fromDate").value;
