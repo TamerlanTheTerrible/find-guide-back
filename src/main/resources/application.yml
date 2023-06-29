@@ -1,0 +1,43 @@
+server:
+  port: 8280
+  ssl:
+    key-store-type: PKCS12
+#    key-store: classpath:keystore/telegram.p12
+    key-store: /Users/tamerlantheterrible/IdeProjects 2.0/find-guide-back/find-guide-back/telegram.p12
+    key-store-password: Qbod!1336
+    key-alias: telegram
+    enabled: true
+
+spring:
+  application:
+    name: get-guide
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/find_guide
+    username: find_guide
+    password: find_guide
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 30000
+      max-lifetime: 2000000
+      connection-timeout: 30000
+      pool-name: HikariDbPool
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  thymeleaf:
+    prefix: classpath:/templates/
+
+bot:
+  client:
+    username: find_guide_bot
+    token: 5957262303:AAEbQPnIvl6EGoOXswWn8xP1Dhvz8PirX-E
+  guide:
+    username: GuideHelperUzBot
+    token: 6000035744:AAEP0RtU5sV_6Xa76-SnPOPrF5EHQXvcE60
+  admin:
+    username: FindGuideAdminBot
+    token: 6205040015:AAGDE1_8UpX46rVhml2_zZr34RRFMQ7a12o
