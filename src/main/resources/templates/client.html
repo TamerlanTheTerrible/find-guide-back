@@ -108,10 +108,29 @@
     // });
 
     Telegram.WebApp.onEvent('mainButtonClicked', function(){
-        console.log("mainButtonClicked");
-        tg.sendData("/webapp");
-        tg.close()
-        //при клике на основную кнопку отправляем данные в строковом виде
+        let fromDate = document.getElementById("fromDate").value;
+        let toDate = document.getElementById("toDate").value;
+        let language = document.getElementById("language").value;
+        let region = document.getElementById("region").value;
+        let hasCar = document.getElementById("hasCar").checked;
+
+        // Create an object with the search parameters
+        let searchParams = {
+            fromDate: fromDate,
+            toDate: toDate,
+            language: language,
+            region: region,
+            hasCar: hasCar
+        };
+
+        // Convert the object to a JSON string
+        let searchData = JSON.stringify(searchParams);
+
+        // Send the JSON string to the bot
+        tg.sendData(searchData);
+
+        // Close the WebApp after sending the data
+        tg.close();
     });
 
     let searchButton = document.getElementById("searchButton");
