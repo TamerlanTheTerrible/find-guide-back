@@ -129,6 +129,7 @@
 
         // Convert the object to a JSON string
         let searchData = JSON.stringify(searchParams);
+        guideLanguage = searchData
 
         fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
             method: 'POST',
