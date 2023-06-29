@@ -2,10 +2,10 @@ package me.timur.findguideback.bot.client;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.timur.findguideback.bot.client.factory.ClientBotCallbackHandlerFactory;
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
 import me.timur.findguideback.bot.common.model.dto.RequestDto;
-import me.timur.findguideback.bot.client.factory.ClientBotCallbackHandlerFactory;
 import me.timur.findguideback.bot.common.util.UpdateUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -63,6 +63,9 @@ public class ClientBot extends TelegramLongPollingBot {
     }
 
     private void handleIncomingMessage(Message message) {
+        RequestDto request = new RequestDto(message);
+        log.info("CLIENT BOT Message : {}", request);
+
         try {
             final WebAppData webAppData = message.getWebAppData();
             if (webAppData != null) {
@@ -79,15 +82,15 @@ public class ClientBot extends TelegramLongPollingBot {
         }
 
 
-        RequestDto request = new RequestDto(message);
-        log.info("CLIENT BOT Message : {}", request);
-
         ClientBotUpdateHandlerService callbackHandler = clientBotCallbackHandlerFactory.get(message.getText());
         List<BotApiMethod<? extends Serializable>> methods = callbackHandler.handle(request);
         execute(methods);
     }
 
     private void handleCallbackQuery(CallbackQuery query) {
+        RequestDto request = new RequestDto(query);
+        log.info("CLIENT BOT CallbackQuery : {}",request);
+
         try {
             query.getMessage().getWebAppData();
             if (query.getMessage().getWebAppData() != null) {
@@ -102,10 +105,6 @@ public class ClientBot extends TelegramLongPollingBot {
         } catch (Exception e) {
             log.error("Error while handling WebAppData", e);
         }
-
-
-        RequestDto request = new RequestDto(query);
-        log.info("CLIENT BOT CallbackQuery : {}",request);
 
         ClientBotUpdateHandlerService callbackHandler = clientBotCallbackHandlerFactory.get(ClientCommand.get(UpdateUtil.getPrefix(query.getData())));
         List<BotApiMethod<? extends Serializable>> methods = callbackHandler.handle(request);
