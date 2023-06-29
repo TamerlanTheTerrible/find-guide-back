@@ -2,7 +2,6 @@ server:
   port: 8282
   ssl:
     key-store-type: PKCS12
-#    key-store: classpath:keystore/telegram.p12
     key-store: /Users/tamerlantheterrible/IdeProjects 2.0/find-guide-back/find-guide-back/telegram.p12
     key-store-password: Qbod!1336
     key-alias: telegram
