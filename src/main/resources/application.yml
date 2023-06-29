@@ -12,9 +12,9 @@ spring:
     name: get-guide
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/find_guide
-    username: find_guide
-    password: find_guide
+    url: jdbc:postgres://ec2-34-236-103-63.compute-1.amazonaws.com:5432/d9b4pr7113hdda
+    username: qvmiimmumjtndv
+    password: 17db20f9f7055fd8c1226e9b2cd775315c77389ac8f930591019cba8b7c9188b
     hikari:
       minimum-idle: 5
       maximum-pool-size: 10
