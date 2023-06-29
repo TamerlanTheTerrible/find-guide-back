@@ -43,7 +43,7 @@ public class BotApiMethodUtil {
         return toList(deleteMessage, sendMessage);
     }
 
-    public static List<BotApiMethod<? extends Serializable>> removeKeyboard(@NonNull Long chatId, int prevMessageId) {
+    public static List<BotApiMethod<? extends Serializable>> deleteMessage(@NonNull Long chatId, int prevMessageId) {
         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), prevMessageId);
         return toList(deleteMessage);
     }

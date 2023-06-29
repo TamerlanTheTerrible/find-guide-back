@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.removeKeyboard;
 import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
 
 /**
@@ -98,8 +97,7 @@ public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerServi
                 guideService.save(new GuideCreateOrUpdateDto(chatId, progress));
                 newGuideProgressMap.remove(chatId);
 
-                methodList = removeKeyboard(chatId, prevMessageId);
-                methodList.addAll(sendMessage(chatId, "Congratulations, it's almost done. Please attach your license to verify your account"));
+                methodList = sendMessage(chatId, "Congratulations, it's almost done. Please attach your license to verify your account", KeyboardUtil.removeKeyboard(), prevMessageId);
             }
         }
 

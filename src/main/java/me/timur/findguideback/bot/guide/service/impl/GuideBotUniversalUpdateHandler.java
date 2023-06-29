@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.removeKeyboard;
+import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.deleteMessage;
 import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
 
 /**
@@ -52,7 +52,7 @@ public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerServ
             //send a message with inline keyboard to select a language
             List<String> languages = new ArrayList<>(languageService.getAllNames());
 
-            final ArrayList<BotApiMethod<? extends Serializable>> messages = new ArrayList<>(removeKeyboard(requestDto.getChatId(), requestDto.getPrevMessageId()));
+            final ArrayList<BotApiMethod<? extends Serializable>> messages = new ArrayList<>(deleteMessage(requestDto.getChatId(), requestDto.getPrevMessageId()));
             messages.addAll(sendMessage(
                     requestDto.getChatId(),
                     "Please select the language you use during the excursion",

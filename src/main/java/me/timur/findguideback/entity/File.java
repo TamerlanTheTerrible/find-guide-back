@@ -37,7 +37,7 @@ public class File extends BaseEntity {
     @Column(name = "size")
     private Long size;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "guide_id", nullable = false)
     private Guide guide;
 

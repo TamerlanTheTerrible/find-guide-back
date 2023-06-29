@@ -3,6 +3,7 @@ package me.timur.findguideback.bot.common.util;
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -61,6 +62,12 @@ public class KeyboardUtil {
 
         keyboard.setKeyboard(keyboardRows);
 
+        return keyboard;
+    }
+
+    public static ReplyKeyboardRemove removeKeyboard() {
+        ReplyKeyboardRemove keyboard = new ReplyKeyboardRemove();
+        keyboard.setRemoveKeyboard(true);
         return keyboard;
     }
 
