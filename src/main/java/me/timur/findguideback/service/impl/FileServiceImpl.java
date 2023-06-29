@@ -30,7 +30,7 @@ public class FileServiceImpl implements FileService {
         Guide guide = guideRepository.findByUserIdOrUserTelegramId(createDto.getGuideId(), createDto.getGuideTelegramId())
                     .orElseThrow(() -> new RuntimeException(String.format("Could not find guide with id %s or telegram id %s", createDto.getGuideId(), createDto.getGuideTelegramId())));
 
-        var file = fileRepository.save(new File(createDto, guide));
+        File file = fileRepository.save(new File(createDto, guide));
 
         return new FileDto(file);
     }

@@ -25,7 +25,7 @@ public class RestTemplateHelper implements HttpHelper {
 
     @Override
     public ResponseEntity<String> post(String url, MultiValueMap<String, Object> requestBody) {
-        var headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return post(url, requestBody, headers);
     }
@@ -42,7 +42,7 @@ public class RestTemplateHelper implements HttpHelper {
     private ResponseEntity<String> sendRequest(String url, HttpEntity<MultiValueMap<String, Object>> requestEntity) {
         log.info("HTTP request to {}{}", url, requestEntity != null ? " with body: " + requestEntity.getBody() : "");
         try {
-            var responseEntity = requestEntity != null
+            ResponseEntity<String> responseEntity = requestEntity != null
                     ? restTemplate.postForEntity(url, requestEntity, String.class)
                     : restTemplate.getForEntity(url, String.class);
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -35,20 +36,20 @@ public class GuideRepositoryCustomImpl implements GuideRepositoryCustom {
             //count query
             countQuery.select(cb.count(root))
                     .where(buildPredicate(filter, cb, root));
-            var totalResults = em.createQuery(countQuery)
+            Long totalResults = em.createQuery(countQuery)
                     .getSingleResult();
 
             //init select query objects
-            var dataQuery = cb.createQuery(Guide.class);
+            CriteriaQuery<Guide> dataQuery = cb.createQuery(Guide.class);
             root = dataQuery.from(Guide.class);
             //select query
             dataQuery.select(root)
                     .where(buildPredicate(filter, cb, root));
-            var dataTypedQuery = em.createQuery(dataQuery);
+            TypedQuery<Guide> dataTypedQuery = em.createQuery(dataQuery);
             dataTypedQuery.setFirstResult(filter.getPageNumber() * filter.getPageSize());
             dataTypedQuery.setMaxResults(filter.getPageSize());
 
-            var resultList = dataTypedQuery.getResultList();
+            List<Guide> resultList = dataTypedQuery.getResultList();
 
             return new CriteriaSearchResult<>(totalResults, resultList);
         } finally {

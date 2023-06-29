@@ -9,6 +9,7 @@ public enum GuideCommand {
     UNIVERSAL("UNIVERSAL"),
     NEW_GUIDE("NEW_GUIDE"),
     CALENDAR("CALENDAR"),
+    JOBS("JOBS"),
     ;
 
     public final String command;

@@ -3,6 +3,7 @@ package me.timur.findguideback.bot.client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.bot.client.model.enums.ClientCommand;
+import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
 import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.client.factory.ClientBotCallbackHandlerFactory;
 import me.timur.findguideback.bot.common.util.UpdateUtil;
@@ -59,20 +60,20 @@ public class ClientBot extends TelegramLongPollingBot {
     }
 
     private void handleIncomingMessage(Message message) {
-        var request = new RequestDto(message);
+        RequestDto request = new RequestDto(message);
         log.info("CLIENT BOT Message : {}", request);
 
-        var callbackHandler = clientBotCallbackHandlerFactory.get(message.getText());
-        var methods = callbackHandler.handle(request);
+        ClientBotUpdateHandlerService callbackHandler = clientBotCallbackHandlerFactory.get(message.getText());
+        List<BotApiMethod<? extends Serializable>> methods = callbackHandler.handle(request);
         execute(methods);
     }
 
     private void handleCallbackQuery(CallbackQuery query) {
-        var request = new RequestDto(query);
+        RequestDto request = new RequestDto(query);
         log.info("CLIENT BOT CallbackQuery : {}",request);
 
-        var callbackHandler = clientBotCallbackHandlerFactory.get(ClientCommand.get(UpdateUtil.getPrefix(query.getData())));
-        var methods = callbackHandler.handle(request);
+        ClientBotUpdateHandlerService callbackHandler = clientBotCallbackHandlerFactory.get(ClientCommand.get(UpdateUtil.getPrefix(query.getData())));
+        List<BotApiMethod<? extends Serializable>> methods = callbackHandler.handle(request);
         execute(methods);
     }
 

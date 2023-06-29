@@ -7,6 +7,7 @@ import me.timur.findguideback.bot.client.service.ClientBotUpdateHandlerService;
 import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.common.util.KeyboardUtil;
 import me.timur.findguideback.model.dto.UserCreateDto;
+import me.timur.findguideback.model.dto.UserDto;
 import me.timur.findguideback.service.UserService;
 import me.timur.findguideback.util.StringUtil;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class ClientBotUserService implements ClientBotUpdateHandlerService {
                 .phoneNumbers(StringUtil.splitToList(requestDto.getPhone()))
                 .build();
 
-            var user = userService.getOrSave(userCreateDto);
+            UserDto user = userService.getOrSave(userCreateDto);
             // Send welcome message with inline keyboard to find a guide
             return sendMessage(
                     requestDto.getChatId(),

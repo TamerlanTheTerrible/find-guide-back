@@ -9,6 +9,7 @@ import me.timur.findguideback.bot.common.service.TelegramFileDownloader;
 import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.dto.FileCreateDto;
 import me.timur.findguideback.model.dto.FileDto;
+import me.timur.findguideback.model.dto.GuideDto;
 import me.timur.findguideback.model.enums.DocumentExtension;
 import me.timur.findguideback.model.enums.DocumentType;
 import me.timur.findguideback.model.enums.ResponseCode;
@@ -21,9 +22,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -49,7 +52,7 @@ public class ForConfirmationSender {
         if (requestDto.getPhotos() != null && !requestDto.getPhotos().isEmpty()) {
             log.info("Received photo from {}", requestDto.getChatId());
             // get photo
-            var photo = requestDto.getPhotos().stream()
+            PhotoSize photo = requestDto.getPhotos().stream()
                     .max(Comparator.comparingInt(PhotoSize::getFileSize))
                     .orElseThrow(() -> new FindGuideException(ResponseCode.INVALID_PARAMETERS, "Photo list is empty"));
             // save photo
@@ -58,7 +61,7 @@ public class ForConfirmationSender {
             log.info("Received document from {}", requestDto.getChatId());
 
             // save photo
-            var document = requestDto.getDocument();
+            Document document = requestDto.getDocument();
             fileDto = getFileDto(requestDto, document.getFileId(), document.getFileSize(), document.getFileName().split("\\.")[1]);
         }
 
@@ -79,18 +82,18 @@ public class ForConfirmationSender {
     private void send(FileDto fileDto) {
         try {
             // download a photo
-            var filePath = telegramFileDownloader.downloadFile(fileDto.getFileTelegramId(), GUIDE_BOT_TOKEN);
+            Path filePath = telegramFileDownloader.downloadFile(fileDto.getFileTelegramId(), GUIDE_BOT_TOKEN);
 
             // prepare a url
-            var adminChatId = 3728614L;
-            var extension = FilenameUtils.getExtension(filePath.toString());
-            var url = "https://api.telegram.org/bot" + ADMIN_BOT_TOKEN + (extension.equals("jpg") ? "/sendPhoto" : "/sendDocument") + "?chat_id=" + adminChatId;
+            Long adminChatId = 3728614L;
+            String extension = FilenameUtils.getExtension(filePath.toString());
+            String url = "https://api.telegram.org/bot" + ADMIN_BOT_TOKEN + (extension.equals("jpg") ? "/sendPhoto" : "/sendDocument") + "?chat_id=" + adminChatId;
             // prepare headers
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
             // prepare body
-            var guideTgId = fileDto.getGuide().getUser().getTelegramId();
-            var keyboardJson = "{\n" +
+            Long guideTgId = fileDto.getGuide().getUser().getTelegramId();
+            String keyboardJson = "{\n" +
                     "    \"inline_keyboard\": [\n" +
                     "        [\n" +
                     "            {\n" +
@@ -105,10 +108,10 @@ public class ForConfirmationSender {
                     "    ]\n" +
                     "}";
 
-            var guide = fileDto.getGuide();
-            var languages = Arrays.toString(guide.getLanguageNames().toArray());
-            var regions = Arrays.toString(guide.getRegionNames().toArray());
-            var caption = "name: " + guide.getUser().getFullNameOrUsername() + "\n" +
+            GuideDto guide = fileDto.getGuide();
+            String languages = Arrays.toString(guide.getLanguageNames().toArray());
+            String regions = Arrays.toString(guide.getRegionNames().toArray());
+            String caption = "name: " + guide.getUser().getFullNameOrUsername() + "\n" +
                     "username: " + (guide.getUser().getTelegramUsername() != null ? "@" + guide.getUser().getTelegramUsername() : "") + "\n" +
                     "phone: " + guide.getUser().getPhoneNumbers().get(0) + "\n" +
                     "language: " + languages.substring(1, languages.length()-1) + "\n" +

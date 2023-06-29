@@ -21,7 +21,7 @@ public class CalendarUtil {
 
     static {
         monthMap = new LinkedHashMap<>();
-        var now = LocalDate.now().withMonth(1);
+        LocalDate now = LocalDate.now().withMonth(1);
         for (int i = 1; i <= 12; i++) {
             monthMap.put(now.getMonth().name(), i);
             now = now.plusMonths(1);

@@ -3,14 +3,12 @@ package me.timur.findguideback.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.timur.findguideback.entity.BaseEntity;
+import me.timur.findguideback.entity.Guide;
 import me.timur.findguideback.entity.GuideSearch;
 import me.timur.findguideback.entity.User;
 import me.timur.findguideback.exception.FindGuideException;
 import me.timur.findguideback.model.GetGuideSearchesRequest;
-import me.timur.findguideback.model.dto.GuideDto;
-import me.timur.findguideback.model.dto.GuideFilterDto;
-import me.timur.findguideback.model.dto.GuideSearchDto;
-import me.timur.findguideback.model.dto.SearchResultDto;
+import me.timur.findguideback.model.dto.*;
 import me.timur.findguideback.model.enums.ResponseCode;
 import me.timur.findguideback.model.enums.SearchStatus;
 import me.timur.findguideback.repository.GuideRepository;
@@ -19,10 +17,8 @@ import me.timur.findguideback.repository.UserRepository;
 import me.timur.findguideback.service.GuideSearchService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Temurbek Ismoilov on 29/05/23.
@@ -42,20 +38,20 @@ public class GuideSearchServiceImpl implements GuideSearchService {
         log.info("Getting filtered guides: {}", filterDto);
         try {
             //fetch guides and total count from db
-            var searchResult = guideRepository.findAllFiltered(filterDto);
-            var guides = searchResult.getResultList();
-            var totalCount = searchResult.getCount();
-            log.info("Filtered guide id list: {}", guides.stream().map(BaseEntity::getId).toList());
+            CriteriaSearchResult<Guide> searchResult = guideRepository.findAllFiltered(filterDto);
+            List<Guide> guides = searchResult.getResultList();
+            Long totalCount = searchResult.getCount();
+            log.info("Filtered guide id list: {}", guides.stream().map(BaseEntity::getId).collect(Collectors.toList()));
             //prepare guide ids and guide dtos
-            var guideIds = new HashSet<Long>();
-            var guideDtos = new ArrayList<GuideDto>();
-            for (var guide : guides) {
+            Set<Long> guideIds = new HashSet<>();
+            List<GuideDto> guideDtos = new ArrayList<>();
+            for (Guide guide : guides) {
                 guideIds.add(guide.getId());
                 guideDtos.add(new GuideDto(guide));
             }
-            var user = getUser(filterDto.getUserId(), filterDto.getTelegramId());
+            User user = getUser(filterDto.getUserId(), filterDto.getTelegramId());
             //save guide search
-            var guideSearch = guideSearchRepository.save(new GuideSearch(user, filterDto, guideIds, totalCount));
+            GuideSearch guideSearch = guideSearchRepository.save(new GuideSearch(user, filterDto, guideIds, totalCount));
             log.info("Guide search saved: {}", guideSearch);
             //return result
             return new SearchResultDto(guideDtos, guideSearch.getId(), totalCount);
@@ -67,7 +63,7 @@ public class GuideSearchServiceImpl implements GuideSearchService {
 
     @Override
     public void notifyGuides(Long guideSearchId) {
-        var guideSearch = getGuideSearch(guideSearchId);
+        GuideSearch guideSearch = getGuideSearch(guideSearchId);
         Long[] guideIds = guideSearch.getGuideIds().toArray(new Long[0]);
         log.info("Sending notification on search with id {} to guides {}", guideSearchId, guideIds);
         //TODO: send notification to guides
@@ -77,7 +73,7 @@ public class GuideSearchServiceImpl implements GuideSearchService {
 
     @Override
     public boolean closeSearch(Long guideSearchId) {
-        var guideSearch = getGuideSearch(guideSearchId);
+        GuideSearch guideSearch = getGuideSearch(guideSearchId);
         guideSearch.setStatus(SearchStatus.CLOSED);
         guideSearchRepository.save(guideSearch);
         log.info("Close guide search with id {}", guideSearchId);
@@ -87,13 +83,13 @@ public class GuideSearchServiceImpl implements GuideSearchService {
     @Override
     public List<GuideSearchDto> getGuideSearches(GetGuideSearchesRequest request) {
         log.info("Getting guide searches: {}", request);
-        var guideSearches = guideSearchRepository.findAllByClientAndStatusIn(
+        List<GuideSearch> guideSearches = guideSearchRepository.findAllByClientAndStatusIn(
                 getUser(request.getUserId(), request.getTelegramId()),
                 request.getStatuses()
         );
-        log.info("Found guide searches: {}", Arrays.toString(guideSearches.stream().map(BaseEntity::getId).toList().toArray()));
+        log.info("Found guide searches: {}", Arrays.toString(guideSearches.stream().map(BaseEntity::getId).toArray()));
 
-        return guideSearches.stream().map(GuideSearchDto::new).toList();
+        return guideSearches.stream().map(GuideSearchDto::new).collect(Collectors.toList());
     }
 
     private GuideSearch getGuideSearch(Long guideSearchId) {

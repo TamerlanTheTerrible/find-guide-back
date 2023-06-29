@@ -35,7 +35,7 @@ public class TelegramFileDownloader {
         // Construct the Telegram Bot API file URL
         String fileUrl = TELEGRAM_API_BASE_URL + botToken + "/getFile?file_id=" + fileId;
         // Get the file path from the Telegram Bot API
-        var fileUrlFromTelegram = getFileUrlFromTelegram(fileUrl, botToken);
+        String fileUrlFromTelegram = getFileUrlFromTelegram(fileUrl, botToken);
         // Save the file to the local file system
         return saveFile(fileUrlFromTelegram, fileId);
     }
@@ -43,7 +43,7 @@ public class TelegramFileDownloader {
     private String getFileUrlFromTelegram(String fileUrl, String botToken){
         try {
             final ResponseEntity<String> responseEntity = restTemplate.getForEntity(fileUrl, String.class);
-            var telegramResponseDTO = objectMapper.readValue(responseEntity.getBody(), TelegramResponseDto.class);
+            TelegramResponseDto telegramResponseDTO = objectMapper.readValue(responseEntity.getBody(), TelegramResponseDto.class);
             log.info("Telegram response: {}", telegramResponseDTO);
             Map<String, String> resultMap = (HashMap<String, String>) telegramResponseDTO.getResult();
             return "https://api.telegram.org/file/bot" + botToken + "/" + resultMap.get("file_path");
@@ -60,9 +60,16 @@ public class TelegramFileDownloader {
         }
 
         try (FileOutputStream fos = new FileOutputStream(path.toString())) {
-            restTemplate.execute(fileUrlFromTelegram, HttpMethod.GET, null, response -> {
-                response.getBody().transferTo(fos);
+            ResponseEntity<Object> responseEntity = restTemplate.execute(fileUrlFromTelegram, HttpMethod.GET, null, response -> {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = response.getBody().read(buffer)) != -1) {
+                    fos.write(buffer, 0, bytesRead);
+                }
                 System.out.println("Image downloaded and saved successfully");
+
+//                byte[] fileBytes = responseEntity.getBody();
+                fos.write(buffer);
                 return null;
             });
         } catch (IOException e) {

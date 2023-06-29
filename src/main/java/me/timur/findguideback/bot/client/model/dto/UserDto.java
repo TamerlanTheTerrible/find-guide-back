@@ -46,15 +46,15 @@ public class UserDto implements Serializable {
     private Boolean isBlocked;
 
     public boolean hasNameOrUsername() {
-        return (firstName != null && !firstName.isBlank())
-                || (lastName != null && !lastName.isBlank())
-                || telegramUsername != null && !telegramUsername.isBlank();
+        return (firstName != null && !firstName.isEmpty())
+                || (lastName != null && !lastName.isEmpty())
+                || telegramUsername != null && !telegramUsername.isEmpty();
 
     }
 
     public String getFullNameOrUsername() {
         if (hasNameOrUsername()) {
-            return (firstName != null && !firstName.isBlank() ? firstName : "") + " " + (lastName != null && !lastName.isBlank() ? lastName : "");
+            return (firstName != null && !firstName.isEmpty() ? firstName : "") + " " + (lastName != null && !lastName.isEmpty() ? lastName : "");
         } else {
             return telegramUsername;
         }

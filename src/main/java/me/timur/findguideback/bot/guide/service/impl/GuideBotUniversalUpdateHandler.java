@@ -8,8 +8,7 @@ import me.timur.findguideback.bot.guide.model.dto.NewGuideProgress;
 import me.timur.findguideback.bot.guide.model.enums.GuideCommand;
 import me.timur.findguideback.bot.guide.service.ForConfirmationSender;
 import me.timur.findguideback.bot.guide.service.GuideBotUpdateHandlerService;
-import me.timur.findguideback.entity.Language;
-import me.timur.findguideback.repository.LanguageRepository;
+import me.timur.findguideback.service.LanguageService;
 import me.timur.findguideback.service.UserService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -32,7 +31,7 @@ import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessag
 public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerService {
 
     private final UserService userService;
-    private final LanguageRepository languageRepository;
+    private final LanguageService languageService;
     private final ForConfirmationSender forConfirmationSender;
     private final ConcurrentHashMap<Long, NewGuideProgress> newGuideProgressMap;
 
@@ -51,9 +50,9 @@ public class GuideBotUniversalUpdateHandler implements GuideBotUpdateHandlerServ
             log.info("Creating new progress for chatId: {}", requestDto.getChatId());
             newGuideProgressMap.put(requestDto.getChatId(), new NewGuideProgress());
             //send a message with inline keyboard to select a language
-            var languages = languageRepository.findAll().stream().map(Language::getEngName).toList();
+            List<String> languages = new ArrayList<>(languageService.getAllNames());
 
-            var messages = new ArrayList<>(removeKeyboard(requestDto.getChatId(), requestDto.getPrevMessageId()));
+            final ArrayList<BotApiMethod<? extends Serializable>> messages = new ArrayList<>(removeKeyboard(requestDto.getChatId(), requestDto.getPrevMessageId()));
             messages.addAll(sendMessage(
                     requestDto.getChatId(),
                     "Please select the language you use during the excursion",

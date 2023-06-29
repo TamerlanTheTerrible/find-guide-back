@@ -18,8 +18,14 @@ import static me.timur.findguideback.bot.common.util.UpdateUtil.callbackDataPref
 
 public class KeyboardUtil {
 
-    public static InlineKeyboardMarkup inlineKeyboard(List<String> values, ClientCommand prefix, int rowLength) {
-        return inlineKeyboard(values, prefix.command, rowLength);
+    public static InlineKeyboardMarkup inlineKeyboard(String value, ClientCommand prefix) {
+        List<String> values = new ArrayList<>(1);
+        values.add(value);
+        return inlineKeyboard(values, prefix.command, 1);
+    }
+
+    public static InlineKeyboardMarkup inlineKeyboard(List<String> values, ClientCommand prefix) {
+        return inlineKeyboard(values, prefix.command, 2);
     }
 
     public static InlineKeyboardMarkup inlineKeyboard(List<String> values, String prefix, int rowLength) {

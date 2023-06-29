@@ -13,6 +13,7 @@ import me.timur.findguideback.service.GuideService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,26 +34,27 @@ public class GuideServiceImpl implements GuideService {
     @Override
     public GuideDto save(GuideCreateOrUpdateDto requestDto) {
         log.info("Creating guide: {}", requestDto);
-        var languages = getLanguages(requestDto.getLanguageNames());
-        var regions = getRegions(requestDto.getRegionNames());
-        var transports = getTransports(requestDto.getTransports());
-        var files = getFiles(requestDto.getFiles());
-        var user = getUser(requestDto.getUserId(), requestDto.getUserTelegramId());
+        Set<Language> languages = getLanguages(requestDto.getLanguageNames());
+        Set<Region> regions = getRegions(requestDto.getRegionNames());
+        Set<Transport> transports = getTransports(requestDto.getTransports());
+        Set<File> files = getFiles(requestDto.getFiles());
+        User user = getUser(requestDto.getUserId(), requestDto.getUserTelegramId());
 
         // check if the user has already created a guide
-        guideRepository.findByUserTelegramId(requestDto.getUserTelegramId())
-                .ifPresent(oldGuide -> {
-                    log.info("User {} is already a guide Deleting the old guide record before creating new one", oldGuide);
-                    guideRepository.delete(oldGuide);
-                });
+        final Optional<Guide> oldguideOpt = guideRepository.findByUserTelegramId(requestDto.getUserTelegramId());
+        if (oldguideOpt.isPresent()) {
+            Guide oldGuide = oldguideOpt.get();
+            log.info("User {} is already a guide Deleting the old guide record before creating new one", oldGuide);
+            guideRepository.delete(oldGuide);
+        }
 
-        var guide = guideRepository.save(new Guide(requestDto, user, languages, regions, transports, files));
+        Guide guide = guideRepository.save(new Guide(requestDto, user, languages, regions, transports, files));
         return new GuideDto(guide);
     }
 
     @Override
     public GuideDto addLanguage(Long telegramId, String language) {
-        var guide = getEntityByTelegramId(telegramId);
+        Guide guide = getEntityByTelegramId(telegramId);
         guide.addLanguage(languageRepository
                 .findByEngName(language)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find language with name: " + language))
@@ -62,7 +64,7 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideDto addRegion(Long telegramId, String region) {
-        var guide = getEntityByTelegramId(telegramId);
+        Guide guide = getEntityByTelegramId(telegramId);
         guide.addRegion(regionRepository
                 .findByEngName(region)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find region with name: " + region))
@@ -88,7 +90,7 @@ public class GuideServiceImpl implements GuideService {
     public GuideDto update(GuideCreateOrUpdateDto requestDto) {
         log.info("Updating guide: {}", requestDto);
 
-        var user = guideRepository.findByUserIdOrUserTelegramId(requestDto.getUserId(), requestDto.getUserTelegramId())
+        Guide user = guideRepository.findByUserIdOrUserTelegramId(requestDto.getUserId(), requestDto.getUserTelegramId())
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "Could not find guide with user id: " + requestDto.getUserId() + " or telegram id: " + requestDto.getUserTelegramId()));
         if (requestDto.getLanguageNames() != null && !requestDto.getLanguageNames().isEmpty()) {
             user.setLanguages(getLanguages(requestDto.getLanguageNames()));
@@ -114,14 +116,14 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideDto getByTelegramId(Long telegramId) {
-        var guideOptional = guideRepository.findByUserTelegramId(telegramId);
+        Optional<Guide> guideOptional = guideRepository.findByUserTelegramId(telegramId);
         return guideOptional.map(GuideDto::new).orElse(null);
     }
 
     @Override
     public GuideDto confirmGuide(Long telegramId, boolean isConfirmed) {
         log.info("Confirming/rejecting guide with telegram id: {} isConfirmed: {}", telegramId, isConfirmed);
-        var guide = getEntityByTelegramId(telegramId);
+        Guide guide = getEntityByTelegramId(telegramId);
         guide.setIsVerified(isConfirmed);
         return new GuideDto(guideRepository.save(guide));
     }
@@ -151,7 +153,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     private Set<Region> getRegions(Collection<String> args) {
-        var regions = regionRepository.findAllByEngNameIn(args);
+        Set<Region> regions = regionRepository.findAllByEngNameIn(args);
         if (regions.isEmpty()) {
             throw new FindGuideException(ResponseCode.NOT_FOUND, "Could not find regions with names: " + args);
         }
@@ -159,7 +161,7 @@ public class GuideServiceImpl implements GuideService {
     }
 
     private Set<Language> getLanguages(Collection<String> args) {
-        var languages = languageRepository.findAllByEngNameIn(args);
+        Set<Language> languages = languageRepository.findAllByEngNameIn(args);
         if (languages.isEmpty()) {
             throw new FindGuideException(ResponseCode.NOT_FOUND, "Could not find languages with names: " + args);
         }

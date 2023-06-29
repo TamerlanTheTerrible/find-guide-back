@@ -6,6 +6,7 @@ import me.timur.findguideback.bot.common.model.dto.RequestDto;
 import me.timur.findguideback.bot.common.util.UpdateUtil;
 import me.timur.findguideback.bot.guide.factory.GuideBotCallbackHandlerFactory;
 import me.timur.findguideback.bot.guide.model.enums.GuideCommand;
+import me.timur.findguideback.bot.guide.service.GuideBotUpdateHandlerService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -59,19 +60,19 @@ public class GuideBot extends TelegramLongPollingBot {
     }
 
     private void handleIncomingMessage(Message message) {
-        var request = new RequestDto(message);
+        RequestDto request = new RequestDto(message);
         log.info("GUIDE BOT Message : {}", request);
-        var callbackHandler = callbackHandlerFactory.get(message.getText());
-        var methods = callbackHandler.handle(request);
+        GuideBotUpdateHandlerService callbackHandler = callbackHandlerFactory.get(message.getText());
+        List<BotApiMethod<? extends Serializable>> methods = callbackHandler.handle(request);
         execute(methods);
     }
 
     private void handleCallbackQuery(CallbackQuery query) {
-        var request = new RequestDto(query);
+        RequestDto request = new RequestDto(query);
         log.info("GUIDE BOT CallbackQuery : {}",request);
 
-        var callbackHandler = callbackHandlerFactory.get(GuideCommand.get(UpdateUtil.getPrefix(query.getData())));
-        var methods = callbackHandler.handle(request);
+        GuideBotUpdateHandlerService callbackHandler = callbackHandlerFactory.get(GuideCommand.get(UpdateUtil.getPrefix(query.getData())));
+        List<BotApiMethod<? extends Serializable>> methods = callbackHandler.handle(request);
         execute(methods);
     }
 

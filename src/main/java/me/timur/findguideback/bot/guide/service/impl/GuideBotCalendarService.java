@@ -13,7 +13,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
@@ -46,7 +48,10 @@ public class GuideBotCalendarService implements GuideBotUpdateHandlerService {
 
     private List<BotApiMethod<? extends Serializable>> sendYear(long chatId, String messageText, int prevMessageId) {
         // Create a reply keyboard markup with a calendar
-        InlineKeyboardMarkup markup = KeyboardUtil.inlineKeyboard(List.of("2023","2024","2025"), getType().command, 3);
+        List<String> list = new ArrayList<>();
+        LocalDate now = LocalDate.now();
+        Collections.addAll(list, String.valueOf(now.getYear()), String.valueOf(now.getYear() + 1));
+        InlineKeyboardMarkup markup = KeyboardUtil.inlineKeyboard(list, getType().command, 3);
         return sendMessage(chatId, messageText, markup, prevMessageId);
     }
 

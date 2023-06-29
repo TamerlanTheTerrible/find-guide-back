@@ -61,7 +61,7 @@ public class AdminBot extends TelegramLongPollingBot {
     }
 
     private void handleIncomingMessage(Message message) {
-        var request = new RequestDto(message);
+        RequestDto request = new RequestDto(message);
         log.info("ADMIN BOT Message : {}", request);
         if (Objects.equals(request.getData(), "/start")) {
             execute(sendMessage(request.getChatId(), "Welcome to Admin Bot"));
@@ -71,7 +71,7 @@ public class AdminBot extends TelegramLongPollingBot {
     }
 
     private void handleCallbackQuery(CallbackQuery query) {
-        var request = new RequestDto(query);
+        RequestDto request = new RequestDto(query);
         log.info("ADMIN BOT CallbackQuery : {}",request);
         final String prefix = UpdateUtil.getPrefix(query.getData());
         if (prefix.equals(CommonCommand.CONFIRM.command)) {

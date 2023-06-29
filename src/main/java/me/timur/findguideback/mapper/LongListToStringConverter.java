@@ -34,6 +34,6 @@ public class LongListToStringConverter implements AttributeConverter<List<Long>,
         }
         return Arrays.stream(s.split(","))
                 .map(Long::parseLong)
-                .toList();
+                .collect(Collectors.toList());
     }
 }

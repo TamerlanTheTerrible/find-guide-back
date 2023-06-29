@@ -7,6 +7,8 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,31 +21,37 @@ public class BotApiMethodUtil {
     }
 
     public static List<BotApiMethod<? extends Serializable>> sendMessage(@NonNull Long chatId, String message) {
-        return List.of(new SendMessage(String.valueOf(chatId), message));
+        return toList(new SendMessage(String.valueOf(chatId), message));
     }
 
     public static List<BotApiMethod<? extends Serializable>> sendMessage(@NonNull Long chatId, String message, int prevMessageId) {
         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), prevMessageId);
         SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
-        return List.of(deleteMessage, sendMessage);
+        return toList(deleteMessage, sendMessage);
     }
 
     public static List<BotApiMethod<? extends Serializable>> sendMessage(@NonNull Long chatId, String message, ReplyKeyboard markup) {
         SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
         sendMessage.setReplyMarkup(markup);
-        return List.of(sendMessage);
+        return toList(sendMessage);
     }
 
     public static List<BotApiMethod<? extends Serializable>> sendMessage(@NonNull Long chatId, String message, ReplyKeyboard markup, int prevMessageId) {
         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), prevMessageId);
         SendMessage sendMessage = new SendMessage(String.valueOf(chatId), message);
         sendMessage.setReplyMarkup(markup);
-        return List.of(deleteMessage, sendMessage);
+        return toList(deleteMessage, sendMessage);
     }
 
     public static List<BotApiMethod<? extends Serializable>> removeKeyboard(@NonNull Long chatId, int prevMessageId) {
         DeleteMessage deleteMessage = new DeleteMessage(String.valueOf(chatId), prevMessageId);
-        return List.of(deleteMessage);
+        return toList(deleteMessage);
+    }
+
+    private static List<BotApiMethod<? extends Serializable>> toList(BotApiMethod<? extends Serializable>... methods) {
+        List<BotApiMethod<? extends Serializable>> list = new ArrayList();
+        Collections.addAll(list, methods);
+        return list;
     }
 
 }

@@ -1,8 +1,10 @@
 package me.timur.findguideback.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import me.timur.findguideback.model.enums.DocumentExtension;
 import me.timur.findguideback.model.enums.DocumentType;
 
@@ -12,7 +14,10 @@ import java.io.Serializable;
  * Created by Temurbek Ismoilov on 30/04/23.
  */
 
+
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class FileCreateDto implements Serializable {
     @JsonProperty("guide_id")

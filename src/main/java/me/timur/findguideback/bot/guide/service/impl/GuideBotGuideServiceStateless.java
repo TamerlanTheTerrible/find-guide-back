@@ -7,22 +7,22 @@ import me.timur.findguideback.bot.common.util.KeyboardUtil;
 import me.timur.findguideback.bot.guide.model.dto.NewGuideProgress;
 import me.timur.findguideback.bot.guide.model.enums.GuideCommand;
 import me.timur.findguideback.bot.guide.service.GuideBotUpdateHandlerService;
-import me.timur.findguideback.entity.Language;
-import me.timur.findguideback.entity.Region;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
-import me.timur.findguideback.repository.LanguageRepository;
-import me.timur.findguideback.repository.RegionRepository;
 import me.timur.findguideback.service.GuideService;
+import me.timur.findguideback.service.LanguageService;
+import me.timur.findguideback.service.RegionService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.removeKeyboard;
 import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessage;
 
 /**
@@ -37,8 +37,8 @@ import static me.timur.findguideback.bot.common.util.BotApiMethodUtil.sendMessag
 @Service
 public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerService {
 
-    private final LanguageRepository languageRepository;
-    private final RegionRepository regionRepository;
+    private final LanguageService languageService;
+    private final RegionService regionService;
     private final GuideService guideService;
     private final ConcurrentHashMap<Long, NewGuideProgress> newGuideProgressMap;
 
@@ -98,7 +98,8 @@ public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerServi
                 guideService.save(new GuideCreateOrUpdateDto(chatId, progress));
                 newGuideProgressMap.remove(chatId);
 
-                methodList = sendMessage(chatId, "Congratulations, it's almost done. Please attach your license to verify your account", prevMessageId);
+                methodList = removeKeyboard(chatId, prevMessageId);
+                methodList.addAll(sendMessage(chatId, "Congratulations, it's almost done. Please attach your license to verify your account"));
             }
         }
 
@@ -106,19 +107,19 @@ public class GuideBotGuideServiceStateless implements GuideBotUpdateHandlerServi
     }
 
     private ReplyKeyboard createLanguagesKeyboard() {
-        List<String> languages = new ArrayList<>(languageRepository.findAll().stream().map(Language::getEngName).toList());
+        List<String> languages = new ArrayList<>(languageService.getAllNames());
         languages.add("Skip");
         return KeyboardUtil.inlineKeyboard(languages, getType().command,2);
     }
 
     private ReplyKeyboard createRegionsKeyboard() {
-        List<String> regions = new ArrayList<>(regionRepository.findAll().stream().map(Region::getEngName).toList());
+        List<String> regions = new ArrayList<>(regionService.getAllNames());
         regions.add("Skip");
         return KeyboardUtil.inlineKeyboard(regions, getType().command,2);
     }
 
     private ReplyKeyboard createHasCarKeyboard() {
-        return KeyboardUtil.inlineKeyboard(List.of("yes", "no"), getType().command,2);
+        return KeyboardUtil.inlineKeyboard(Arrays.asList("yes", "no"), getType().command,2);
     }
 
 }

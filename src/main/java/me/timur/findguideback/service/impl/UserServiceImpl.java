@@ -12,7 +12,7 @@ import me.timur.findguideback.repository.UserRepository;
 import me.timur.findguideback.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by Temurbek Ismoilov on 01/05/23.
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getOrSave(UserCreateDto createDto) {
         // get user from repository by telegram id, if user is present, update user, else save user
-        var user = userRepository.findByTelegramId(createDto.getTelegramId())
+        User user = userRepository.findByTelegramId(createDto.getTelegramId())
                 .map(userFromDB -> update(userFromDB, createDto))
                 .orElseGet(() -> save(createDto));
 
@@ -39,9 +39,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto savePhone(@NonNull Long telegramId, @NonNull String phone) {
         log.info("Saving phone {} for user with telegram id {}", phone, telegramId);
-        var user = userRepository.findByTelegramId(telegramId)
+        User user = userRepository.findByTelegramId(telegramId)
                 .orElseThrow(() -> new FindGuideException(ResponseCode.NOT_FOUND, "User with telegram id %s not found", telegramId));
-        user.setPhoneNumbers(List.of(phone));
+        user.setPhoneNumbers(Collections.singletonList(phone));
         return new UserDto(userRepository.save(user));
     }
 

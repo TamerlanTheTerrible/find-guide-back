@@ -61,16 +61,16 @@ public class UserDto implements Serializable {
     }
 
     public boolean hasNameOrUsername() {
-        return (telegramUsername != null && !telegramUsername.isBlank())
+        return (telegramUsername != null && !telegramUsername.isEmpty())
                 || (firstName != null && !firstName.isEmpty())
-                || (lastName != null && !lastName.isBlank());
+                || (lastName != null && !lastName.isEmpty());
     }
 
     public String getFullNameOrUsername() {
         if (firstName != null && !firstName.isEmpty()) {
-            return firstName + (lastName != null && !lastName.isBlank() ? " " + lastName : "");
+            return firstName + (lastName != null && !lastName.isEmpty() ? " " + lastName : "");
         }
-        if (telegramUsername != null && !telegramUsername.isBlank()) {
+        if (telegramUsername != null && !telegramUsername.isEmpty()) {
             return telegramUsername;
         }
         return "";

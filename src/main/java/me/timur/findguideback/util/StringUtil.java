@@ -42,7 +42,7 @@ public class StringUtil {
             throw new FindGuideException(ResponseCode.INVALID_PARAMETERS, "Invalid format for %s: %s", format, str);
         }
 
-        return Arrays.stream(str.split(delimiter)).map(String::trim).toList();
+        return Arrays.stream(str.split(delimiter)).map(String::trim).collect(Collectors.toList());
     }
 
     public static Set<String> splitToSet(String str, String delimiter) {

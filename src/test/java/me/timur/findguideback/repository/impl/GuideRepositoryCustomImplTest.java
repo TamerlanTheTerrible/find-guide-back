@@ -6,6 +6,7 @@ import me.timur.findguideback.entity.Guide;
 import me.timur.findguideback.entity.Language;
 import me.timur.findguideback.entity.Region;
 import me.timur.findguideback.entity.User;
+import me.timur.findguideback.model.dto.CriteriaSearchResult;
 import me.timur.findguideback.model.dto.GuideCreateOrUpdateDto;
 import me.timur.findguideback.model.dto.GuideFilterDto;
 import me.timur.findguideback.model.dto.UserCreateDto;
@@ -23,10 +24,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,13 +52,13 @@ public class GuideRepositoryCustomImplTest {
     @Test
     public void testFindAllFiltered_VerifiedTrue() {
         // given
-        var filter = new GuideFilterDto();
+        GuideFilterDto filter = new GuideFilterDto();
         filter.setPageNumber(0);
         filter.setPageSize(10);
         // when
-        var result = guideRepositoryCustomImpl.findAllFiltered(filter);
+        CriteriaSearchResult<Guide> result = guideRepositoryCustomImpl.findAllFiltered(filter);
         // then
-        var verifiedGuideNumber = TOTAL_GUIDE_NUMBER-1;
+        long verifiedGuideNumber = TOTAL_GUIDE_NUMBER-1;
         final List<Guide> guides = result.getResultList();
         assertEquals(verifiedGuideNumber, guides.size());
         assertEquals(verifiedGuideNumber, result.getCount());
@@ -70,14 +68,14 @@ public class GuideRepositoryCustomImplTest {
     @Test
     public void testFindAllFiltered_WithRegionFilter() {
         // given
-        var filter = new GuideFilterDto();
+        GuideFilterDto filter = new GuideFilterDto();
         filter.setPageNumber(0);
         filter.setPageSize(10);
         filter.setRegion("TASHKENT");
         // when
-        var result = guideRepositoryCustomImpl.findAllFiltered(filter);
+        CriteriaSearchResult<Guide> result = guideRepositoryCustomImpl.findAllFiltered(filter);
         // then
-        var guides = result.getResultList();
+        List<Guide> guides = result.getResultList();
         assertTrue(guides.size() > 0);
         guides.forEach(guide -> assertTrue(guide.getRegionNames().contains("TASHKENT")));
     }
@@ -85,14 +83,14 @@ public class GuideRepositoryCustomImplTest {
     @Test
     public void testFindAllFiltered_WithLanguageFilter() {
         // when
-        var filter = new GuideFilterDto();
+        GuideFilterDto filter = new GuideFilterDto();
         filter.setPageNumber(0);
         filter.setPageSize(10);
         filter.setLanguage("ENGLISH");
         // given
-        var result = guideRepositoryCustomImpl.findAllFiltered(filter);
+        CriteriaSearchResult<Guide> result = guideRepositoryCustomImpl.findAllFiltered(filter);
         // then
-        var guides = result.getResultList();
+        List<Guide> guides = result.getResultList();
         assertTrue(guides.size() > 0);
         guides.forEach(guide -> assertTrue(guide.getLanguageNames().contains("ENGLISH")));
     }
@@ -100,15 +98,15 @@ public class GuideRepositoryCustomImplTest {
     @Test
     public void testFindAllFiltered_WithLanguageAndRegionFilter() {
         // when
-        var filter = new GuideFilterDto();
+        GuideFilterDto filter = new GuideFilterDto();
         filter.setPageNumber(0);
         filter.setPageSize(10);
         filter.setLanguage("RUSSIAN");
         filter.setRegion("SAMARKAND");
         // given
-        var result = guideRepositoryCustomImpl.findAllFiltered(filter);
+        CriteriaSearchResult<Guide> result = guideRepositoryCustomImpl.findAllFiltered(filter);
         // then
-        var guides = result.getResultList();
+        List<Guide> guides = result.getResultList();
         assertTrue(guides.size() > 0);
         guides.forEach(guide -> assertTrue(guide.getLanguageNames().contains("ENGLISH") && guide.getRegionNames().contains("SAMARKAND")));
     }
@@ -116,14 +114,14 @@ public class GuideRepositoryCustomImplTest {
     @Test
     public void testFindAllFiltered_WithHasCarFilter() {
         // when
-        var filter = new GuideFilterDto();
+        GuideFilterDto filter = new GuideFilterDto();
         filter.setPageNumber(0);
         filter.setPageSize(10);
         filter.setHasCar(true);
         // given
-        var result = guideRepositoryCustomImpl.findAllFiltered(filter);
+        CriteriaSearchResult<Guide> result = guideRepositoryCustomImpl.findAllFiltered(filter);
         // then
-        var guides = result.getResultList();
+        List<Guide> guides = result.getResultList();
         assertTrue(guides.size() > 0);
         guides.forEach(guide -> assertTrue(guide.getHasCar()));
     }
@@ -131,26 +129,26 @@ public class GuideRepositoryCustomImplTest {
     @Test
     public void testFindAllFiltered_WithPageSize() {
         // when
-        var filter = new GuideFilterDto();
+        GuideFilterDto filter = new GuideFilterDto();
         filter.setPageNumber(0);
         filter.setPageSize(1);
         // given
-        var result = guideRepositoryCustomImpl.findAllFiltered(filter);
+        CriteriaSearchResult<Guide> result = guideRepositoryCustomImpl.findAllFiltered(filter);
         // then
-        var guides = result.getResultList();
+        List<Guide> guides = result.getResultList();
         assertEquals(1, guides.size());
     }
 
     @Test
     public void testFindAllFiltered_WithPageNumber() {
         // when
-        var filter = new GuideFilterDto();
+        GuideFilterDto filter = new GuideFilterDto();
         filter.setPageNumber(1);
         filter.setPageSize(10);
         // given
-        var result = guideRepositoryCustomImpl.findAllFiltered(filter);
+        CriteriaSearchResult<Guide> result = guideRepositoryCustomImpl.findAllFiltered(filter);
         // then
-        var guides = result.getResultList();
+        List<Guide> guides = result.getResultList();
         assertEquals(0, guides.size());
     }
 
@@ -159,39 +157,39 @@ public class GuideRepositoryCustomImplTest {
         log.info("-----===== Setting up test data =====-----");
 
         // languages
-        var english = languageRepository.save(new Language("ENGLISH"));
-        var russian = languageRepository.save(new Language("RUSSIAN"));
+        Language english = languageRepository.save(new Language("ENGLISH"));
+        Language russian = languageRepository.save(new Language("RUSSIAN"));
 
         // regions
-        var tashkent = regionRepository.save(new Region("TASHKENT"));
-        var samarkand = regionRepository.save(new Region("SAMARKAND"));
+        Region tashkent = regionRepository.save(new Region("TASHKENT"));
+        Region samarkand = regionRepository.save(new Region("SAMARKAND"));
 
-        var createDto = new GuideCreateOrUpdateDto();
+        GuideCreateOrUpdateDto createDto = new GuideCreateOrUpdateDto();
         createDto.setDescription("Test description");
         createDto.setHasCar(true);
 
-        var users = createUsers();
+        List<User> users = createUsers();
         // guide 1
-        var guide1 = new Guide(createDto, users.get(0), new HashSet<>(List.of(english, russian)), new HashSet<>(List.of(tashkent, samarkand)), null, null);
+        Guide guide1 = new Guide(createDto, users.get(0), new HashSet<>(Arrays.asList(english, russian)), new HashSet<>(Arrays.asList(tashkent, samarkand)), null, null);
         guide1.setIsVerified(true);
         // guide 2
-        var guide2 = new Guide(createDto, users.get(1), new HashSet<>(List.of(english)), new HashSet<>(List.of(samarkand)), null, null);
+        Guide guide2 = new Guide(createDto, users.get(1), new HashSet<>(Collections.singletonList(english)), new HashSet<>(Collections.singletonList(samarkand)), null, null);
         guide2.setIsVerified(true);
         // guide 3
-        var guide3 = new Guide(createDto, users.get(2), new HashSet<>(List.of(russian)), new HashSet<>(List.of(tashkent)), null, null);
+        Guide guide3 = new Guide(createDto, users.get(2), new HashSet<>(Collections.singletonList(russian)), new HashSet<>(Collections.singletonList(tashkent)), null, null);
         guide3.setIsVerified(true);
         // guide 4
-        var guide4 = new Guide(createDto, users.get(3), new HashSet<>(List.of(english, russian)), new HashSet<>(List.of(tashkent, samarkand)), null, null);
+        Guide guide4 = new Guide(createDto, users.get(3), new HashSet<>(Arrays.asList(english, russian)), new HashSet<>(Arrays.asList(tashkent, samarkand)), null, null);
         guide4.setIsVerified(false);
 
-        guideRepository.saveAll(List.of(guide1, guide2, guide3, guide4));
+        guideRepository.saveAll(Arrays.asList(guide1, guide2, guide3, guide4));
     }
 
     @NonNull
     private List<User> createUsers() {
-        var users = new ArrayList<User>();
+        List<User> users = new ArrayList<>();
         for (int i = 0; i < TOTAL_GUIDE_NUMBER; i++) {
-            var userCreateDto = new UserCreateDto();
+            UserCreateDto userCreateDto = new UserCreateDto();
             userCreateDto.setFirstName("John" + i);
             userCreateDto.setLastName("Doe" + i);
             userCreateDto.setBirthDate(LocalDateTime.now());

@@ -13,5 +13,12 @@ spring:
     show-sql: true
 
 bot:
-  username: find_guide_bot
-  token: 5957262303:AAEbQPnIvl6EGoOXswWn8xP1Dhvz8PirX-E
+  client:
+    username: find_guide_bot
+    token: 5957262303:AAEbQPnIvl6EGoOXswWn8xP1Dhvz8PirX-E
+  guide:
+    username: GuideHelperUzBot
+    token: 6000035744:AAEP0RtU5sV_6Xa76-SnPOPrF5EHQXvcE60
+  admin:
+    username: FindGuideAdminBot
+    token: 6205040015:AAGDE1_8UpX46rVhml2_zZr34RRFMQ7a12o

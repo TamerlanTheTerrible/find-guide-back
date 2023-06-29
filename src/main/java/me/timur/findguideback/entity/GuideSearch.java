@@ -8,8 +8,8 @@ import me.timur.findguideback.model.enums.SearchStatus;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Temurbek Ismoilov on 29/05/23.
@@ -57,7 +57,7 @@ public class GuideSearch extends BaseEntity{
     @Column(name = "status", nullable = false)
     private SearchStatus status = SearchStatus.CREATED;
 
-    public GuideSearch(User user, GuideFilterDto filterDto, HashSet<Long> guideIds, Long totalCount) {
+    public GuideSearch(User user, GuideFilterDto filterDto, Set<Long> guideIds, Long totalCount) {
         this.client = user;
         this.fromDate = filterDto.getFromDate();
         this.toDate = filterDto.getToDate();

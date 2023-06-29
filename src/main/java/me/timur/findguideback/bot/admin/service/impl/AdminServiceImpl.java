@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 
 import java.io.Serializable;
@@ -62,12 +63,12 @@ public class AdminServiceImpl implements AdminService {
     private void notifyGuide(GuideDto guideDto) {
         log.info("Notifying guide {} about verification status", guideDto.getUser().getFullNameOrUsername());
         //prepare url
-        var url = "https://api.telegram.org/bot" + GUIDE_BOT_TOKEN + "/sendMessage";
+        String url = "https://api.telegram.org/bot" + GUIDE_BOT_TOKEN + "/sendMessage";
         //prepare header
-        var headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         //prepare body
-        var requestBody = new LinkedMultiValueMap<String, Object>();
+        MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
         requestBody.add("chat_id", guideDto.getUser().getTelegramId());
         requestBody.add(
                 "text",

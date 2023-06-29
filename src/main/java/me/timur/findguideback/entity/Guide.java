@@ -42,10 +42,7 @@ public class Guide extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "transport_id"))
     private Set<Transport> transports;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "guide_file",
-            joinColumns = @JoinColumn(name = "guide_id"),
-            inverseJoinColumns = @JoinColumn(name = "file_id"))
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "guide", cascade = CascadeType.REMOVE)
     private Set<File> files;
 
     @Column(name = "description")
