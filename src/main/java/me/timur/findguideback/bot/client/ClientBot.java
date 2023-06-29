@@ -11,13 +11,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.webapp.WebAppData;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Temurbek Ismoilov on 22/03/23.
@@ -60,6 +63,22 @@ public class ClientBot extends TelegramLongPollingBot {
     }
 
     private void handleIncomingMessage(Message message) {
+        try {
+            final WebAppData webAppData = message.getWebAppData();
+            if (webAppData != null) {
+                final String text = "================== From Message WebApp: " + webAppData.getData();
+                log.info(text);
+                execute(new SendMessage(message.getChatId().toString(), text));
+            } else if (Objects.equals(message.getText(), "/webapp")) {
+                final String text = "================== From Message";
+                log.info(text);
+                execute(new SendMessage(message.getChatId().toString(), text));
+            }
+        } catch (Exception e) {
+            log.error("Error while handling WebAppData", e);
+        }
+
+
         RequestDto request = new RequestDto(message);
         log.info("CLIENT BOT Message : {}", request);
 
@@ -69,6 +88,22 @@ public class ClientBot extends TelegramLongPollingBot {
     }
 
     private void handleCallbackQuery(CallbackQuery query) {
+        try {
+            query.getMessage().getWebAppData();
+            if (query.getMessage().getWebAppData() != null) {
+                final String text = "================== From CallbackQuery WebApp: " + query.getMessage().getWebAppData().getData();
+                log.info(text);
+                execute(new SendMessage(query.getMessage().getChatId().toString(), text));
+            } else if (Objects.equals(query.getData(), "/webapp")) {
+                final String text = "================== From CallbackQuery";
+                log.info(text);
+                execute(new SendMessage(query.getMessage().getChatId().toString(), text));
+            }
+        } catch (Exception e) {
+            log.error("Error while handling WebAppData", e);
+        }
+
+
         RequestDto request = new RequestDto(query);
         log.info("CLIENT BOT CallbackQuery : {}",request);
 
