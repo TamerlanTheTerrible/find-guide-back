@@ -92,6 +92,11 @@
 <script>
     let tg = window.Telegram.WebApp;
 
+    tg.init({
+        chatId: '3728614',  // Replace with your actual bot username
+        appTitle: 'Guide Finder WebApp'
+    });
+
     tg.expand();
 
     tg.MainButton.text = "Changed Text"; //изменяем текст кнопки
