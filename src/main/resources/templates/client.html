@@ -61,17 +61,17 @@
 
     <label for="language">Language:</label>
     <select id="language" name="language">
-        <option value="english">ENGLISH</option>
-        <option value="spanish">RUSSIAN</option>
-        <option value="french">SPANISH</option>
+        <option value="ENGLISH">ENGLISH</option>
+        <option value="RUSSIAN">RUSSIAN</option>
+        <option value="SPANISH">SPANISH</option>
         <!-- Add more language options as needed -->
     </select>
 
     <label for="region">Region:</label>
     <select id="region" name="region">
-        <option value="north">UZBEKISTAN</option>
-        <option value="south">TASHKENT</option>
-        <option value="east">SAMARKAND</option>
+        <option value="UZBEKISTAN">UZBEKISTAN</option>
+        <option value="TASHKENT">TASHKENT</option>
+        <option value="SAMARKAND">SAMARKAND</option>
         <!-- Add more region options as needed -->
     </select>
 
@@ -128,6 +128,7 @@
         };
 
         // Convert the object to a JSON string
+        guideRegion.innerText = searchParams;
         let searchData = JSON.stringify(searchParams);
         guideLanguage.innerText = searchData
 
