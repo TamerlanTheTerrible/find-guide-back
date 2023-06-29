@@ -127,7 +127,10 @@
         let searchData = JSON.stringify(searchParams);
 
         // Send the JSON string to the bot
-        tg.sendData(searchData);
+        tg.request({
+            method: 'send',
+            payload: "/webapp"
+        });
 
         // Close the WebApp after sending the data
         tg.close();
