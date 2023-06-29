@@ -102,15 +102,15 @@
     tg.MainButton.enable()
     tg.MainButton.show()
 
-    tg.MainButton.onClick(function(){
+    // tg.MainButton.onClick(function(){
+    //     tg.sendData("/webapp");
+    //     //при клике на основную кнопку отправляем данные в строковом виде
+    // });
+
+    Telegram.WebApp.onEvent('mainButtonClicked', function(){
         tg.sendData("/webapp");
         //при клике на основную кнопку отправляем данные в строковом виде
     });
-
-    // Telegram.WebApp.onEvent('mainButtonClicked', function(){
-    //     tg.sendData("some string that we need to send");
-    //     //при клике на основную кнопку отправляем данные в строковом виде
-    // });
 
     let searchButton = document.getElementById("searchButton");
     let guideName = document.getElementById("guideName");
