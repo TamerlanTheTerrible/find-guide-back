@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Telegram WebApps API</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+<form id="guideForm" method="post" action="/guide-search">
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" name="userId" required>
+    <br>
+    <label for="telegramId">Telegram ID:</label>
+    <input type="text" id="telegramId" name="telegramId" required>
+    <br>
+    <label for="language">Language:</label>
+    <input type="text" id="language" name="language" required>
+    <br>
+    <label for="region">Region:</label>
+    <input type="text" id="region" name="region" required>
+    <br>
+    <label for="fromDate">From Date:</label>
+    <input type="datetime-local" id="fromDate" name="fromDate" required>
+    <br>
+    <label for="toDate">To Date:</label>
+    <input type="datetime-local" id="toDate" name="toDate" required>
+    <br>
+    <label for="hasCar">Has Car:</label>
+    <input type="checkbox" id="hasCar" name="hasCar">
+    <br>
+    <label for="comment">Comment:</label>
+    <textarea id="comment" name="comment"></textarea>
+    <br>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    let tg = window.Telegram.WebApp;
+
+    tg.expand();
+
+    // Handle form submission
+    let form = document.getElementById("guideForm");
+    form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form from being submitted normally
+        let formData = new FormData(form); // Create FormData object from the form
+        let xhr = new XMLHttpRequest(); // Create XMLHttpRequest object
+        xhr.open("POST", form.action, true); // Set the request method and URL
+        xhr.setRequestHeader("Content-Type", "application/json"); // Set the request header
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let response = JSON.parse(xhr.responseText); // Parse the response JSON
+                console.log(response); // Handle the response as needed
+            }
+        };
+        let jsonPayload = JSON.stringify(Object.fromEntries(formData)); // Convert FormData to JSON
+        xhr.send(jsonPayload); // Send the request with the JSON payload
+    });
+</script>
+</body>
+</html>

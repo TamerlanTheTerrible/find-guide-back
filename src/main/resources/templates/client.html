@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Telegram WebApps API</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script> <!--Подключаем скрипт от телеграм-->
+    <title>Guide Finder WebApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
-        body{
+        body {
             color: var(--tg-theme-text-color);
             background: var(--tg-theme-bg-color);
             display: flex;
@@ -17,45 +17,82 @@
             font-size: 18px;
         }
 
-        .hint{
+        .hint {
             color: var(--tg-theme-hint-color);
         }
 
-        .link{
+        .link {
             color: var(--tg-theme-link-color);
         }
 
-        .button{
+        .button {
             background: var(--tg-theme-button-color);
             color: var(--tg-theme-button-text-color);
             border: none;
             font-size: 18px;
         }
 
-        .button:not(:last-child){
-            margin-bottom: 20px
+        .button:not(:last-child) {
+            margin-bottom: 20px;
         }
 
-        #usercard{
-            text-align: center;
+        #guideForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     </style>
 </head>
 
 <body>
-<div id="usercard"> <!--Карта профиля, человека, который к нам обратился-->
+<div id="guideForm">
+    <label for="fromDate">From Date:</label>
+    <input type="date" id="fromDate" name="fromDate">
+
+    <label for="toDate">To Date:</label>
+    <input type="date" id="toDate" name="toDate">
+
+    <label for="language">Language:</label>
+    <select id="language" name="language">
+        <option value="english">English</option>
+        <option value="spanish">Spanish</option>
+        <option value="french">French</option>
+        <!-- Add more language options as needed -->
+    </select>
+
+    <label for="region">Region:</label>
+    <select id="region" name="region">
+        <option value="north">North</option>
+        <option value="south">South</option>
+        <option value="east">East</option>
+        <option value="west">West</option>
+        <!-- Add more region options as needed -->
+    </select>
+
+    <label for="hasCar">Has Car:</label>
+    <input type="checkbox" id="hasCar" name="hasCar">
+
+    <button id="searchButton" class="button">Search</button>
 </div>
-<p>Just text</p> <!--Просто текст для проверки-->
-<a class="link" href="https://mihailgok.ru">Link</a> <!--Просто ссылка для проверки-->
-<p class="hint">Some little hint</p> <!--Просто текст-подсказка для проверки-->
-<button id="btn" class="button">Show/Hide Main Button</button> <!--Кнопка, чтобы скрыть / показать основную кнопку-->
-<button id="btnED" class="button">Enable/Disable Main Button</button> <!--Кнопка, чтобы сделать кнопку активной/неактивной-->
-</body>
+
+<div id="results">
+    <p id="guideName"></p>
+    <p id="guideLanguage"></p>
+    <p id="guideRegion"></p>
+    <p id="guideCar"></p>
+</div>
 
 <script>
-    let tg = window.Telegram.WebApp; //получаем объект webapp телеграма
+    let tg = window.Telegram.WebApp;
 
-    tg.expand(); //расширяем на все окно
+    tg.expand();
 
     tg.MainButton.text = "Changed Text"; //изменяем текст кнопки
     tg.MainButton.setText("Changed Text1"); //изменяем текст кнопки иначе
@@ -63,52 +100,77 @@
     tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
     tg.MainButton.setParams({"color": "#143F6B"}); //так изменяются все параметры
 
-    let btn = document.getElementById("btn"); //получаем кнопку скрыть/показать
-
-    btn.addEventListener('click', function(){ //вешаем событие на нажатие html-кнопки
-        if (tg.MainButton.isVisible){ //если кнопка показана
-            tg.MainButton.hide() //скрываем кнопку
-        }
-        else{ //иначе
-            tg.MainButton.show() //показываем
-        }
-    });
-
-    let btnED = document.getElementById("btnED"); //получаем кнопку активировать/деактивировать
-    btnED.addEventListener('click', function(){ //вешаем событие на нажатие html-кнопки
-        if (tg.MainButton.isActive){ //если кнопка показана
-            tg.MainButton.setParams({"color": "#E0FFFF"}); //меняем цвет
-            tg.MainButton.disable() //скрываем кнопку
-        }
-        else{ //иначе
-            tg.MainButton.setParams({"color": "#143F6B"}); //меняем цвет
-            tg.MainButton.enable() //показываем
-        }
-    });
-
     Telegram.WebApp.onEvent('mainButtonClicked', function(){
         tg.sendData("some string that we need to send");
         //при клике на основную кнопку отправляем данные в строковом виде
     });
 
+    let searchButton = document.getElementById("searchButton");
+    let guideName = document.getElementById("guideName");
+    let guideLanguage = document.getElementById("guideLanguage");
+    let guideRegion = document.getElementById("guideRegion");
+    let guideCar = document.getElementById("guideCar");
 
-    let usercard = document.getElementById("usercard"); //получаем блок usercard
+    searchButton.addEventListener('click', function () {
+            let fromDate = document.getElementById("fromDate").value;
+            let toDate = document.getElementById("toDate").value;
+            let language = document.getElementById("language").value;
+            let region = document.getElementById("region").value;
+            let hasCar = document.getElementById("hasCar").checked;
 
-    let profName = document.createElement('p'); //создаем параграф
-    profName.innerText = `${tg.initDataUnsafe.user.first_name}
-   ${tg.initDataUnsafe.user.last_name}
-   ${tg.initDataUnsafe.user.username} (${tg.initDataUnsafe.user.language_code})`;
-    //выдем имя, "фамилию", через тире username и код языка
-    usercard.appendChild(profName); //добавляем
+            // Perform the guide search based on the parameters
+            // Replace the following code with your actual guide search implementation
+            let guide = findGuide(fromDate, toDate, language, region, hasCar);
 
-    let userid = document.createElement('p'); //создаем еще параграф
-    userid.innerText = `${tg.initDataUnsafe.user.id}`; //показываем user_id
-    usercard.appendChild(userid); //добавляем
+            if (guide) {
+                guideName.innerText = "Guide Name: " + guide.name;
+                guideLanguage.innerText = "Language: " + guide.language;
+                guideRegion.innerText = "Region: " + guide.region;
+                guideCar.innerText = "Has Car: " + (guide.hasCar ? "Yes" : "No");
+            } else {
+                guideName.innerText = "No guide found.";
+                guideLanguage.innerText = "";
+                guideRegion.innerText = "";
+                guideCar.innerText = "";
+            }
+        });
 
+        function findGuide(fromDate, toDate, language, region, hasCar) {
+            // Implement your guide search logic here
+            // Return the found guide or null if no guide matches the parameters
+            // You can replace this function with your actual guide search implementation
+            // Example code:
+            let guides = [
+                {
+                    name: "John Doe",
+                    language: "English",
+                    region: "North",
+                    hasCar: true
+                },
+                {
+                    name: "Jane Smith",
+                    language: "French",
+                    region: "South",
+                    hasCar: false
+                },
+                // Add more guide objects as needed
+            ];
 
-    //работает только в attachment menu
-    // let pic = document.createElement('img'); //создаем img
-    // pic.src = tg.initDataUnsafe.user.photo_url; //задаём src
-    // usercard.appendChild(pic); //добавляем элемент в карточку
+            for (let i = 0; i < guides.length; i++) {
+                let guide = guides[i];
+                // Check if the guide matches the parameters
+                if (
+                    guide.language === language &&
+                    guide.region === region &&
+                    guide.hasCar === hasCar
+                ) {
+                    return guide;
+                }
+            }
+
+            return null; // No guide found
+        }
 </script>
+</body>
 </html>
+
