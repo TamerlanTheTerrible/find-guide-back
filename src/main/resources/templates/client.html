@@ -28,11 +28,12 @@
         }
 
         #guideForm label {
-            margin-bottom: 8px; /* Added margin-bottom for spacing between labels */
+            margin-bottom: 8px;
             text-align: right;
             clear: both;
             float:left;
             margin-right:15px;
+            color: var(--tg-theme-text-color)
         }
 
         #guideForm input,
@@ -60,12 +61,13 @@
         #guideForm .div-group label {
             margin-right: 10px; /* Adjust margin as needed */
             order: 0; /* Reset the default order */
+            color: var(--tg-theme-text-color)
         }
 
         #guideForm .div-group input, #guideForm .div-group select {
             margin-left: auto; /* Push the input to the right */
             order: 1; /* Set a higher order to place it after the label */
-            min-width: 160px;
+            min-width: 180px;
             max-width: 200px;
             font-size: 18px;
         }
@@ -77,18 +79,19 @@
 <div id="guideForm">
     <!--    from date-->
     <div class="div-group">
-        <label for="fromDate">📆 FROM DATE:</label>
+        <label for="fromDate">📆 from date:</label>
         <input type="date" id="fromDate" name="fromDate">
     </div>
     <!--    to date-->
     <div class="div-group">
-        <label for="toDate">📆 TO DATE:</label>
+        <label for="toDate">📆 to date:</label>
         <input type="date" id="toDate" name="toDate">
     </div>
     <!--    language-->
     <div class="div-group">
-        <label for="language">🇺🇿 LANGUAGE:</label>
+        <label for="language">🇺🇿 language:</label>
         <select id="language" name="language">
+            <option value="">choose language</option>
             <option value="ENGLISH">ENGLISH</option>
             <option value="RUSSIAN">RUSSIAN</option>
             <option value="SPANISH">SPANISH</option>
@@ -97,8 +100,9 @@
     </div>
     <!--    region-->
     <div class="div-group">
-        <label for="region">🕌 REGION:</label>
+        <label for="region">🕌 region:</label>
         <select id="region" name="region">
+            <option value="">choose region</option>
             <option value="UZBEKISTAN">UZBEKISTAN</option>
             <option value="TASHKENT">TASHKENT</option>
             <option value="SAMARKAND">SAMARKAND</option>
@@ -107,15 +111,14 @@
     </div>
     <!--    has car-->
     <div class="div-group">
-        <label for="hasCar">🚗 HAS CAR:</label>
+        <label for="hasCar">🚗 has car:</label>
         <input type="checkbox" id="hasCar" name="hasCar">
     </div>
     <!--    has car-->
     <div class="div-group">
-        <label for="comment">💬 COMMENTS:</label>
+        <label for="comment">💬 comments:</label>
         <input type="text" id="comment" name="comment" style="height: 70px">
     </div>
-
 </div>
 
 <div id="results">
