@@ -153,10 +153,12 @@
             .then(data =>{
                 console.log('data:', JSON.stringify(data));
                 guideName.innerText = JSON.stringify(data);
+                tg.showAlert(JSON.stringify(data));
             })
             .catch(error => {
                 console.error('Error:', JSON.stringify(error.json()));
                 guideName.innerText = JSON.stringify(error.json());
+                tg.showAlert(JSON.stringify(error.json()));
             });
         tg.sendData(JSON.stringify(searchParams));
     }
