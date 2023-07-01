@@ -125,8 +125,11 @@
         sendData();
     });
 
+    // let initDataURLSP = new URLSearchParams('query_id=AAHm5DgAAAAAAObkOACNgLFJ&user=%7B%22id%22%3A3728614%2C%22first_name%22%3A%22Timur%22%2C%22last_name%22%3A%22Ismoilov%22%2C%22username%22%3A%22timurismoilov%22%2C%22language_code%22%3A%22en%22%7D&auth_date=1688209201&hash=17d68d6072c3582de9b74bf6d7254fd9b5a5b1cc53aae1725f4efb09232c1f01');
     let initDataURLSP = new URLSearchParams(tg.initData);
+    console.log(initDataURLSP)
     let user = initDataURLSP.get('user');
+    console.log(user)
 
     function sendData() {
         // Create an object with the search parameters
@@ -145,25 +148,23 @@
         console.log(searchParams)
         console.log(JSON.stringify(searchParams))
 
-        // fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
-        // // fetch('http://127.0.0.1:8280/guide-search/', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(searchParams)
-        // })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log('Response: ', data);
-        //         tg.showPopup(JSON.stringify(data))
-        //     })
-        //     .catch(error => {
-        //         console.error('Error: ', error);
-        //         tg.showAlert("Error: ", error)
-        //     });
-        tg.answerWebAppQuery({text: JSON.stringify(searchParams)})
-        tg.answerWebAppQuery({text: "Hello"})
+        fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
+        // fetch('http://127.0.0.1:8280/guide-search/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchParams)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response: ', data);
+                tg.showPopup(data)
+            })
+            .catch(error => {
+                console.error('Error: ', error);
+                tg.showAlert("Error: ", error)
+            });
     }
 </script>
 </body>
