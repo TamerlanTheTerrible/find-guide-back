@@ -53,6 +53,12 @@
 
 <body>
 <div id="guideForm">
+    <label for="userId">User Id:</label>
+    <input type="text" id="userId" name="userId">
+
+    <label for="telegramId">Telegram Id:</label>
+    <input type="text" id="telegramId" name="telegramId">
+
     <label for="fromDate">From Date:</label>
     <input type="date" id="fromDate" name="fromDate">
 
@@ -89,11 +95,13 @@
 </div>
 
 <script>
-    let fromDate = document.getElementById("fromDate").value;
-    let toDate = document.getElementById("toDate").value;
-    let language = document.getElementById("language").value;
-    let region = document.getElementById("region").value;
-    let hasCar = document.getElementById("hasCar").checked;
+    let userId = document.getElementById("userId");
+    let telegramId = document.getElementById("telegramId");
+    let fromDate = document.getElementById("fromDate");
+    let toDate = document.getElementById("toDate");
+    let language = document.getElementById("language");
+    let region = document.getElementById("region");
+    let hasCar = document.getElementById("hasCar");
 
     let searchButton = document.getElementById("searchButton");
     let guideName = document.getElementById("guideName");
@@ -120,24 +128,28 @@
     function sendData() {
         // Create an object with the search parameters
         let searchParams = {
-            from_date: fromDate,
-            to_date: toDate,
-            language: language,
-            region: region,
-            has_car: hasCar
+            user_id: userId.value,
+            telegram_id: telegramId.value,
+            from_date: fromDate.value,
+            to_date: toDate.value,
+            language: language.value,
+            region: region.value,
+            has_car: hasCar.checked
         };
 
         // Convert the object to a JSON string
         guideRegion.innerText = searchParams;
-        let searchData = JSON.stringify(searchParams);
-        guideLanguage.innerText = searchData
+        guideLanguage.innerText = JSON.stringify(searchParams);
+        console.log(searchParams)
+        console.log(JSON.stringify(searchParams))
 
-        fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
+        // fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
+        fetch('http://127.0.0.1:8280/guide-search/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(searchData)
+            body: JSON.stringify(searchParams)
         })
             .then(response => {
                 if (response.ok) {
