@@ -16,15 +16,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center; /* Add justify-content property */
-            height: 100vh; /* Add height property to body */
-            font-size: 18px;
+            font-size: 22px;
         }
 
         #guideForm {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            margin-top: 20px;
             max-width: fit-content;
         }
 
@@ -66,7 +65,8 @@
         #guideForm .div-group input, #guideForm .div-group select {
             margin-left: auto; /* Push the input to the right */
             order: 1; /* Set a higher order to place it after the label */
-            min-width: 150px;
+            min-width: 180px;
+            max-width: 200px;
         }
 
     </style>
@@ -112,7 +112,7 @@
     <!--    has car-->
     <div class="div-group">
         <label for="comment">💬 comments:</label>
-        <input type="text" id="comment" name="comment">
+        <input type="text" id="comment" name="comment" style="height: 70px">
     </div>
 
 </div>
