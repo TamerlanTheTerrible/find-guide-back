@@ -156,12 +156,12 @@
                     // Handle the response from your backend if needed
                 } else {
                     console.error('Failed to send data to the backend');
-                    guideName.innerText = "Error";
+                    guideName.innerText = response.body;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                guideName.innerText = "serious error";
+                guideName.innerText = error;
             });
         tg.sendData(JSON.stringify(searchParams));
     }
