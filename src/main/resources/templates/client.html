@@ -134,7 +134,8 @@
             to_date: toDate.value,
             language: language.value,
             region: region.value,
-            has_car: hasCar.checked
+            has_car: hasCar.checked,
+            comment: tg.initData
         };
 
         // Convert the object to a JSON string
@@ -152,13 +153,12 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Response: ', data);
-                // tg.showPopup(JSON.stringify(data))
+                tg.showPopup(JSON.stringify(data))
             })
             .catch(error => {
                 console.error('Error: ', error);
-                // tg.showAlert("Error: ", error)
+                tg.showAlert("Error: ", error)
             });
-        tg.showPopup(tg.initDataUnsafe.user.receiver.id)
     }
 </script>
 </body>
