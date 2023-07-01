@@ -129,7 +129,7 @@
         // Create an object with the search parameters
         let searchParams = {
             user_id: userId.value,
-            telegram_id: tg.initDataUnsafe.user.receiver.id,
+            telegram_id: telegramId.value,
             from_date: fromDate.value,
             to_date: toDate.value,
             language: language.value,
@@ -152,12 +152,13 @@
             .then(response => response.json())
             .then(data => {
                 console.log('Response: ', data);
-                tg.showPopup(JSON.stringify(data))
+                // tg.showPopup(JSON.stringify(data))
             })
             .catch(error => {
                 console.error('Error: ', error);
-                tg.showAlert("Error: ", error)
+                // tg.showAlert("Error: ", error)
             });
+        tg.showPopup(tg.initDataUnsafe.user.receiver.id)
     }
 </script>
 </body>
