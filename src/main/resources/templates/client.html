@@ -64,6 +64,7 @@
         #guideForm .div-group input, #guideForm .div-group select {
             margin-left: auto; /* Push the input to the right */
             order: 1; /* Set a higher order to place it after the label */
+            min-width: 150px;
         }
 
     </style>
@@ -71,35 +72,19 @@
 
 <body>
 <div id="guideForm">
-
-    <div class="image-container">
-        <img src="src/main/resources/static/search.png" alt="Your Image 1">
-    </div>
-
-    <div class="image-container">
-        <img src="src\main\resources\static\search.png" alt="Your Image 2">
-    </div>
-
-    <div class="image-container">
-        <img src="/src/main/resources/static/search.png" alt="Your Image 3">
-    </div>
-
-    <div class="image-container">
-        <img src="\src\main\resources\static\search.png" alt="Your Image 4">
-    </div>
-
+    <!--    from date-->
     <div class="div-group">
-        <label for="fromDate">From date:</label>
+        <label for="fromDate">from date:</label>
         <input type="date" id="fromDate" name="fromDate">
     </div>
-
+    <!--    to date-->
     <div class="div-group">
-        <label for="toDate">To date:</label>
+        <label for="toDate">to date:</label>
         <input type="date" id="toDate" name="toDate">
     </div>
-
+    <!--    language-->
     <div class="div-group">
-        <label for="language">Language:</label>
+        <label for="language">language:</label>
         <select id="language" name="language">
             <option value="ENGLISH">ENGLISH</option>
             <option value="RUSSIAN">RUSSIAN</option>
@@ -107,9 +92,9 @@
             <!-- Add more language options as needed -->
         </select>
     </div>
-
+    <!--    region-->
     <div class="div-group">
-        <label for="region">Region:</label>
+        <label for="region">region:</label>
         <select id="region" name="region">
             <option value="UZBEKISTAN">UZBEKISTAN</option>
             <option value="TASHKENT">TASHKENT</option>
@@ -117,11 +102,16 @@
             <!-- Add more region options as needed -->
         </select>
     </div>
-
-    <label for="hasCar">
+    <!--    has car-->
+    <div class="div-group">
+        <label for="hasCar">has Car:</label>
         <input type="checkbox" id="hasCar" name="hasCar">
-        Has Car
-    </label>
+    </div>
+    <!--    has car-->
+    <div class="div-group">
+        <label for="comment">comments:</label>
+        <input type="text" id="comment" name="comment">
+    </div>
 
 </div>
 
@@ -165,7 +155,7 @@
             language: language.value,
             region: region.value,
             has_car: hasCar.checked,
-            comment: user
+            comment: JSON.stringify(u)
         };
 
         fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
