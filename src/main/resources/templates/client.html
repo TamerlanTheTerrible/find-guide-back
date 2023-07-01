@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,30 +18,40 @@
             font-size: 18px;
         }
 
-        .hint {
-            color: var(--tg-theme-hint-color);
-        }
-
-        .link {
-            color: var(--tg-theme-link-color);
-        }
-
-        .button {
-            background: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
-            border: none;
-            font-size: 18px;
-        }
-
-        .button:not(:last-child) {
-            margin-bottom: 20px;
-        }
-
         #guideForm {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-bottom: 20px;
+            max-width: 300px; /* Added max-width for mobile-friendly layout */
+        }
+
+        #guideForm label {
+            margin-bottom: 8px; /* Added margin-bottom for spacing between labels */
+        }
+
+        #guideForm input[type="date"],
+        #guideForm select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px; /* Rounded corners for input fields */
+            margin-bottom: 16px; /* Increased margin-bottom for spacing between input fields */
+            width: 100%; /* Added width: 100% for full-width on mobile */
+            box-sizing: border-box; /* Include padding and border in the element's total width */
+        }
+
+        #guideForm input[type="checkbox"] {
+            margin-bottom: 16px; /* Increased margin-bottom for spacing between input fields */
+        }
+
+        #guideForm label {
+            width: 100%; /* Added width: 100% for full-width on mobile */
+            display: flex;
+            align-items: center;
+        }
+
+        #guideForm label input[type="checkbox"] {
+            margin-right: 8px; /* Added margin-right for spacing between checkbox and label text */
         }
 
         #results {
@@ -49,15 +60,11 @@
             align-items: center;
         }
     </style>
+
 </head>
 
 <body>
 <div id="guideForm">
-<!--    <label for="userId">User Id:</label>-->
-<!--    <input type="text" id="userId" name="userId">-->
-
-<!--    <label for="telegramId">Telegram Id:</label>-->
-<!--    <input type="text" id="telegramId" name="telegramId">-->
 
     <label for="fromDate">From Date:</label>
     <input type="date" id="fromDate" name="fromDate">
@@ -81,10 +88,9 @@
         <!-- Add more region options as needed -->
     </select>
 
-    <label for="hasCar">Has Car:</label>
+    <label for="hasCar">Has Car</label>
     <input type="checkbox" id="hasCar" name="hasCar">
 
-    <button id="searchButton" class="button">Search</button>
 </div>
 
 <div id="results">
@@ -95,19 +101,11 @@
 </div>
 
 <script>
-    // let userId = document.getElementById("userId");
-    // let telegramId = document.getElementById("telegramId");
     let fromDate = document.getElementById("fromDate");
     let toDate = document.getElementById("toDate");
     let language = document.getElementById("language");
     let region = document.getElementById("region");
     let hasCar = document.getElementById("hasCar");
-
-    let searchButton = document.getElementById("searchButton");
-    let guideName = document.getElementById("guideName");
-    let guideLanguage = document.getElementById("guideLanguage");
-    let guideRegion = document.getElementById("guideRegion");
-    let guideCar = document.getElementById("guideCar");
 
     let tg = window.Telegram.WebApp;
     tg.expand();
@@ -118,10 +116,6 @@
     tg.MainButton.show()
 
     Telegram.WebApp.onEvent('mainButtonClicked', function(){
-        sendData();
-    });
-
-    searchButton.addEventListener('click', function () {
         sendData();
     });
 
