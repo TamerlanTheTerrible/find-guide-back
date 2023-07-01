@@ -15,6 +15,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Add justify-content property */
+            height: 100vh; /* Add height property to body */
             font-size: 18px;
         }
 
@@ -23,7 +25,7 @@
             flex-direction: column;
             align-items: center;
             margin-bottom: 20px;
-            max-width: fit-content; /* Added max-width for mobile-friendly layout */
+            max-width: fit-content;
         }
 
         #guideForm label {
@@ -74,17 +76,17 @@
 <div id="guideForm">
     <!--    from date-->
     <div class="div-group">
-        <label for="fromDate">from date:</label>
+        <label for="fromDate">📆 from date:</label>
         <input type="date" id="fromDate" name="fromDate">
     </div>
     <!--    to date-->
     <div class="div-group">
-        <label for="toDate">to date:</label>
+        <label for="toDate">📆 to date:</label>
         <input type="date" id="toDate" name="toDate">
     </div>
     <!--    language-->
     <div class="div-group">
-        <label for="language">language:</label>
+        <label for="language">🇺🇿 language:</label>
         <select id="language" name="language">
             <option value="ENGLISH">ENGLISH</option>
             <option value="RUSSIAN">RUSSIAN</option>
@@ -94,7 +96,7 @@
     </div>
     <!--    region-->
     <div class="div-group">
-        <label for="region">region:</label>
+        <label for="region">🕌 region:</label>
         <select id="region" name="region">
             <option value="UZBEKISTAN">UZBEKISTAN</option>
             <option value="TASHKENT">TASHKENT</option>
@@ -104,12 +106,12 @@
     </div>
     <!--    has car-->
     <div class="div-group">
-        <label for="hasCar">has Car:</label>
+        <label for="hasCar">🚗 has car:</label>
         <input type="checkbox" id="hasCar" name="hasCar">
     </div>
     <!--    has car-->
     <div class="div-group">
-        <label for="comment">comments:</label>
+        <label for="comment">💬 comments:</label>
         <input type="text" id="comment" name="comment">
     </div>
 
