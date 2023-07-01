@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -27,7 +28,13 @@
         }
 
         #guideForm label {
+            display: flex;
+            align-items: center;
             margin-bottom: 8px; /* Added margin-bottom for spacing between labels */
+        }
+
+        #guideForm label span {
+            flex: 1; /* Allow the label text to take up remaining space */
         }
 
         #guideForm input[type="date"],
@@ -44,52 +51,51 @@
             margin-bottom: 16px; /* Increased margin-bottom for spacing between input fields */
         }
 
-        #guideForm label {
-            width: 100%; /* Added width: 100% for full-width on mobile */
-            display: flex;
-            align-items: center;
-        }
-
-        #guideForm label input[type="checkbox"] {
-            margin-right: 8px; /* Added margin-right for spacing between checkbox and label text */
-        }
-
         #results {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
     </style>
-
 </head>
 
 <body>
 <div id="guideForm">
 
-    <label for="fromDate">From Date:</label>
-    <input type="date" id="fromDate" name="fromDate">
+    <label for="fromDate">
+        <span>From Date:</span>
+        <input type="date" id="fromDate" name="fromDate">
+    </label>
 
-    <label for="toDate">To Date:</label>
-    <input type="date" id="toDate" name="toDate">
+    <label for="toDate">
+        <span>To Date:</span>
+        <input type="date" id="toDate" name="toDate">
+    </label>
 
-    <label for="language">Language:</label>
-    <select id="language" name="language">
-        <option value="ENGLISH">ENGLISH</option>
-        <option value="RUSSIAN">RUSSIAN</option>
-        <option value="SPANISH">SPANISH</option>
-        <!-- Add more language options as needed -->
-    </select>
+    <label for="language">
+        <span>Language:</span>
+        <select id="language" name="language">
+            <option value="ENGLISH">ENGLISH</option>
+            <option value="RUSSIAN">RUSSIAN</option>
+            <option value="SPANISH">SPANISH</option>
+            <!-- Add more language options as needed -->
+        </select>
+    </label>
 
-    <label for="region">Region:</label>
-    <select id="region" name="region">
-        <option value="UZBEKISTAN">UZBEKISTAN</option>
-        <option value="TASHKENT">TASHKENT</option>
-        <option value="SAMARKAND">SAMARKAND</option>
-        <!-- Add more region options as needed -->
-    </select>
+    <label for="region">
+        <span>Region:</span>
+        <select id="region" name="region">
+            <option value="UZBEKISTAN">UZBEKISTAN</option>
+            <option value="TASHKENT">TASHKENT</option>
+            <option value="SAMARKAND">SAMARKAND</option>
+            <!-- Add more region options as needed -->
+        </select>
+    </label>
 
-    <label for="hasCar">Has Car</label>
-    <input type="checkbox" id="hasCar" name="hasCar">
+    <label for="hasCar">
+        <input type="checkbox" id="hasCar" name="hasCar">
+        <span>Has Car</span>
+    </label>
 
 </div>
 
@@ -108,7 +114,7 @@
     let hasCar = document.getElementById("hasCar");
 
     let tg = window.Telegram.WebApp;
-    tg.expand();
+    // tg.expand();
 
     tg.MainButton.text = "Changed Text"; //изменяем текст кнопки
     tg.MainButton.color = "#143F6B"; //изменяем цвет бэкграунда кнопки
