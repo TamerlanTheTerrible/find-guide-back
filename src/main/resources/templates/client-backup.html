@@ -1,64 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Telegram WebApps API</title>
+    <title>Guide Finder WebApp</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <style>
+        body {
+            color: var(--tg-theme-text-color);
+            background: var(--tg-theme-secondary-bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Add justify-content property */
+            font-size: 18px;
+        }
+
+        #guideForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            max-width: fit-content;
+        }
+
+        #guideForm label {
+            margin-bottom: 8px;
+            text-align: right;
+            clear: both;
+            float:left;
+            margin-right:15px;
+            color: var(--tg-theme-text-color)
+        }
+
+        #guideForm input,
+        #guideForm select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px; /* Rounded corners for input fields */
+            margin-bottom: 16px; /* Increased margin-bottom for spacing between input fields */
+            /*width: 50%; !* Added width: 100% for full-width on mobile *!*/
+            box-sizing: border-box; /* Include padding and border in the element's total width */
+        }
+
+        #results {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #guideForm .div-group {
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        #guideForm .div-group label {
+            margin-right: 10px; /* Adjust margin as needed */
+            order: 0; /* Reset the default order */
+            color: var(--tg-theme-text-color);
+        }
+
+        #guideForm .div-group input, #guideForm .div-group select {
+            margin-left: auto; /* Push the input to the right */
+            order: 1; /* Set a higher order to place it after the label */
+            min-width: 180px;
+            max-width: 200px;
+            font-size: 18px;
+            color: var(--tg-theme-text-color);
+            background-color: var(--tg-theme-bg-color);
+            border-color: var(--tg-theme-bg-color);
+        }
+
+    </style>
 </head>
 
 <body>
-<form id="guideForm" method="post" action="/guide-search">
-    <label for="userId">User ID:</label>
-    <input type="text" id="userId" name="userId" required>
-    <br>
-    <label for="telegramId">Telegram ID:</label>
-    <input type="text" id="telegramId" name="telegramId" required>
-    <br>
-    <label for="language">Language:</label>
-    <input type="text" id="language" name="language" required>
-    <br>
-    <label for="region">Region:</label>
-    <input type="text" id="region" name="region" required>
-    <br>
-    <label for="fromDate">From Date:</label>
-    <input type="datetime-local" id="fromDate" name="fromDate" required>
-    <br>
-    <label for="toDate">To Date:</label>
-    <input type="datetime-local" id="toDate" name="toDate" required>
-    <br>
-    <label for="hasCar">Has Car:</label>
-    <input type="checkbox" id="hasCar" name="hasCar">
-    <br>
-    <label for="comment">Comment:</label>
-    <textarea id="comment" name="comment"></textarea>
-    <br>
-    <button type="submit">Submit</button>
-</form>
+<div id="guideForm">
+    <!--    from date-->
+    <div class="div-group">
+        <label for="fromDate">📆 from date:</label>
+        <input type="date" id="fromDate" name="fromDate">
+    </div>
+    <!--    to date-->
+    <div class="div-group">
+        <label for="toDate">📆 to date:</label>
+        <input type="date" id="toDate" name="toDate">
+    </div>
+    <!--    language-->
+    <div class="div-group">
+        <label for="language">🇺🇿 language:</label>
+        <select id="language" name="language">
+            <option value="">choose language</option>
+            <option value="ENGLISH">ENGLISH</option>
+            <option value="RUSSIAN">RUSSIAN</option>
+            <option value="SPANISH">SPANISH</option>
+            <!-- Add more language options as needed -->
+        </select>
+    </div>
+    <!--    region-->
+    <div class="div-group">
+        <label for="region">🕌 region:</label>
+        <select id="region" name="region">
+            <option value="">choose region</option>
+            <option value="UZBEKISTAN">UZBEKISTAN</option>
+            <option value="TASHKENT">TASHKENT</option>
+            <option value="SAMARKAND">SAMARKAND</option>
+            <!-- Add more region options as needed -->
+        </select>
+    </div>
+    <!--    has car-->
+    <div class="div-group">
+        <label for="hasCar">🚗 has car:</label>
+        <input type="checkbox" id="hasCar" name="hasCar">
+    </div>
+    <!--    has car-->
+    <div class="div-group">
+        <label for="comment">💬 comments:</label>
+        <input type="text" id="comment" name="comment" style="height: 70px">
+    </div>
+</div>
+
+<div id="results">
+    <p id="guideName"></p>
+    <p id="guideLanguage"></p>
+    <p id="guideRegion"></p>
+    <p id="guideCar"></p>
+</div>
 
 <script>
+    let fromDate = document.getElementById("fromDate");
+    let toDate = document.getElementById("toDate");
+    let language = document.getElementById("language");
+    let region = document.getElementById("region");
+    let hasCar = document.getElementById("hasCar");
+    let comments = document.getElementById("comment");
+
     let tg = window.Telegram.WebApp;
 
-    tg.expand();
+    tg.MainButton.text = "Search"; //изменяем текст кнопки
+    tg.MainButton.enable()
+    tg.MainButton.show()
 
-    // Handle form submission
-    let form = document.getElementById("guideForm");
-    form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent form from being submitted normally
-        let formData = new FormData(form); // Create FormData object from the form
-        let xhr = new XMLHttpRequest(); // Create XMLHttpRequest object
-        xhr.open("POST", form.action, true); // Set the request method and URL
-        xhr.setRequestHeader("Content-Type", "application/json"); // Set the request header
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                let response = JSON.parse(xhr.responseText); // Parse the response JSON
-                console.log(response); // Handle the response as needed
-            }
-        };
-        let jsonPayload = JSON.stringify(Object.fromEntries(formData)); // Convert FormData to JSON
-        xhr.send(jsonPayload); // Send the request with the JSON payload
+    Telegram.WebApp.onEvent('mainButtonClicked', function(){
+        sendData();
     });
+
+    function sendData() {
+        let initDataURLSP = new URLSearchParams(tg.initData);
+        let userStr = initDataURLSP.get('user');
+        let user = JSON.parse(userStr);
+
+        // Create an object with the search parameters
+        let searchParams = {
+            // user_id: userId.value,
+            telegram_id: user.id,
+            from_date: fromDate.value,
+            to_date: toDate.value,
+            language: language.value,
+            region: region.value,
+            has_car: hasCar.checked,
+            comment: comments.value
+        };
+
+        fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
+        // fetch('http://127.0.0.1:8280/guide-search/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(searchParams)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response: ', data);
+                tg.showPopup(data)
+            })
+            .catch(error => {
+                console.error('Error: ', error);
+                tg.showAlert("Error: ", error)
+            });
+    }
 </script>
 </body>
 </html>
+
