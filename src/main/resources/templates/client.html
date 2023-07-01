@@ -128,6 +128,7 @@
     let language = document.getElementById("language");
     let region = document.getElementById("region");
     let hasCar = document.getElementById("hasCar");
+    let comments = document.getElementById("comment");
 
     let tg = window.Telegram.WebApp;
     // tg.expand();
@@ -155,7 +156,7 @@
             language: language.value,
             region: region.value,
             has_car: hasCar.checked,
-            comment: JSON.stringify(u)
+            comment: comments.value
         };
 
         fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
