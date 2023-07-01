@@ -125,11 +125,11 @@
         sendData();
     });
 
-    let initDataURLSP = new URLSearchParams(tg.initData);
-    let userStr = initDataURLSP.get('user');
-    let user = JSON.parse(userStr);
-
     function sendData() {
+        let initDataURLSP = new URLSearchParams(tg.initData);
+        let userStr = initDataURLSP.get('user');
+        let user = JSON.parse(userStr);
+
         // Create an object with the search parameters
         let searchParams = {
             // user_id: userId.value,
@@ -139,12 +139,8 @@
             language: language.value,
             region: region.value,
             has_car: hasCar.checked,
-            comment: initDataURLSP.toString()
+            comment: user
         };
-
-        // Convert the object to a JSON string
-        console.log(searchParams)
-        console.log(JSON.stringify(searchParams))
 
         fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
         // fetch('http://127.0.0.1:8280/guide-search/', {
