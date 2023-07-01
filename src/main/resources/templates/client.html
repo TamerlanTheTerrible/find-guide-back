@@ -138,13 +138,11 @@
         };
 
         // Convert the object to a JSON string
-        guideRegion.innerText = searchParams;
-        guideLanguage.innerText = JSON.stringify(searchParams);
         console.log(searchParams)
         console.log(JSON.stringify(searchParams))
 
-        // fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
-        fetch('http://127.0.0.1:8280/guide-search/', {
+        fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
+        // fetch('http://127.0.0.1:8280/guide-search/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -165,73 +163,8 @@
                 console.error('Error:', error);
                 guideName.innerText = "serious error";
             });
-
-        // Close the WebApp after sending the data
-        // tg.close();
+        tg.sendData(JSON.stringify(searchParams));
     }
-
-
-
-
-    // searchButton.addEventListener('click', function () {
-    //         let fromDate = document.getElementById("fromDate").value;
-    //         let toDate = document.getElementById("toDate").value;
-    //         let language = document.getElementById("language").value;
-    //         let region = document.getElementById("region").value;
-    //         let hasCar = document.getElementById("hasCar").checked;
-    //
-    //         // Perform the guide search based on the parameters
-    //         // Replace the following code with your actual guide search implementation
-    //         let guide = findGuide(fromDate, toDate, language, region, hasCar);
-    //
-    //         if (guide) {
-    //             guideName.innerText = "Guide Name: " + guide.name;
-    //             guideLanguage.innerText = "Language: " + guide.language;
-    //             guideRegion.innerText = "Region: " + guide.region;
-    //             guideCar.innerText = "Has Car: " + (guide.hasCar ? "Yes" : "No");
-    //         } else {
-    //             guideName.innerText = "No guide found.";
-    //             guideLanguage.innerText = "";
-    //             guideRegion.innerText = "";
-    //             guideCar.innerText = "";
-    //         }
-    //     });
-    //
-    //     function findGuide(fromDate, toDate, language, region, hasCar) {
-    //         // Implement your guide search logic here
-    //         // Return the found guide or null if no guide matches the parameters
-    //         // You can replace this function with your actual guide search implementation
-    //         // Example code:
-    //         let guides = [
-    //             {
-    //                 name: "John Doe",
-    //                 language: "English",
-    //                 region: "North",
-    //                 hasCar: true
-    //             },
-    //             {
-    //                 name: "Jane Smith",
-    //                 language: "French",
-    //                 region: "South",
-    //                 hasCar: false
-    //             },
-    //             // Add more guide objects as needed
-    //         ];
-    //
-    //         for (let i = 0; i < guides.length; i++) {
-    //             let guide = guides[i];
-    //             // Check if the guide matches the parameters
-    //             if (
-    //                 guide.language === language &&
-    //                 guide.region === region &&
-    //                 guide.hasCar === hasCar
-    //             ) {
-    //                 return guide;
-    //             }
-    //         }
-    //
-    //         return null; // No guide found
-    //     }
 </script>
 </body>
 </html>
