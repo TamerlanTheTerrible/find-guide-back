@@ -141,8 +141,8 @@
         console.log(searchParams)
         console.log(JSON.stringify(searchParams))
 
-        fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
-        // fetch('http://127.0.0.1:8280/guide-search/', {
+        // fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
+        fetch('http://127.0.0.1:8280/guide-search/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -151,11 +151,12 @@
         })
             .then(response => response.json())
             .then(data =>{
-                guideName.innerText = data;
+                console.log('data:', JSON.stringify(data));
+                guideName.innerText = JSON.stringify(data);
             })
             .catch(error => {
-                console.error('Error:', error);
-                guideName.innerText = error;
+                console.error('Error:', JSON.stringify(error.json()));
+                guideName.innerText = JSON.stringify(error.json());
             });
         tg.sendData(JSON.stringify(searchParams));
     }
