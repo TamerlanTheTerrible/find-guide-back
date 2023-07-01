@@ -125,6 +125,11 @@
         sendData();
     });
 
+    const search = Telegram.WebApp.initData;
+    const converted = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
+        return key === "" ? value : decodeURIComponent(value)
+    });
+
     function sendData() {
         // Create an object with the search parameters
         let searchParams = {
@@ -135,7 +140,7 @@
             language: language.value,
             region: region.value,
             has_car: hasCar.checked,
-            comment: tg.initDataUnsafe.user.id
+            comment: JSON.stringify(converted)
         };
 
         // Convert the object to a JSON string
