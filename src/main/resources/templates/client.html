@@ -129,7 +129,7 @@
         // Create an object with the search parameters
         let searchParams = {
             user_id: userId.value,
-            telegram_id: telegramId.value,
+            telegram_id: tg.initDataUnsafe.user.receiver.id,
             from_date: fromDate.value,
             to_date: toDate.value,
             language: language.value,
@@ -149,21 +149,15 @@
             },
             body: JSON.stringify(searchParams)
         })
-            .then(async response => {
-                if (response.ok) {
-                    console.log('Data sent successfully to the backend');
-                    guideName.innerText = await response.json();
-                    // Handle the response from your backend if needed
-                } else {
-                    console.error('Failed to send data to the backend');
-                    tg.showAlert('Failed to send data to the backend ' + await response.json());
-                }
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response: ', data);
+                tg.showPopup(JSON.stringify(data))
             })
             .catch(error => {
-                console.error('Error:', error);
-                tg.showAlert('Failed to send data to the backend ' + error);
+                console.error('Error: ', error);
+                tg.showAlert("Error: ", error)
             });
-        tg.sendData(JSON.stringify(searchParams));
     }
 </script>
 </body>
