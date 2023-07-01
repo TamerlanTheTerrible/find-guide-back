@@ -149,15 +149,9 @@
             },
             body: JSON.stringify(searchParams)
         })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Data sent successfully to the backend');
-                    guideName.innerText = "Success!";
-                    // Handle the response from your backend if needed
-                } else {
-                    console.error('Failed to send data to the backend');
-                    guideName.innerText = response;
-                }
+            .then(response => response.json())
+            .then(data =>{
+                guideName.innerText = data;
             })
             .catch(error => {
                 console.error('Error:', error);
