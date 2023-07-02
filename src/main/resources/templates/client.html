@@ -142,7 +142,6 @@
     let tg = window.Telegram.WebApp;
 
     tg.MainButton.text = "Search"; //изменяем текст кнопки
-    tg.MainButton.enable()
     tg.MainButton.show()
 
     Telegram.WebApp.onEvent('mainButtonClicked', function(){
@@ -183,6 +182,10 @@
                 console.error('Error: ', error);
                 tg.showAlert("Error: ", error)
             });
+    }
+
+    function showCalendar() {
+        document.getElementById('calendarInput').style.display = 'block';
     }
 </script>
 </body>
