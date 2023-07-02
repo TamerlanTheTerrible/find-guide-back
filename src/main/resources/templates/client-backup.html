@@ -72,7 +72,7 @@
             font-size: 18px;
             color: var(--tg-theme-text-color);
             background-color: var(--tg-theme-bg-color);
-            border-color: transparent;
+            border: 0;
         }
 
     </style>
@@ -167,7 +167,7 @@
         };
 
         fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
-        // fetch('http://127.0.0.1:8280/guide-search/', {
+            // fetch('http://127.0.0.1:8280/guide-search/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

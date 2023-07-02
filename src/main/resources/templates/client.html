@@ -8,129 +8,292 @@
     <title>Guide Finder WebApp</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+    <!-- calendar -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../calendar-07/css/style.css">
     <style>
-        body {
-            color: var(--tg-theme-text-color);
-            background: var(--tg-theme-secondary-bg-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* Add justify-content property */
-            font-size: 18px;
-        }
+        /*html * {*/
+        /*    padding: 0;*/
+        /*    margin: 0;*/
+        /*    box-sizing: border-box;*/
+        /*}*/
+        /*body {*/
+        /*    background-color: #262626;*/
+        /*    display: flex;*/
+        /*    justify-content: center;*/
+        /*    align-items: center;*/
+        /*    height: 100vh;*/
+        /*    font-family: sans-serif;*/
+        /*    padding: 5rem;*/
+        /*}*/
 
-        #guideForm {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            max-width: fit-content;
-        }
+        /*details {*/
+        /*    position: relative;*/
+        /*    width: 300px;*/
+        /*    margin-right: 1rem;*/
+        /*}*/
 
-        #guideForm label {
-            margin-bottom: 8px;
-            text-align: right;
-            clear: both;
-            float:left;
-            margin-right:15px;
-            color: var(--tg-theme-text-color)
-        }
+        /*details[open] {*/
+        /*    z-index: 1;*/
+        /*}*/
 
-        #guideForm input,
-        #guideForm select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px; /* Rounded corners for input fields */
-            margin-bottom: 16px; /* Increased margin-bottom for spacing between input fields */
-            /*width: 50%; !* Added width: 100% for full-width on mobile *!*/
-            box-sizing: border-box; /* Include padding and border in the element's total width */
-        }
+        /*summary {*/
+        /*    padding: 1rem;*/
+        /*    cursor: pointer;*/
+        /*    border-radius: 5px;*/
+        /*    background-color: #ddd;*/
+        /*    list-style: none;*/
+        /*}*/
 
-        #results {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        /*summary::-webkit-details-marker {*/
+        /*    display: none;*/
+        /*}*/
 
-        #guideForm .div-group {
-            width: 100%;
-            display: flex;
-            align-items: center;
-        }
+        /*details[open] summary:before {*/
+        /*    content: '';*/
+        /*    display: block;*/
+        /*    width: 100vw;*/
+        /*    height: 100vh;*/
+        /*    background: transparent;*/
+        /*    position: fixed;*/
+        /*    top: 0;*/
+        /*    left: 0;*/
+        /*}*/
 
-        #guideForm .div-group label {
-            margin-right: 10px; /* Adjust margin as needed */
-            order: 0; /* Reset the default order */
-            color: var(--tg-theme-text-color);
-        }
+        /*summary:after {*/
+        /*    content: '';*/
+        /*    display: inline-block;*/
+        /*    float: right;*/
+        /*    width: .5rem;*/
+        /*    height: .5rem;*/
+        /*    border-bottom: 1px solid currentColor;*/
+        /*    border-left: 1px solid currentColor;*/
+        /*    border-bottom-left-radius: 2px;*/
+        /*    transform: rotate(45deg) translate(50%, 0%);*/
+        /*    transform-origin: center center;*/
+        /*    transition: transform ease-in-out 100ms*/
+        /*}*/
 
-        #guideForm .div-group input, #guideForm .div-group select {
-            margin-left: auto; /* Push the input to the right */
-            order: 1; /* Set a higher order to place it after the label */
-            min-width: 180px;
-            max-width: 200px;
-            font-size: 18px;
-            color: var(--tg-theme-text-color);
-            background-color: var(--tg-theme-bg-color);
-            border: 0;
-        }
+        /*summary:focus {*/
+        /*    outline: none;*/
+        /*}*/
 
+        /*details[open] summary:after {*/
+        /*    transform: rotate(-45deg) translate(0%, 0%);*/
+        /*}*/
+
+        /*ul {*/
+        /*    width: 100%;*/
+        /*    background: #ddd;*/
+        /*    position: absolute;*/
+        /*    top: calc(100% + .5rem);*/
+        /*    left: 0;*/
+        /*    padding: 1rem;*/
+        /*    margin: 0;*/
+        /*    box-sizing: border-box;*/
+        /*    border-radius: 5px;*/
+        /*    max-height: 200px;*/
+        /*    overflow-y: auto;*/
+        /*}*/
+
+        /*li {*/
+        /*    margin: 0;*/
+        /*    padding: 1rem 0;*/
+        /*    border-bottom: 1px solid #ccc;*/
+        /*}*/
+
+        /*li:first-child {*/
+        /*    padding-top: 0;*/
+        /*}*/
+
+        /*li:last-child {*/
+        /*    padding-bottom: 0;*/
+        /*    border-bottom: none;*/
+        /*}*/
+
+        /*!* FAKE SELECT *!*/
+
+        /*summary.radios {*/
+        /*    counter-reset: radios;*/
+        /*}*/
+
+        /*summary.radios:before {*/
+        /*    content: var(--selection);*/
+        /*}*/
+
+        /*input[type=radio] {*/
+        /*    counter-increment: radios;*/
+        /*    appearance: none;*/
+        /*    display: none;*/
+        /*}*/
+
+        /*input[type=radio]:checked {*/
+        /*    display: inline;*/
+        /*    --display: block;*/
+        /*}*/
+
+        /*input[type=radio]:after {*/
+        /*    content: attr(title);*/
+        /*    display: inline;*/
+        /*    font-size: 1rem;*/
+        /*}*/
+
+        /*ul.list {*/
+        /*    counter-reset: labels;*/
+        /*}*/
+
+        /*ul {*/
+        /*    list-style: none;*/
+        /*}*/
+
+        /*label {*/
+        /*    width: 100%;*/
+        /*    display: flex;*/
+        /*    cursor: pointer;*/
+        /*    justify-content: space-between;*/
+        /*}*/
+
+        /*label span {*/
+        /*    --display: none;*/
+        /*    display: var(--display);*/
+        /*    width: 1rem;*/
+        /*    height: 1rem;*/
+        /*    border: 1px solid #727272;*/
+        /*    border-radius: 3px;*/
+        /*}*/
     </style>
 </head>
 
 <body>
 <div id="guideForm">
-    <!--    from date-->
-    <div class="div-group">
-        <label for="fromDate">📆 from date:</label>
-        <input type="date" id="fromDate" name="fromDate">
+    <!--     calendar-->
+    <div class="calendar">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center mb-5">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="elegant-calencar d-md-flex">
+                    <div class="wrap-header d-flex align-items-center img" style="background-image: url(../calendar-07/images/bg.jpg);">
+                        <p id="reset">Today</p>
+                        <div id="header" class="p-0">
+                            <!-- <div class="pre-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-left"></i></div> -->
+                            <div class="head-info">
+                                <div class="head-month"></div>
+                                <div class="head-day"></div>
+                            </div>
+                            <!-- <div class="next-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-right"></i></div> -->
+                        </div>
+                    </div>
+                    <div class="calendar-wrap">
+                        <div class="w-100 button-wrap">
+                            <div class="pre-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-left"></i></div>
+                            <div class="next-button d-flex align-items-center justify-content-center"><i class="fa fa-chevron-right"></i></div>
+                        </div>
+                        <table id="calendar">
+                            <thead>
+                            <tr>
+                                <th>Sun</th>
+                                <th>Mon</th>
+                                <th>Tue</th>
+                                <th>Wed</th>
+                                <th>Thu</th>
+                                <th>Fri</th>
+                                <th>Sat</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!--    to date-->
-    <div class="div-group">
-        <label for="toDate">📆 to date:</label>
-        <input type="date" id="toDate" name="toDate">
-    </div>
-    <!--    language-->
-    <div class="div-group">
-        <label for="language">🇺🇿 language:</label>
-        <select id="language" name="language">
-            <option value="">choose language</option>
-            <option value="ENGLISH">ENGLISH</option>
-            <option value="RUSSIAN">RUSSIAN</option>
-            <option value="SPANISH">SPANISH</option>
-            <!-- Add more language options as needed -->
-        </select>
-    </div>
-    <!--    region-->
-    <div class="div-group">
-        <label for="region">🕌 region:</label>
-        <select id="region" name="region">
-            <option value="">choose region</option>
-            <option value="UZBEKISTAN">UZBEKISTAN</option>
-            <option value="TASHKENT">TASHKENT</option>
-            <option value="SAMARKAND">SAMARKAND</option>
-            <!-- Add more region options as needed -->
-        </select>
-    </div>
-    <!--    has car-->
-    <div class="div-group">
-        <label for="hasCar">🚗 has car:</label>
-        <input type="checkbox" id="hasCar" name="hasCar">
-    </div>
-    <!--    has car-->
-    <div class="div-group">
-        <label for="comment">💬 comments:</label>
-        <input type="text" id="comment" name="comment" style="height: 70px">
-    </div>
-</div>
 
-<div id="results">
-    <p id="guideName"></p>
-    <p id="guideLanguage"></p>
-    <p id="guideRegion"></p>
-    <p id="guideCar"></p>
-</div>
 
+<!--    <details class="custom-select">-->
+<!--        <summary class="radios">-->
+<!--            <input type="radio" name="item" id="default" title="choose language" checked>-->
+<!--            <input type="radio" name="item" id="Uzbekistan" title="Uzbekistan">-->
+<!--            <input type="radio" name="item" id="Tashkent" title="Tashkent">-->
+<!--            <input type="radio" name="item" id="Samarkand" title="Samarkand">-->
+<!--            <input type="radio" name="item" id="Bukhara" title="Bukhara">-->
+<!--        </summary>-->
+<!--        <ul class="list">-->
+<!--            <li>-->
+<!--                <label for="Uzbekistan">Uzbekistan-->
+<!--                    <span></span>-->
+<!--                </label>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <label for="Tashkent">Tashkent</label>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <label for="Samarkand">Samarkand</label>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <label for="Bukhara">Bukhara</label>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </details>-->
+</div>
 <script>
     let fromDate = document.getElementById("fromDate");
     let toDate = document.getElementById("toDate");
@@ -185,6 +348,10 @@
             });
     }
 </script>
+<script src="../calendar-07/js/jquery.min.js"></script>
+<script src="../calendar-07/js/popper.js"></script>
+<script src="../calendar-07/js/bootstrap.min.js"></script>
+<script src="../calendar-07/js/main.js"></script>
 </body>
 </html>
 
