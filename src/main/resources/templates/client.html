@@ -10,119 +10,70 @@
 
     <style>
         body {
-            color: var(--tg-theme-text-color);
-            background: var(--tg-theme-secondary-bg-color);
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: center; /* Add justify-content property */
-            font-size: 18px;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
-        #guideForm {
+        form {
+            width: 90%;
+            max-width: 500px; /* Set a maximum width for mobile-friendly layout */
+        }
+
+        .form-row {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            max-width: fit-content;
+            flex-wrap: wrap;
         }
 
-        #guideForm label {
-            margin-bottom: 8px;
-            text-align: right;
-            clear: both;
-            float:left;
-            margin-right:15px;
-            color: var(--tg-theme-text-color)
+        .form-row > div {
+            flex: 1;
+            margin-right: 10px;
         }
 
-        #guideForm input,
-        #guideForm select {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px; /* Rounded corners for input fields */
-            margin-bottom: 16px; /* Increased margin-bottom for spacing between input fields */
-            /*width: 50%; !* Added width: 100% for full-width on mobile *!*/
-            box-sizing: border-box; /* Include padding and border in the element's total width */
-        }
-
-        #results {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #guideForm .div-group {
+        input[type="date"],
+        select {
             width: 100%;
-            display: flex;
-            align-items: center;
         }
 
-        #guideForm .div-group label {
-            margin-right: 10px; /* Adjust margin as needed */
-            order: 0; /* Reset the default order */
-            color: var(--tg-theme-text-color);
+        form div {
+            margin-bottom: 5px;
         }
 
-        #guideForm .div-group input, #guideForm .div-group select {
-            margin-left: auto; /* Push the input to the right */
-            order: 1; /* Set a higher order to place it after the label */
-            min-width: 180px;
-            max-width: 200px;
-            font-size: 18px;
-            color: var(--tg-theme-text-color);
-            background-color: var(--tg-theme-bg-color);
-            border: 0;
+        label {
+            font-style: italic;
         }
 
     </style>
 </head>
 
 <body>
-<div id="guideForm">
-    <!--    from date-->
-    <div class="div-group">
-        <label for="fromDate">📆 from date:</label>
-        <input type="date" id="fromDate" name="fromDate">
+<form>
+    <div class="form-row">
+        <div>
+            <label for="fromDate">From date:</label>
+            <input type="date" id="fromDate" name="fromDate">
+        </div>
+        <div>
+            <label for="toDate">To date:</label>
+            <input type="date" id="toDate" name="toDate">
+        </div>
     </div>
-    <!--    to date-->
-    <div class="div-group">
-        <label for="toDate">📆 to date:</label>
-        <input type="date" id="toDate" name="toDate">
-    </div>
-    <!--    language-->
-    <div class="div-group">
-        <label for="language">🇺🇿 language:</label>
-        <select id="language" name="language">
-            <option value="">choose language</option>
-            <option value="ENGLISH">ENGLISH</option>
-            <option value="RUSSIAN">RUSSIAN</option>
-            <option value="SPANISH">SPANISH</option>
-            <!-- Add more language options as needed -->
-        </select>
-    </div>
-    <!--    region-->
-    <div class="div-group">
-        <label for="region">🕌 region:</label>
+
+    <div>
+        <label for="region">Region:</label>
         <select id="region" name="region">
-            <option value="">choose region</option>
-            <option value="UZBEKISTAN">UZBEKISTAN</option>
-            <option value="TASHKENT">TASHKENT</option>
-            <option value="SAMARKAND">SAMARKAND</option>
-            <!-- Add more region options as needed -->
         </select>
     </div>
-    <!--    has car-->
-    <div class="div-group">
-        <label for="hasCar">🚗 has car:</label>
-        <input type="checkbox" id="hasCar" name="hasCar">
+
+    <div>
+        <label for="language">Language:</label>
+        <select id="language" name="language">
+        </select>
     </div>
-    <!--    has car-->
-    <div class="div-group">
-        <label for="comment">💬 comments:</label>
-        <input type="text" id="comment" name="comment" style="height: 70px">
-    </div>
-</div>
+</form>
 
 <div id="results">
     <p id="guideName"></p>
@@ -132,21 +83,25 @@
 </div>
 
 <script>
+    // init form elements
     let fromDate = document.getElementById("fromDate");
     let toDate = document.getElementById("toDate");
     let language = document.getElementById("language");
     let region = document.getElementById("region");
     let hasCar = document.getElementById("hasCar");
     let comments = document.getElementById("comment");
-
+    // init main button
     let tg = window.Telegram.WebApp;
-
     tg.MainButton.text = "Search"; //изменяем текст кнопки
+    tg.MainButton.enable()
     tg.MainButton.show()
 
     Telegram.WebApp.onEvent('mainButtonClicked', function(){
         sendData();
     });
+
+    populateSelectFrom(region, 'http://localhost:8280/api/region/');
+    populateSelectFrom(language, 'http://localhost:8280/api/language/');
 
     function sendData() {
         let initDataURLSP = new URLSearchParams(tg.initData);
@@ -155,7 +110,6 @@
 
         // Create an object with the search parameters
         let searchParams = {
-            // user_id: userId.value,
             telegram_id: user.id,
             from_date: fromDate.value,
             to_date: toDate.value,
@@ -165,28 +119,70 @@
             comment: comments.value
         };
 
-        fetch('https://still-beyond-67512-6a27447420c3.herokuapp.com/guide-search', {
-            // fetch('http://127.0.0.1:8280/guide-search/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(searchParams)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Response: ', data);
-                tg.showPopup(data)
-            })
-            .catch(error => {
-                console.error('Error: ', error);
-                tg.showAlert("Error: ", error)
-            });
+        post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
+        // post('http://127.0.0.1:8280/api/guide-search/', searchParams);
     }
 
-    function showCalendar() {
-        document.getElementById('calendarInput').style.display = 'block';
+    // Function to populate a <select> element with options
+    async function populateSelectFrom(select, url) {
+        const data = await get(url);
+        console.log('Populating select with data:', data)
+        data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item; // Assuming the data is a simple array of strings
+            option.textContent = item;
+            select.appendChild(option);
+        });
     }
+
+    function post(url, searchParams) {
+        try {
+            let responsePromise = fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchParams)
+            });
+            return handleApiResponse(responsePromise);
+        } catch (error) {
+            console.error('Error during api call: ', error);
+            return null;
+        }
+
+    }
+
+    function get(url) {
+        try {
+            let responsePromise = fetch(url);
+            return handleApiResponse(responsePromise);
+        } catch (error) {
+            console.error('Error during api call: ', error);
+            return null;
+        }
+    }
+
+    function handleApiResponse(responsePromise) {
+        return responsePromise
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Request failed');
+                }
+            })
+            .then(data => {
+                console.log('Response: ', data);
+                if (data.code === 1) {
+                    console.log('Data fetched successfully:', data.payload);
+                    return data.payload;
+                } else {
+                    console.error('Error fetching data:', response);
+                    return null;
+                }
+            })
+    }
+
 </script>
 </body>
 </html>

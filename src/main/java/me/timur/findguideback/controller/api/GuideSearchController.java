@@ -1,4 +1,4 @@
-package me.timur.findguideback.controller;
+package me.timur.findguideback.controller.api;
 
 import lombok.RequiredArgsConstructor;
 import me.timur.findguideback.model.dto.GuideFilterDto;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping("/guide-search")
-@CrossOrigin(origins = {"http://localhost:8280", "http://127.0.0.1:8281"})
+@RequestMapping("/api/guide-search")
+@CrossOrigin(origins = {"http://localhost:8280", "http://127.0.0.1:8280"})
 @RequiredArgsConstructor
 public class GuideSearchController {
 
