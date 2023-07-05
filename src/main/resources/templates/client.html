@@ -16,6 +16,8 @@
             height: 100vh;
             margin: 0;
             padding: 0;
+            color: var(--tg-theme-text-color);
+            background: var(--tg-theme-bg-color);
         }
 
         form {
@@ -36,6 +38,8 @@
         input[type="date"],
         select {
             width: 100%;
+            background-color: var(--tg-theme-secondary-bg-color);
+            font-size: 18px;
         }
 
         form div {
@@ -92,9 +96,11 @@
     let comments = document.getElementById("comment");
     // init main button
     let tg = window.Telegram.WebApp;
+    tg.expand();
     tg.MainButton.text = "Search"; //изменяем текст кнопки
     tg.MainButton.enable()
     tg.MainButton.show()
+    tg.MainButton.expand = false;
 
     Telegram.WebApp.onEvent('mainButtonClicked', function(){
         sendData();
