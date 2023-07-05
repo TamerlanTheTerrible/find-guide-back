@@ -100,14 +100,15 @@
         sendData();
     });
 
-    populateSelectFrom(region, 'http://localhost:8280/api/region/');
-    populateSelectFrom(language, 'http://localhost:8280/api/language/');
+    // populateSelectFrom(region, 'http://localhost:8280/api/region/');
+    // populateSelectFrom(language, 'http://localhost:8280/api/language/');
+    populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
+    populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
 
     function sendData() {
         let initDataURLSP = new URLSearchParams(tg.initData);
         let userStr = initDataURLSP.get('user');
         let user = JSON.parse(userStr);
-
         // Create an object with the search parameters
         let searchParams = {
             telegram_id: user.id,
