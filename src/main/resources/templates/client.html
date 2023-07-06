@@ -240,9 +240,9 @@
     </div>
 </div>
 
-<!--<div>-->
-<!--    <input type="button" id="back" name="back" value="back" onclick="switchChild(0, 1);">-->
-<!--</div>-->
+<div>
+    <input type="button" id="back" name="back" value="back" onclick="switchChild(0, 1);">
+</div>
 <script>
     // init elements
     let searchForm = document.getElementById("search-form");
@@ -289,10 +289,10 @@
     });
 
     // init datepickers
-    // populateSelectFrom(region, 'http://localhost:8280/api/region/');
-    // populateSelectFrom(language, 'http://localhost:8280/api/language/');
-    populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
-    populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
+    populateSelectFrom(region, 'http://localhost:8280/api/region/');
+    populateSelectFrom(language, 'http://localhost:8280/api/language/');
+    // populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
+    // populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
 
     async function sendData() {
         <!--    validate-->
@@ -307,8 +307,8 @@
         let user = JSON.parse(userStr);
         // Create an object with the search parameters
         let searchParams = {
-            telegram_id: user.id,
-            // telegram_id: '3728614',
+            // telegram_id: user.id,
+            telegram_id: '3728614',
             from_date: fromDate.value,
             to_date: toDate.value,
             language: language.value,
@@ -320,8 +320,8 @@
         };
 
         <!--    send data-->
-        const searchResult = await postForResponse('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
-        // const searchResult = await postForResponse('http://127.0.0.1:8280/api/guide-search/', searchParams);
+        // const searchResult = await postForResponse('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
+        const searchResult = await postForResponse('http://127.0.0.1:8280/api/guide-search/', searchParams);
         console.log('searchResult: ', searchResult);
         let guides = searchResult.result_list;
         if (guides.length > 0) {
