@@ -226,12 +226,12 @@
     </form>
 
 
-    <div id="no-result" class="child" style="display: none">
+    <div id="no-result" class="child">
         <p>No results</p>
     </div>
 
 
-    <div id="results" class="child" style="display: none">
+    <div id="results" class="child">
         <p id="guideId"></p>
         <p id="guideName"></p>
         <p id="guideLanguage"></p>
@@ -284,7 +284,7 @@
         //     searchForm.style.display = "block";
         //     tg.BackButton.hide()
         //
-        switchChild(0, 1);
+        switchChild(1, 0);
         tg.BackButton.hide()
     });
 
@@ -331,7 +331,7 @@
             // searchForm.style.display = "none";
             // noResultDiv.style.display = "none";
             // resultDiv.style.display = "block";
-
+            switchChild(0,1)
             let guide = guides[0];
             let user = guide.user;
             document.getElementById("guideId").innerHTML = guide.id;
@@ -340,7 +340,7 @@
             document.getElementById("guideRegion").innerHTML = guide.region_names.toString();
             document.getElementById("guideCar").innerHTML = guide.has_car;
         } else {
-            document.getElementById("no-result").style.display = "flex";
+            // document.getElementById("no-result").style.display = "flex";
         }
     }
 
