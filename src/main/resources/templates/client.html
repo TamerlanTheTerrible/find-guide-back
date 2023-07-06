@@ -27,7 +27,7 @@
         }
 
         form {
-            width: 90%;
+            width: 100%;
             max-width: 500px; /* Set a maximum width for mobile-friendly layout */
         }
 
@@ -273,7 +273,7 @@
         };
 
         <!--    send data-->
-        const searchResult = await post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
+        const searchResult = await postForResponse('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
         // const searchResult = await postForResponse('http://127.0.0.1:8280/api/guide-search/', searchParams);
         console.log('searchResult: ', searchResult);
         let guides = searchResult.result_list;
