@@ -15,6 +15,8 @@
             justify-content: center;
             align-items: center;
             width: 90%;
+            position: relative;
+            overflow: hidden;
         }
         body {
             display: flex;
@@ -31,6 +33,28 @@
             width: 100%;
             max-width: 500px; /* Set a maximum width for mobile-friendly layout */
         }
+
+        .container {
+            position: relative;
+            height: 300px; /* Adjust the height as needed */
+            overflow: hidden;
+        }
+
+        .child {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .child.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
 
         .switch-container {
             display: inline-flex;
@@ -142,7 +166,7 @@
 
 <body>
 <div class="container">
-    <form id = "search-form">
+    <form id = "search-form" class="child">
         <!--    switches-->
         <div class="form-row">
             <!--    date-->
@@ -202,25 +226,32 @@
     </form>
 
 
-    <div id="no-result" style="display: none">
+    <div id="no-result" class="child" style="display: none">
         <p>No results</p>
     </div>
 
 
-    <div id="results" style="display: none">
+    <div id="results" class="child" style="display: none">
         <p id="guideId"></p>
         <p id="guideName"></p>
         <p id="guideLanguage"></p>
         <p id="guideRegion"></p>
         <p id="guideCar"></p>
     </div>
-
 </div>
+
+<!--<div>-->
+<!--    <input type="button" id="back" name="back" value="back" onclick="switchChild(0, 1);">-->
+<!--</div>-->
 <script>
     // init elements
     let searchForm = document.getElementById("search-form");
     let noResultDiv = document.getElementById("no-result");
     let resultDiv = document.getElementById("results");
+
+    const container = document.querySelector('.container');
+    const children = Array.from(container.querySelectorAll('.child'));
+    children[0].classList.add('active');
 
     let isOneDay = document.getElementById("isOneDay");
     let fromDate = document.getElementById("fromDate");
@@ -247,12 +278,14 @@
     });
 
     Telegram.WebApp.onEvent('backButtonClicked', function(){
-        if (resultDiv.style.display !== "none") {
-            resultDiv.style.display = "none";
-            noResultDiv.style.display = "none";
-            searchForm.style.display = "block";
-            tg.BackButton.hide()
-        }
+        // if (resultDiv.style.display !== "none") {
+        //     resultDiv.style.display = "none";
+        //     noResultDiv.style.display = "none";
+        //     searchForm.style.display = "block";
+        //     tg.BackButton.hide()
+        //
+        switchChild(0, 1);
+        tg.BackButton.hide()
     });
 
     // init datepickers
@@ -295,10 +328,11 @@
             //init tg back button
             tg.BackButton.show();
 
+            // searchForm.style.display = "none";
+            // noResultDiv.style.display = "none";
+            // resultDiv.style.display = "block";
+
             let guide = guides[0];
-            searchForm.style.display = "none";
-            noResultDiv.style.display = "none";
-            resultDiv.style.display = "block";
             let user = guide.user;
             document.getElementById("guideId").innerHTML = guide.id;
             document.getElementById("guideName").innerHTML = user.first_name;
@@ -376,6 +410,22 @@
             element.value = null;
         }
     }
+
+    function switchChild(currentIndex, nextIndex) {
+        const currentChild = children[currentIndex];
+        const nextChild = children[nextIndex];
+
+        // Hide the current child with transition
+        currentChild.style.opacity = '0';
+        currentChild.style.transform = 'translateY(100%)';
+        currentChild.classList.remove('active');
+
+        // Show the next child with transition
+        nextChild.style.opacity = '1';
+        nextChild.style.transform = 'translateY(0)';
+        nextChild.classList.add('active');
+    }
+
 </script>
 </body>
 </html>
