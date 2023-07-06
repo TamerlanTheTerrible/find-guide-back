@@ -159,12 +159,11 @@
     <div class="form-row">
         <div>
             <label for="fromDate">From date:</label>
-            <input type="date" id="fromDate" name="fromDate" required="required">
-            <span class="warning" id="nameWarning" style="display: none;">Please enter your name.</span>
+            <input type="date" id="fromDate" name="fromDate" pattern="\d{2}/\d{2}/\d{4}">
         </div>
         <div>
             <label for="toDate">To date:</label>
-            <input type="date" id="toDate" name="toDate">
+            <input type="date" id="toDate" name="toDate" pattern="\d{2}/\d{2}/\d{4}">
         </div>
     </div>
 
@@ -189,9 +188,9 @@
     </div>
 
     <!--    temp submit button-->
-    <div>
-        <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">
-    </div>
+<!--    <div>-->
+<!--        <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">-->
+<!--    </div>-->
 </form>
 
 <div id="results">
@@ -325,6 +324,9 @@
 
     function enable(element, state) {
         element.disabled = state;
+        if (state) {
+            element.value = null;
+        }
     }
 
 </script>
