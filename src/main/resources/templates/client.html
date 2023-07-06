@@ -9,15 +9,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
-        .container {
-            display: flex;
-            /*flex-direction: column;*/
-            justify-content: center;
-            align-items: center;
-            width: 90%;
-            position: relative;
-            overflow: hidden;
-        }
+
         body {
             display: flex;
             justify-content: center;
@@ -33,28 +25,6 @@
             width: 100%;
             max-width: 500px; /* Set a maximum width for mobile-friendly layout */
         }
-
-        .container {
-            position: relative;
-            height: 300px; /* Adjust the height as needed */
-            overflow: hidden;
-        }
-
-        .child {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
-        }
-
-        .child.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
 
         .switch-container {
             display: inline-flex;
@@ -81,6 +51,7 @@
             background: white;
             border-radius: 6px;
             margin-bottom: 3px;
+            pointer-events: auto;
         }
 
         input[type="date"] {
@@ -224,12 +195,9 @@
             <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">
         </div>
     </form>
-
-
-    <div id="no-result" class="child">
-        <p>No results</p>
-    </div>
-
+<!--    <div id="no-result">-->
+<!--        <p>No results</p>-->
+<!--    </div>-->
 
     <div id="results" class="child">
         <p id="guideId"></p>
@@ -241,17 +209,13 @@
 </div>
 
 <div>
-    <input type="button" id="back" name="back" value="back" onclick="switchChild(0, 1);">
+    <input type="button" id="back" name="back" value="back" style="display: none">
 </div>
 <script>
     // init elements
     let searchForm = document.getElementById("search-form");
-    let noResultDiv = document.getElementById("no-result");
+    // let noResultDiv = document.getElementById("no-result");
     let resultDiv = document.getElementById("results");
-
-    const container = document.querySelector('.container');
-    const children = Array.from(container.querySelectorAll('.child'));
-    children[0].classList.add('active');
 
     let isOneDay = document.getElementById("isOneDay");
     let fromDate = document.getElementById("fromDate");
@@ -278,13 +242,6 @@
     });
 
     Telegram.WebApp.onEvent('backButtonClicked', function(){
-        // if (resultDiv.style.display !== "none") {
-        //     resultDiv.style.display = "none";
-        //     noResultDiv.style.display = "none";
-        //     searchForm.style.display = "block";
-        //     tg.BackButton.hide()
-        //
-        switchChild(1, 0);
         tg.BackButton.hide()
     });
 
@@ -326,12 +283,11 @@
         let guides = searchResult.result_list;
         if (guides.length > 0) {
             //init tg back button
-            tg.BackButton.show();
+            // tg.BackButton.show();
+            let backButtonTemp = document.getElementById("back");
+            backButtonTemp.style.display = "block";
+            // switchChild(0, 1)
 
-            // searchForm.style.display = "none";
-            // noResultDiv.style.display = "none";
-            // resultDiv.style.display = "block";
-            switchChild(0,1)
             let guide = guides[0];
             let user = guide.user;
             document.getElementById("guideId").innerHTML = guide.id;
@@ -409,21 +365,6 @@
         if (state) {
             element.value = null;
         }
-    }
-
-    function switchChild(currentIndex, nextIndex) {
-        const currentChild = children[currentIndex];
-        const nextChild = children[nextIndex];
-
-        // Hide the current child with transition
-        currentChild.style.opacity = '0';
-        currentChild.style.transform = 'translateY(100%)';
-        currentChild.classList.remove('active');
-
-        // Show the next child with transition
-        nextChild.style.opacity = '1';
-        nextChild.style.transform = 'translateY(0)';
-        nextChild.classList.add('active');
     }
 
 </script>
