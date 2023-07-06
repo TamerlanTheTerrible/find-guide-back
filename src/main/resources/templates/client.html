@@ -130,7 +130,6 @@
             -ms-transform: translateX(26px);
             transform: translateX(26px);
         }
-
     </style>
 </head>
 
@@ -144,7 +143,7 @@
                 <input type="checkbox" id="isOneDay" onclick="enable(document.getElementById('toDate'), this.checked)">
                 <span class="slider round"></span>
             </label>
-            <label for="isOneDay">one day</label>
+            <label for="isOneDay">for one day</label>
         </div>
         <!--    has car-->
         <div class="switch-container">
@@ -160,7 +159,8 @@
     <div class="form-row">
         <div>
             <label for="fromDate">From date:</label>
-            <input type="date" id="fromDate" name="fromDate">
+            <input type="date" id="fromDate" name="fromDate" required="required">
+            <span class="warning" id="nameWarning" style="display: none;">Please enter your name.</span>
         </div>
         <div>
             <label for="toDate">To date:</label>
@@ -188,10 +188,10 @@
         <textarea id="comment" name="comment" style="width: 100%; resize: vertical;"></textarea>
     </div>
 
-<!--    &lt;!&ndash;    temp submit button&ndash;&gt;-->
-<!--    <div>-->
-<!--        <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">-->
-<!--    </div>-->
+    <!--    temp submit button-->
+    <div>
+        <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">
+    </div>
 </form>
 
 <div id="results">
@@ -230,12 +230,20 @@
     });
 
     // init datepickers
-    populateSelectFrom(region, 'http://localhost:8280/api/region/');
-    populateSelectFrom(language, 'http://localhost:8280/api/language/');
-    // populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
-    // populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
+    // populateSelectFrom(region, 'http://localhost:8280/api/region/');
+    // populateSelectFrom(language, 'http://localhost:8280/api/language/');
+    populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
+    populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
 
     function sendData() {
+
+        if (fromDate == null || fromDate.value === '') {
+            fromDate.style.border = '1px solid red';
+            tg.showAlert('Please enter from date');
+            return;
+        }
+
+
         let initDataURLSP = new URLSearchParams(tg.initData);
         let userStr = initDataURLSP.get('user');
         let user = JSON.parse(userStr);
@@ -251,8 +259,8 @@
             comment: comments.value
         };
 
-        // post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
-        post('http://127.0.0.1:8280/api/guide-search/', searchParams);
+        post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
+        // post('http://127.0.0.1:8280/api/guide-search/', searchParams);
     }
 
     // Function to populate a <select> element with options

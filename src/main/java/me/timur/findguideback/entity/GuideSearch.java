@@ -60,7 +60,7 @@ public class GuideSearch extends BaseEntity{
     public GuideSearch(User user, GuideFilterDto filterDto, Set<Long> guideIds, Long totalCount) {
         this.client = user;
         this.fromDate = filterDto.getFromDate().atStartOfDay();
-        this.toDate = filterDto.getToDate().atStartOfDay();
+        this.toDate = filterDto.getToDate() != null ? filterDto.getToDate().atStartOfDay() : this.fromDate;
         this.language = filterDto.getLanguage();
         this.region = filterDto.getRegion();
         this.hasCar = filterDto.getHasCar();
