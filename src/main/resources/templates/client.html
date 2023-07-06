@@ -9,6 +9,12 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
         body {
             display: flex;
             justify-content: center;
@@ -134,72 +140,81 @@
 </head>
 
 <body>
-<form>
-    <!--    switches-->
-    <div class="form-row">
-        <!--    date-->
-        <div class="switch-container">
-            <label class="switch">
-                <input type="checkbox" id="isOneDay" onclick="enable(document.getElementById('toDate'), this.checked)">
-                <span class="slider round"></span>
-            </label>
-            <label for="isOneDay">for one day</label>
+<div class="container">
+    <form id = "search-form">
+        <!--    switches-->
+        <div class="form-row">
+            <!--    date-->
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="isOneDay" onclick="enableInput(document.getElementById('toDate'), this.checked)">
+                    <span class="slider round"></span>
+                </label>
+                <label for="isOneDay">for one day</label>
+            </div>
+            <!--    has car-->
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="hasCar">
+                    <span class="slider round"></span>
+                </label>
+                <label for="hasCar">has car</label>
+            </div>
         </div>
-        <!--    has car-->
-        <div class="switch-container">
-            <label class="switch">
-                <input type="checkbox" id="hasCar">
-                <span class="slider round"></span>
-            </label>
-            <label for="hasCar">has car</label>
-        </div>
-    </div>
 
-    <!--    dates-->
-    <div class="form-row">
+        <!--    dates-->
+        <div class="form-row">
+            <div>
+                <label for="fromDate">From date:</label>
+                <input type="date" id="fromDate" name="fromDate" pattern="\d{2}/\d{2}/\d{4}">
+            </div>
+            <div>
+                <label for="toDate">To date:</label>
+                <input type="date" id="toDate" name="toDate" pattern="\d{2}/\d{2}/\d{4}">
+            </div>
+        </div>
+
+        <!--    region-->
         <div>
-            <label for="fromDate">From date:</label>
-            <input type="date" id="fromDate" name="fromDate" pattern="\d{2}/\d{2}/\d{4}">
+            <label for="region">Region:</label>
+            <select id="region" name="region">
+            </select>
         </div>
+
+        <!--    language-->
         <div>
-            <label for="toDate">To date:</label>
-            <input type="date" id="toDate" name="toDate" pattern="\d{2}/\d{2}/\d{4}">
+            <label for="language">Language:</label>
+            <select id="language" name="language">
+            </select>
         </div>
+
+        <!--    comments-->
+        <div >
+            <label for="comment">Comments:</label>
+            <textarea id="comment" name="comment" style="width: 100%; resize: vertical;"></textarea>
+        </div>
+
+        <!--    temp submit button-->
+        <div>
+            <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">
+        </div>
+    </form>
+
+
+    <div id="no-result" style="display: none">
+        <p>No results</p>
     </div>
 
-    <!--    region-->
-    <div>
-        <label for="region">Region:</label>
-        <select id="region" name="region">
-        </select>
+
+    <div id="results" style="display: none">
+        <p id="guideId"></p>
+        <p id="guideName"></p>
+        <p id="guideLanguage"></p>
+        <p id="guideRegion"></p>
+        <p id="guideCar"></p>
     </div>
 
-    <!--    language-->
-    <div>
-        <label for="language">Language:</label>
-        <select id="language" name="language">
-        </select>
-    </div>
-
-    <!--    comments-->
-    <div >
-        <label for="comment">Comments:</label>
-        <textarea id="comment" name="comment" style="width: 100%; resize: vertical;"></textarea>
-    </div>
-
-    <!--    temp submit button-->
-<!--    <div>-->
-<!--        <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">-->
-<!--    </div>-->
-</form>
-
-<div id="results">
-    <p id="guideName"></p>
-    <p id="guideLanguage"></p>
-    <p id="guideRegion"></p>
-    <p id="guideCar"></p>
 </div>
-
 <script>
     // init form elements
     let isOneDay = document.getElementById("isOneDay");
@@ -212,11 +227,9 @@
 
     // init some elements values
     isOneDay.checked = true;
-    if (isOneDay.checked) {
-        toDate.disabled = true;
-    }
+    enableInput(toDate, isOneDay.checked)
 
-    // init main button
+    // init tg main button
     let tg = window.Telegram.WebApp;
     tg.expand();
     tg.MainButton.text = "Search"; //изменяем текст кнопки
@@ -229,20 +242,19 @@
     });
 
     // init datepickers
-    // populateSelectFrom(region, 'http://localhost:8280/api/region/');
-    // populateSelectFrom(language, 'http://localhost:8280/api/language/');
-    populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
-    populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
+    populateSelectFrom(region, 'http://localhost:8280/api/region/');
+    populateSelectFrom(language, 'http://localhost:8280/api/language/');
+    // populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
+    // populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
 
-    function sendData() {
-
+    async function sendData() {
+        <!--    validate-->
         if (fromDate == null || fromDate.value === '') {
             fromDate.style.border = '1px solid red';
             tg.showAlert('Please enter from date');
             return;
         }
-
-
+        <!--    prepare params-->
         let initDataURLSP = new URLSearchParams(tg.initData);
         let userStr = initDataURLSP.get('user');
         let user = JSON.parse(userStr);
@@ -255,16 +267,35 @@
             language: language.value,
             region: region.value,
             has_car: hasCar.checked,
-            comment: comments.value
+            comment: comments.value,
+            page_number: 0,
+            page_size: 10
         };
 
-        post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
-        // post('http://127.0.0.1:8280/api/guide-search/', searchParams);
+        <!--    send data-->
+        // post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
+        const searchResult = await postForResponse('http://127.0.0.1:8280/api/guide-search/', searchParams);
+        console.log('searchResult: ', searchResult);
+        let guides = searchResult.result_list;
+        if (guides.length > 0) {
+            let guide = guides[0];
+            document.getElementById("search-form").style.display = "none";
+            document.getElementById("no-result").style.display = "none";
+            document.getElementById("results").style.display = "block";
+            let user = guide.user;
+            document.getElementById("guideId").innerHTML = guide.id;
+            document.getElementById("guideName").innerHTML = user.first_name;
+            document.getElementById("guideLanguage").innerHTML = guide.language_names.toString();
+            document.getElementById("guideRegion").innerHTML = guide.region_names.toString();
+            document.getElementById("guideCar").innerHTML = guide.has_car;
+        } else {
+            document.getElementById("no-result").style.display = "block";
+        }
     }
 
     // Function to populate a <select> element with options
     async function populateSelectFrom(select, url) {
-        const data = await get(url);
+        const data = await getForResponse(url);
         console.log('Populating select with data:', data)
         data.forEach(item => {
             const option = document.createElement('option');
@@ -274,7 +305,7 @@
         });
     }
 
-    function post(url, searchParams) {
+    async function postForResponse(url, searchParams) {
         try {
             let responsePromise = fetch(url, {
                 method: 'POST',
@@ -291,7 +322,7 @@
 
     }
 
-    function get(url) {
+    function getForResponse(url) {
         try {
             let responsePromise = fetch(url);
             return handleApiResponse(responsePromise);
@@ -301,7 +332,7 @@
         }
     }
 
-    function handleApiResponse(responsePromise) {
+    async function handleApiResponse(responsePromise) {
         return responsePromise
             .then(response => {
                 if (response.ok) {
@@ -322,13 +353,12 @@
             })
     }
 
-    function enable(element, state) {
+    function enableInput(element, state) {
         element.disabled = state;
         if (state) {
             element.value = null;
         }
     }
-
 </script>
 </body>
 </html>

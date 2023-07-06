@@ -63,12 +63,12 @@ public class GuideRepositoryCustomImpl implements GuideRepositoryCustom {
         predicates.add(cb.equal(root.get("isVerified"), true));
         predicates.add(cb.equal(root.get("isBlocked"), false));
         if (filter.getRegion() != null && !filter.getRegion().isEmpty()) {
-            predicates.add(root.join("regions").get("engName").in(filter.getRegion()));
+            predicates.add(root.join("regions").get("engName").in(filter.getRegion().trim()));
         }
         if (filter.getLanguage() != null && !filter.getLanguage().isEmpty()) {
-            predicates.add(root.join("languages").get("engName").in(filter.getLanguage()));
+            predicates.add(root.join("languages").get("engName").in(filter.getLanguage().trim()));
         }
-        if (filter.getHasCar() != null) {
+        if (filter.getHasCar() != null && filter.getHasCar()) {
             predicates.add(cb.equal(root.get("hasCar"), filter.getHasCar()));
         }
         return predicates.toArray(new Predicate[0]);

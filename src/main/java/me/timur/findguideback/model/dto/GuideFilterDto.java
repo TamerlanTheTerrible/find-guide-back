@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public class GuideFilterDto extends BaseFilter {
+public class GuideFilterDto {
     private Long userId;
     private Long telegramId;
     private String language;
@@ -32,6 +32,8 @@ public class GuideFilterDto extends BaseFilter {
     private LocalDate toDate;
     private Boolean hasCar;
     private String comment;
+    private int pageNumber;
+    private int pageSize;
 
     @Override
     public String toString() {
