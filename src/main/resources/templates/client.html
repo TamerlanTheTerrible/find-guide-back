@@ -11,9 +11,10 @@
     <style>
         .container {
             display: flex;
-            flex-direction: column;
+            /*flex-direction: column;*/
             justify-content: center;
             align-items: center;
+            width: fit-content;
         }
         body {
             display: flex;
@@ -241,6 +242,12 @@
         sendData();
     });
 
+    Telegram.WebApp.onEvent('backButtonClicked', function(){
+        document.getElementById("search-form").style.display = "block";
+        document.getElementById("no-result").style.display = "none";
+        document.getElementById("results").style.display = "none";
+    });
+
     // init datepickers
     // populateSelectFrom(region, 'http://localhost:8280/api/region/');
     // populateSelectFrom(language, 'http://localhost:8280/api/language/');
@@ -278,6 +285,9 @@
         console.log('searchResult: ', searchResult);
         let guides = searchResult.result_list;
         if (guides.length > 0) {
+            //init tg back button
+            tg.BackButton.show();
+
             let guide = guides[0];
             document.getElementById("search-form").style.display = "none";
             document.getElementById("no-result").style.display = "none";
