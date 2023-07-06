@@ -9,7 +9,6 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
-
         body {
             display: flex;
             justify-content: center;
@@ -132,12 +131,65 @@
             -ms-transform: translateX(26px);
             transform: translateX(26px);
         }
+
+    /*    child switch animation*/
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        .child {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .child.active {
+            opacity: 1;
+            pointer-events: auto;
+            position: static;
+        }
+
+        .child.active.up {
+            animation: slideUp 0.3s ease-in-out forwards;
+        }
+
+        .child.active.down {
+            animation: slideDown 0.3s ease-in-out forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(100%);
+            }
+        }
+
     </style>
 </head>
 
 <body>
 <div class="container">
-    <form id = "search-form" class="child">
+    <form id = "search-form" class="child active">
         <!--    switches-->
         <div class="form-row">
             <!--    date-->
@@ -209,8 +261,9 @@
 </div>
 
 <div>
-    <input type="button" id="back" name="back" value="back" style="display: none">
+    <input type="button" id="back" name="back" value="back" style="display: none" onclick="toggleChild(resultDiv, searchForm)">
 </div>
+
 <script>
     // init elements
     let searchForm = document.getElementById("search-form");
@@ -286,7 +339,7 @@
             // tg.BackButton.show();
             let backButtonTemp = document.getElementById("back");
             backButtonTemp.style.display = "block";
-            // switchChild(0, 1)
+            toggleChild(searchForm, resultDiv)
 
             let guide = guides[0];
             let user = guide.user;
@@ -358,6 +411,14 @@
                     return null;
                 }
             })
+    }
+
+    function toggleChild(toDeactivate, toActivate) {
+        toDeactivate.classList.remove('active', 'up');
+        toDeactivate.classList.add('down');
+
+        toActivate.classList.add('active', 'up');
+        toActivate.classList.remove('down');
     }
 
     function enableInput(element, state) {
