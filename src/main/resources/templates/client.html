@@ -217,7 +217,11 @@
 
 </div>
 <script>
-    // init form elements
+    // init elements
+    let searchForm = document.getElementById("search-form");
+    let noResultDiv = document.getElementById("no-result");
+    let resultDiv = document.getElementById("results");
+
     let isOneDay = document.getElementById("isOneDay");
     let fromDate = document.getElementById("fromDate");
     let toDate = document.getElementById("toDate");
@@ -243,9 +247,12 @@
     });
 
     Telegram.WebApp.onEvent('backButtonClicked', function(){
-        document.getElementById("search-form").style.display = "block";
-        document.getElementById("no-result").style.display = "none";
-        document.getElementById("results").style.display = "none";
+        if (resultDiv.style.display !== "none") {
+            resultDiv.style.display = "none";
+            noResultDiv.style.display = "none";
+            searchForm.style.display = "flex";
+            tg.BackButton.hide()
+        }
     });
 
     // init datepickers
@@ -289,9 +296,9 @@
             tg.BackButton.show();
 
             let guide = guides[0];
-            document.getElementById("search-form").style.display = "none";
-            document.getElementById("no-result").style.display = "none";
-            document.getElementById("results").style.display = "block";
+            searchForm.style.display = "none";
+            noResultDiv.style.display = "none";
+            resultDiv.style.display = "flex";
             let user = guide.user;
             document.getElementById("guideId").innerHTML = guide.id;
             document.getElementById("guideName").innerHTML = user.first_name;
@@ -299,7 +306,7 @@
             document.getElementById("guideRegion").innerHTML = guide.region_names.toString();
             document.getElementById("guideCar").innerHTML = guide.has_car;
         } else {
-            document.getElementById("no-result").style.display = "block";
+            document.getElementById("no-result").style.display = "flex";
         }
     }
 
