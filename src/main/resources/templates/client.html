@@ -243,9 +243,9 @@
         </div>
 
         <!--    temp submit button-->
-        <div>
-            <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">
-        </div>
+<!--        <div>-->
+<!--            <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">-->
+<!--        </div>-->
     </form>
 <!--    <div id="no-result">-->
 <!--        <p>No results</p>-->
@@ -260,9 +260,9 @@
     </div>
 </div>
 
-<div>
-    <input type="button" id="back" name="back" value="back" style="display: none" onclick="toggleChild(resultDiv, searchForm)">
-</div>
+<!--<div>-->
+<!--    <input type="button" id="back" name="back" value="back" style="display: none" onclick="toggleChild(resultDiv, searchForm)">-->
+<!--</div>-->
 
 <script>
     // init elements
@@ -295,14 +295,15 @@
     });
 
     Telegram.WebApp.onEvent('backButtonClicked', function(){
+        toggleChild(resultDiv, searchForm);
         tg.BackButton.hide()
     });
 
     // init datepickers
-    populateSelectFrom(region, 'http://localhost:8280/api/region/');
-    populateSelectFrom(language, 'http://localhost:8280/api/language/');
-    // populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
-    // populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
+    // populateSelectFrom(region, 'http://localhost:8280/api/region/');
+    // populateSelectFrom(language, 'http://localhost:8280/api/language/');
+    populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
+    populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
 
     async function sendData() {
         <!--    validate-->
@@ -330,15 +331,17 @@
         };
 
         <!--    send data-->
-        // const searchResult = await postForResponse('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
-        const searchResult = await postForResponse('http://127.0.0.1:8280/api/guide-search/', searchParams);
+        const searchResult = await postForResponse('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
+        // const searchResult = await postForResponse('http://127.0.0.1:8280/api/guide-search/', searchParams);
         console.log('searchResult: ', searchResult);
         let guides = searchResult.result_list;
         if (guides.length > 0) {
             //init tg back button
-            // tg.BackButton.show();
-            let backButtonTemp = document.getElementById("back");
-            backButtonTemp.style.display = "block";
+            tg.BackButton.show();
+            // let backButtonTemp = document.getElementById("back");
+            // backButtonTemp.style.display = "block";
+
+
             toggleChild(searchForm, resultDiv)
 
             let guide = guides[0];
