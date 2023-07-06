@@ -25,6 +25,12 @@
             max-width: 500px; /* Set a maximum width for mobile-friendly layout */
         }
 
+        .switch-container {
+            display: inline-flex;
+            justify-content: left;
+            align-items: center;
+        }
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
@@ -35,7 +41,8 @@
             margin-right: 10px;
         }
 
-        input[type="date"],
+        input,
+        textarea,
         select {
             width: 100%;
             font-size: 16px;
@@ -47,6 +54,10 @@
 
         input[type="date"] {
             padding: 7px 4px;
+        }
+
+        textarea {
+            height: 50px;
         }
 
         select {
@@ -61,11 +72,91 @@
             font-style: italic;
         }
 
+        /*switch*/
+        /* The switch - the box around the slider */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-right: 17px;
+            margin-bottom: 3px;
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 15px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
     </style>
 </head>
 
 <body>
 <form>
+    <!--    switches-->
+    <div class="form-row">
+        <!--    date-->
+        <div class="switch-container">
+            <label class="switch">
+                <input type="checkbox" id="isOneDay" onclick="enable(document.getElementById('toDate'), this.checked)">
+                <span class="slider round"></span>
+            </label>
+            <label for="isOneDay">one day</label>
+        </div>
+        <!--    has car-->
+        <div class="switch-container">
+            <label class="switch">
+                <input type="checkbox" id="hasCar">
+                <span class="slider round"></span>
+            </label>
+            <label for="hasCar">has car</label>
+        </div>
+    </div>
+
+    <!--    dates-->
     <div class="form-row">
         <div>
             <label for="fromDate">From date:</label>
@@ -77,17 +168,30 @@
         </div>
     </div>
 
+    <!--    region-->
     <div>
         <label for="region">Region:</label>
         <select id="region" name="region">
         </select>
     </div>
 
+    <!--    language-->
     <div>
         <label for="language">Language:</label>
         <select id="language" name="language">
         </select>
     </div>
+
+    <!--    comments-->
+    <div >
+        <label for="comment">Comments:</label>
+        <textarea id="comment" name="comment" style="width: 100%; resize: vertical;"></textarea>
+    </div>
+
+<!--    &lt;!&ndash;    temp submit button&ndash;&gt;-->
+<!--    <div>-->
+<!--        <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">-->
+<!--    </div>-->
 </form>
 
 <div id="results">
@@ -99,12 +203,20 @@
 
 <script>
     // init form elements
+    let isOneDay = document.getElementById("isOneDay");
     let fromDate = document.getElementById("fromDate");
     let toDate = document.getElementById("toDate");
     let language = document.getElementById("language");
     let region = document.getElementById("region");
     let hasCar = document.getElementById("hasCar");
     let comments = document.getElementById("comment");
+
+    // init some elements values
+    isOneDay.checked = true;
+    if (isOneDay.checked) {
+        toDate.disabled = true;
+    }
+
     // init main button
     let tg = window.Telegram.WebApp;
     tg.expand();
@@ -117,10 +229,11 @@
         sendData();
     });
 
-    // populateSelectFrom(region, 'http://localhost:8280/api/region/');
-    // populateSelectFrom(language, 'http://localhost:8280/api/language/');
-    populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
-    populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
+    // init datepickers
+    populateSelectFrom(region, 'http://localhost:8280/api/region/');
+    populateSelectFrom(language, 'http://localhost:8280/api/language/');
+    // populateSelectFrom(region, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/region/');
+    // populateSelectFrom(language, 'https://still-beyond-67512-6a27447420c3.herokuapp.com/api/language/');
 
     function sendData() {
         let initDataURLSP = new URLSearchParams(tg.initData);
@@ -128,7 +241,8 @@
         let user = JSON.parse(userStr);
         // Create an object with the search parameters
         let searchParams = {
-            telegram_id: user.id,
+            // telegram_id: user.id,
+            telegram_id: '3728614',
             from_date: fromDate.value,
             to_date: toDate.value,
             language: language.value,
@@ -137,8 +251,8 @@
             comment: comments.value
         };
 
-        post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
-        // post('http://127.0.0.1:8280/api/guide-search/', searchParams);
+        // post('https://still-beyond-67512-6a27447420c3.herokuapp.com/api/guide-search', searchParams);
+        post('http://127.0.0.1:8280/api/guide-search/', searchParams);
     }
 
     // Function to populate a <select> element with options
@@ -199,6 +313,10 @@
                     return null;
                 }
             })
+    }
+
+    function enable(element, state) {
+        element.disabled = state;
     }
 
 </script>
