@@ -161,14 +161,6 @@
             position: static;
         }
 
-        .child.active.up {
-            animation: slideUp 0.3s ease-in-out forwards;
-        }
-
-        .child.active.down {
-            animation: slideDown 0.3s ease-in-out forwards;
-        }
-
         @keyframes slideUp {
             from {
                 transform: translateY(100%);
@@ -185,6 +177,30 @@
             to {
                 transform: translateY(100%);
             }
+        }
+
+        /*grid */
+        .grid-photo { grid-area: menu; }
+        .grid-name { grid-area: main; }
+        .grid-rating { grid-area: right-up; }
+        .grid-comment { grid-area: footer; }
+        .grid-empty { grid-area: right-down; }
+
+        .grid-container {
+            display: grid;
+            grid-template-areas:
+    'menu menu main  main main main main main right-up'
+    'menu menu footer footer footer footer footer footer right-down';
+            gap: 5px;
+            background-color: #202020;
+            padding: 10px;
+        }
+
+        .grid-container > div {
+            background-color: #202020;
+            text-align: left;
+            padding: 10px;
+            font-size: 18px;
         }
 
     </style>
@@ -249,19 +265,9 @@
         <div>
             <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">
         </div>
-
     </form>
 
-    <div id="no-result" style="display: none">
-        <p>No results</p>
-    </div>
-
     <div id="results" class="child">
-        <p id="guideId"></p>
-        <p id="guideName"></p>
-        <p id="guideLanguage"></p>
-        <p id="guideRegion"></p>
-        <p id="guideCar"></p>
     </div>
 </div>
 
@@ -286,7 +292,6 @@
     let region = document.getElementById("region");
     let hasCar = document.getElementById("hasCar");
     let comments = document.getElementById("comment");
-    let noResultDiv = document.getElementById("no-result");
     // init some elements values
     isOneDay.checked = true;
     enableInput(toDate, isOneDay.checked)
@@ -322,15 +327,19 @@
     populateSelectFrom(language, domain + '/api/language/');
     populateSelectFrom(region, domain + '/api/region/');
 
+    function showAlert(message) {
+        if (profile === 'prod') {
+            tg.showAlert(message);
+        } else {
+            alert(message);
+        }
+    }
+
     async function sendData() {
         // validate
         if (fromDate == null || fromDate.value === '') {
             fromDate.style.border = '1px solid red';
-            if (profile === 'prod') {
-                tg.showAlert('Please enter from date');
-            } else {
-                alert('Please enter from date');
-            }
+            showAlert('Please enter from date');
             return;
         }
         // Create an object with the search parameters
@@ -368,18 +377,51 @@
                 }
             }
 
-            noResultDiv.style.display = "none";
             toggleChild(searchForm, resultDiv)
 
-            let guide = guides[0];
-            let user = guide.user;
-            document.getElementById("guideId").innerHTML = guide.id;
-            document.getElementById("guideName").innerHTML = user.first_name;
-            document.getElementById("guideLanguage").innerHTML = guide.language_names.toString();
-            document.getElementById("guideRegion").innerHTML = guide.region_names.toString();
-            document.getElementById("guideCar").innerHTML = guide.has_car;
+            // populate result
+            // Iterate over the array of objects
+            guides.forEach((object) => {
+                // Create a div element for the grid container
+                const gridDiv = document.createElement("div");
+                gridDiv.className = "grid-container";
+
+                // Create div elements for the grid fields
+                const photoDiv = document.createElement("img");
+                photoDiv.className = "grid-photo";
+                // photoDiv.src = "/resources/img/default-profile-pic.png";
+                photoDiv.currentSrc = "/resources/img/default-profile-pic.png";
+                photoDiv.alt = "profile pic";
+                photoDiv.width = 50;
+                photoDiv.height = 70;
+
+                const nameDiv = document.createElement("div");
+                nameDiv.className = "grid-name";
+                nameDiv.textContent = object.first_name;
+
+                const ratingDiv = document.createElement("div");
+                ratingDiv.className = "grid-rating";
+                ratingDiv.textContent = "***";
+
+                const commentDiv = document.createElement("div");
+                commentDiv.className = "grid-comment";
+                commentDiv.textContent = object.comment;
+
+                const emptyDiv = document.createElement("div");
+                emptyDiv.className = "grid-empty";
+
+                // Append the grid fields to the grid container
+                gridDiv.appendChild(photoDiv);
+                gridDiv.appendChild(nameDiv);
+                gridDiv.appendChild(ratingDiv);
+                gridDiv.appendChild(commentDiv);
+                gridDiv.appendChild(emptyDiv);
+
+                // Append the grid container to the results div
+                resultDiv.appendChild(gridDiv);
+            });
         } else {
-            document.getElementById("no-result").style.display = "block";
+            showAlert('No guides found');
         }
     }
 
