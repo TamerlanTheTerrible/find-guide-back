@@ -246,6 +246,15 @@
         <div>
             <input type="button" id="submit" name="submit" value="submit" onclick="sendData()">
         </div>
+
+        <div>
+            <textarea  id="tempRegion"></textarea>
+        </div>
+
+        <div>
+            <textarea  id="tempLanguage"></textarea>
+        </div>
+
     </form>
 
     <div id="no-result" style="display: none">
@@ -264,7 +273,6 @@
 <div>
     <input type="button" id="back" name="back" value="back" style="display: none">
 </div>
-
 <script>
     // get spring profile
     const profile = "[[${profile}]]";
@@ -382,8 +390,34 @@
 
     // Function to populate a <select> element with options
     async function populateSelectFrom(select, url) {
+
+        if (url === domain + '/api/region/') {
+            let tempRegion = document.getElementById("tempRegion");
+            tempRegion.value = 'url: ' + url
+        }
+
+        if (url === domain + '/api/language/') {
+            let tempLanguage = document.getElementById("tempLanguage");
+            tempLanguage.value = 'url: ' + url
+        }
+
+
         const data = await getForResponse(url);
         console.log('Populating select with data:', data)
+
+
+        if (url === domain + '/api/region/') {
+            let tempRegion = document.getElementById("tempRegion");
+            let currentData = tempRegion.value;
+            tempRegion.value = currentData + '\n data: ' + data
+        }
+
+        if (url === domain + '/api/language/') {
+            let tempLanguage = document.getElementById("tempLanguage");
+            let currentData = tempLanguage.value;
+            tempLanguage.value = currentData + '\n data: ' + data
+        }
+
         data.forEach(item => {
             const option = document.createElement('option');
             option.value = item; // Assuming the data is a simple array of strings
