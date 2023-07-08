@@ -321,11 +321,11 @@
         domain = 'https://still-beyond-67512-6a27447420c3.herokuapp.com'
         deleteElement('submit')
         deleteElement('back')
-    } else
+    }
 
     // init datepickers
-    populateSelectFrom(language, domain + '/api/language/', 'language');
-    populateSelectFrom(region, domain + '/api/region/', 'region');
+    populateSelectFrom(language, domain + '/api/language/');
+    populateSelectFrom(region, domain + '/api/region/');
 
     async function sendData() {
         // validate
@@ -389,33 +389,9 @@
     }
 
     // Function to populate a <select> element with options
-    async function populateSelectFrom(select, url, methodName) {
-
-        if (methodName === 'region') {
-            let tempRegion = document.getElementById("tempRegion");
-            tempRegion.value = 'url: ' + url
-        }
-
-        if (methodName === 'language') {
-            let tempLanguage = document.getElementById("tempLanguage");
-            tempLanguage.value = 'url: ' + url
-        }
-
-
+    async function populateSelectFrom(select, url) {
         const data = await getForResponse(url);
         console.log('Populating select with data:', data)
-
-        if (methodName === 'region') {
-            let tempRegion = document.getElementById("tempRegion");
-            let currentData = tempRegion.value;
-            tempRegion.value = currentData + '\n data: ' + data
-        }
-
-        if (methodName === 'language') {
-            let tempLanguage = document.getElementById("tempLanguage");
-            let currentData = tempLanguage.value;
-            tempLanguage.value = currentData + '\n data: ' + data
-        }
 
         data.forEach(item => {
             const option = document.createElement('option');
