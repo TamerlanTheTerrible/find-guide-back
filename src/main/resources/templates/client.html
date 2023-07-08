@@ -324,8 +324,8 @@
     } else
 
     // init datepickers
-    populateSelectFrom(region, domain + '/api/region/');
-    populateSelectFrom(language, domain + '/api/language/');
+    populateSelectFrom(language, domain + '/api/language/', 'language');
+    populateSelectFrom(region, domain + '/api/region/', 'region');
 
     async function sendData() {
         // validate
@@ -389,14 +389,14 @@
     }
 
     // Function to populate a <select> element with options
-    async function populateSelectFrom(select, url) {
+    async function populateSelectFrom(select, url, methodName) {
 
-        if (url === domain + '/api/region/') {
+        if (methodName === 'region') {
             let tempRegion = document.getElementById("tempRegion");
             tempRegion.value = 'url: ' + url
         }
 
-        if (url === domain + '/api/language/') {
+        if (methodName === 'language') {
             let tempLanguage = document.getElementById("tempLanguage");
             tempLanguage.value = 'url: ' + url
         }
@@ -405,14 +405,13 @@
         const data = await getForResponse(url);
         console.log('Populating select with data:', data)
 
-
-        if (url === domain + '/api/region/') {
+        if (methodName === 'region') {
             let tempRegion = document.getElementById("tempRegion");
             let currentData = tempRegion.value;
             tempRegion.value = currentData + '\n data: ' + data
         }
 
-        if (url === domain + '/api/language/') {
+        if (methodName === 'language') {
             let tempLanguage = document.getElementById("tempLanguage");
             let currentData = tempLanguage.value;
             tempLanguage.value = currentData + '\n data: ' + data
